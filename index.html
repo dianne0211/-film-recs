@@ -283,6 +283,7 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
     <button class="tab-btn" onclick="switchTab('watchlist')" id="tab-watchlist">想看</button>
     <button class="tab-btn" onclick="switchTab('watched')"   id="tab-watched">已看</button>
     <button class="tab-btn" onclick="switchTab('taste')"     id="tab-taste">品味</button>
+    <button class="tab-btn" onclick="switchTab('help')"      id="tab-help">說明</button>
   </div>
 </div>
 
@@ -424,6 +425,70 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
 
     <div style="padding:14px;background:var(--card);border-radius:14px;border:1px solid var(--border2);font-size:11.5px;color:var(--text3);line-height:1.7">
       💡 新增的導演、演員或電影片名，會立即影響推薦演算法，提高相關電影的出現機率。
+    </div>
+  </div>
+
+  <!-- HELP PAGE -->
+  <div id="page-help" class="page">
+    <div style="padding:14px 0 18px">
+      <div style="font-size:16.5px;font-weight:600;color:var(--text);margin-bottom:4px">使用說明</div>
+      <div style="font-size:12px;color:var(--text3)">這個 App 背後的所有設計邏輯</div>
+    </div>
+
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:13.5px;font-weight:600;color:var(--warm);margin-bottom:8px">✦ 推薦邏輯（為你精選）</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.85">
+        每部電影的分數由以下項目加總，分數越高排越前面：<br>
+        ・<b style="color:var(--text)">你設定的喜愛導演</b>：命中大幅加分（主要驅動力）<br>
+        ・<b style="color:var(--text)">你設定的喜愛演員</b>：卡司命中加分<br>
+        ・<b style="color:var(--text)">你的評分回饋</b>：對已看電影評分越高，該片的類型與導演往後會被推薦更多；評分低則反向削弱<br>
+        ・<b style="color:var(--text)">你輸入的喜歡電影</b>：系統會比對片庫，若有收錄則套用該片的類型/導演特徵加分（片庫沒有的片名不會產生效果）<br>
+        ・IMDB / 爛番茄分數、得獎紀錄（金棕櫚 / 金獅 / 金熊 / 奧斯卡最佳）：通用品質加分，人人適用<br>
+        ・新片：額外加分<br><br>
+        <span style="color:var(--text3)">⚠️ 這是「規則式加權計分」，不是真的呼叫AI模型做語意理解，但完全依你自己的設定客製化。</span>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:13.5px;font-weight:600;color:var(--warm);margin-bottom:8px">✓ 已看／🔖 想看的排除規則</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.85">
+        ・標記「已看」的電影會被強制排除，<b style="color:var(--text)">不會再出現</b>在推薦清單或換一批裡<br>
+        ・加入「想看清單」的電影同樣會被排除，<b style="color:var(--text)">不會再被推薦</b>，除非你自己從想看清單移除
+      </div>
+    </div>
+
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:13.5px;font-weight:600;color:var(--warm);margin-bottom:8px">🎭 心情推薦</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.85">
+        點「告訴我今天的狀態」後，依你選擇的心情、感受、氛圍三個問題，套用對應的類型加權，<b style="color:var(--text)">暫時覆蓋</b>原本的推薦排序，直到你按「清除」。心情紀錄可在「已看」頁的「心情記錄」查看歷史。
+      </div>
+    </div>
+
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:13.5px;font-weight:600;color:var(--warm);margin-bottom:8px">📚 片庫</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.85">
+        顯示資料庫中全部電影，<b style="color:var(--text)">不受已看／想看影響</b>，可用片名、導演、演員關鍵字搜尋，並可用標籤篩選。這是主動查找用的瀏覽功能，跟推薦引擎是分開的。
+      </div>
+    </div>
+
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:13.5px;font-weight:600;color:var(--warm);margin-bottom:8px">🎨 品味設定</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.85">
+        ・「已加入」（綠色）：目前生效的喜愛導演/演員，點擊可移除<br>
+        ・「推薦快速加入」（灰色）：常見名單，點一下即可加入<br>
+        ・「喜歡的電影」：輸入片名讓系統比對片庫，套用該片特徵<br>
+        ・這裡的設定<b style="color:var(--text)">是推薦演算法的主要依據</b>，越完整推薦越準確
+      </div>
+    </div>
+
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:13.5px;font-weight:600;color:var(--warm);margin-bottom:8px">👤 多使用者系統</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.85">
+        ・點 Header 的「切換使用者」可新增或切換帳號<br>
+        ・每個使用者的已看清單、評分、想看清單、品味設定<b style="color:var(--text)">完全獨立</b>，不會互相影響<br>
+        ・新使用者第一次進入時，會被要求<b style="color:var(--text)">至少設定 2 位導演、2 位演員、2 部喜歡的電影</b>才能開始使用，確保推薦一開始就有基礎資料可用<br>
+        ・⚠️ 資料只存在<b style="color:var(--text)">這台裝置的這個瀏覽器</b>裡，不會跨裝置同步——同一個人在別的手機上使用，需要重新設定一次
+      </div>
     </div>
   </div>
 </div>
@@ -1405,6 +1470,7 @@ function switchTab(tab){
   document.getElementById("page-"+tab).classList.add("active");
   if(tab==="taste") renderTaste();
   else if(tab==="watchlist") renderWatchlistPage();
+  else if(tab==="help") updateHeader();
   else renderAll();
 }
 function setFilter(tag){filterTag=tag;renderFilters();renderBrowse();}
