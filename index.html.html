@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Film Recs">
+<meta name="theme-color" content="#2C2418">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232C2418'/><text x='50' y='42' font-size='20' font-weight='600' text-anchor='middle' fill='%23C8A876' font-family='Georgia,serif'>Film</text><text x='50' y='64' font-size='20' font-weight='600' text-anchor='middle' fill='%239DB89A' font-family='Georgia,serif'>Recs</text><text x='50' y='86' font-size='22' text-anchor='middle'>🎞️</text></svg>">
+<title>Film Recs</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:         #2C2418;
+  --bg2:        #332B1D;
+  --bg3:        #3A3022;
+  --card:       #3E3426;
+  --card2:      #453B2C;
+  --border:     #524636;
+  --border2:    #5E5040;
+  --green:      #9DB89A;
+  --green2:     #7A9E76;
+  --green-lt:   #2E3A2C;
+  --green-mid:  #4A6847;
+  --rose:       #C9A49C;
+  --rose-lt:    #3A2826;
+  --blue:       #99B0C0;
+  --blue-lt:    #252E36;
+  --warm:       #C8A876;
+  --warm-lt:    #362C1A;
+  --text:       #F0EBE0;
+  --text2:      #C8BFB0;
+  --text3:      #8A8070;
+  --shadow:     0 2px 16px rgba(0,0,0,0.25);
+  --shadow-md:  0 4px 24px rgba(0,0,0,0.32);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,0.45);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;color:var(--text);max-width:430px;margin:0 auto;min-height:100dvh}
+::-webkit-scrollbar{display:none}
+button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;outline:none;touch-action:manipulation}
+
+@keyframes fadeUp  {from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn  {from{opacity:0}to{opacity:1}}
+@keyframes slideUp {from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes popIn   {from{opacity:0;transform:scale(0.86) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.fade-up  {animation:fadeUp  0.38s cubic-bezier(0.22,1,0.36,1) both}
+.slide-up {animation:slideUp 0.32s cubic-bezier(0.32,0.72,0,1) both}
+.pop-in   {animation:popIn   0.28s cubic-bezier(0.34,1.4,0.64,1) both}
+
+/* ── Header ── */
+.header{
+  padding:28px 20px 0;
+  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
+  position:sticky;top:0;z-index:50;
+}
+.logo{
+  font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;
+  font-size:28.5px;font-weight:600;
+  color:var(--warm);
+  letter-spacing:-0.5px;
+}
+.subtitle{font-size:13.5px;color:var(--text3);margin-top:2px;letter-spacing:0.04em}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:6px;padding:16px 0 18px}
+.tab-btn{
+  flex:1;padding:10px 6px;
+  border-radius:50px;
+  font-size:13.5px;font-weight:600;
+  border:1.5px solid var(--border2);
+  background:var(--card);
+  color:var(--text3);
+  transition:all 0.22s cubic-bezier(0.22,1,0.36,1);
+  letter-spacing:0.02em;
+  box-shadow:var(--shadow);
+}
+.tab-btn.active{
+  background:var(--green);
+  color:var(--bg);
+  border-color:var(--green);
+  box-shadow:0 4px 18px rgba(125,158,118,0.4);
+}
+
+/* ── Cards ── */
+.card{
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:12px;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:all 0.22s cubic-bezier(0.22,1,0.36,1);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,transparent 50%);
+  pointer-events:none;
+}
+.card:active{transform:scale(0.985)}
+.card.watched{background:var(--green-lt);border-color:var(--green-mid)}
+.card.new-badge{border-color:var(--blue);background:var(--blue-lt)}
+
+/* ── Emoji box ── */
+.emoji-box{
+  width:48px;height:48px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg2);
+  border-radius:14px;
+  font-size:24.5px;flex-shrink:0;
+  border:1.5px solid var(--border2);
+}
+
+/* ── Tags ── */
+.tag{
+  background:var(--bg3);
+  color:var(--text3);
+  font-size:10.5px;font-weight:500;
+  padding:3px 9px;border-radius:50px;
+  white-space:nowrap;letter-spacing:0.02em;
+  border:1px solid var(--border2);
+}
+
+/* ── Score badge ── */
+.score-badge{
+  padding:2px 9px;border-radius:50px;
+  font-size:10.5px;font-weight:700;
+  flex-shrink:0;white-space:nowrap;
+}
+
+/* ── Card watch button ── */
+.watch-btn-sm{
+  border-radius:50px;padding:5px 14px;
+  font-size:13.5px;font-weight:600;
+  transition:all 0.2s;
+  border:1.5px solid var(--border2);
+  background:var(--card2);
+  color:var(--text2);
+}
+.watch-btn-sm.watched{
+  background:var(--green-lt);
+  border-color:var(--green-mid);
+  color:var(--green);
+}
+
+.divider{height:1px;background:var(--border);margin:10px 0}
+
+/* ── Search ── */
+.search-input{
+  width:100%;padding:11px 16px;
+  background:var(--card);
+  border:1.5px solid var(--border2);
+  border-radius:50px;
+  color:var(--text);
+  font-size:13.5px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+  transition:border-color 0.2s;
+}
+.search-input:focus{border-color:var(--green)}
+.search-input::placeholder{color:var(--text3)}
+
+/* ── Filter pills ── */
+#filter-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px}
+.filter-btn{
+  flex-shrink:0;border-radius:50px;
+  padding:6px 14px;font-size:13.5px;font-weight:500;
+  border:1.5px solid var(--border2);
+  background:var(--card);color:var(--text2);
+  white-space:nowrap;transition:all 0.18s;
+  box-shadow:var(--shadow);
+}
+.filter-btn.active{background:var(--green);color:var(--bg);border-color:var(--green)}
+
+/* ── Overlays ── */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(20,16,10,0.75);
+  z-index:200;display:flex;align-items:flex-end;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.overlay.center{align-items:center;justify-content:center}
+.modal-sheet{
+  background:var(--card);
+  border-radius:28px 28px 0 0;
+  padding:28px 22px 56px;
+  width:100%;max-height:90dvh;overflow-y:auto;
+  box-shadow:var(--shadow-lg);
+  border-top:1.5px solid var(--border2);
+}
+.rating-sheet{
+  background:var(--card);
+  border-radius:28px;
+  padding:32px 24px 28px;
+  width:calc(100% - 40px);max-width:360px;
+  box-shadow:var(--shadow-lg);
+  border:1.5px solid var(--border2);
+}
+
+/* ── Score buttons ── */
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
+.score-btn{touch-action:manipulation;
+  height:48px;border-radius:14px;
+  border:1.5px solid var(--border2);
+  background:var(--card2);
+  color:var(--text2);
+  font-size:16.5px;font-weight:600;
+  transition:all 0.18s cubic-bezier(0.22,1,0.36,1);
+}
+.score-btn:active{transform:scale(0.92);-webkit-tap-highlight-color:transparent}
+.score-btn.low {background:var(--rose-lt); border-color:#6A3A36;color:var(--rose)}
+.score-btn.high{background:var(--green-lt);border-color:var(--green-mid);color:var(--green)}
+.score-btn.mid {background:var(--warm-lt); border-color:#5A4020;color:var(--warm)}
+.score-btn.sel {transform:scale(1.08);box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+.score-btn.low.sel {background:var(--rose); border-color:var(--rose); color:var(--bg)}
+.score-btn.high.sel{background:var(--green);border-color:var(--green);color:var(--bg)}
+.score-btn.mid.sel {background:var(--warm); border-color:var(--warm); color:var(--bg)}
+
+/* ── CTA buttons ── */
+.cta-btn{
+  width:100%;padding:15px;
+  border-radius:50px;
+  font-size:16.5px;font-weight:600;
+  border:none;
+  transition:all 0.22s;
+  letter-spacing:0.02em;
+}
+.cta-btn.primary{background:var(--green);color:var(--bg);box-shadow:0 4px 18px rgba(125,158,118,0.4)}
+.cta-btn.ghost  {background:var(--card2);color:var(--text2);border:1.5px solid var(--border2)}
+.cta-btn.done   {background:var(--green-lt);color:var(--green);border:1.5px solid var(--green-mid)}
+
+/* ── Stat row ── */
+.stat-row{
+  display:flex;background:var(--bg2);
+  border-radius:18px;overflow:hidden;
+  border:1.5px solid var(--border2);
+  margin-bottom:22px;
+}
+.stat-cell{flex:1;padding:14px 8px;text-align:center}
+.stat-val {font-size:17px;font-weight:700;margin-bottom:3px}
+.stat-lbl {font-size:10.5px;color:var(--text3);letter-spacing:0.03em}
+
+/* ── Profile blurb ── */
+.profile-blurb{
+  background:var(--warm-lt);
+  border:1.5px solid var(--border2);
+  border-radius:18px;
+  padding:14px 16px;
+  margin-bottom:16px;
+}
+
+.page{display:none}.page.active{display:block}
+.hidden{display:none!important}
+@keyframes flashGreen{
+  0%  {background:var(--green);color:var(--bg);transform:scale(1.12);}
+  60% {background:var(--green);color:var(--bg);transform:scale(1.08);}
+  100%{background:var(--blue-lt);border-color:#355060;color:var(--blue);transform:scale(1);}
+}
+.wl-flash{animation:flashGreen 0.45s cubic-bezier(0.22,1,0.36,1) both;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div class="logo">Film Recs</div>
+      <div class="subtitle">Curated just for you</div>
+    </div>
+    <div id="header-count" style="font-size:13.5px;color:var(--text3);text-align:right;margin-top:6px;line-height:1.8"></div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('recommend')" id="tab-recommend">✦ 推薦</button>
+    <button class="tab-btn" onclick="switchTab('browse')"    id="tab-browse">片庫</button>
+    <button class="tab-btn" onclick="switchTab('watchlist')" id="tab-watchlist">想看</button>
+    <button class="tab-btn" onclick="switchTab('watched')"   id="tab-watched">已看</button>
+    <button class="tab-btn" onclick="switchTab('taste')"     id="tab-taste">品味</button>
+  </div>
+</div>
+
+<div style="padding:0 16px 120px;position:relative;z-index:1">
+
+  <!-- RECOMMEND -->
+  <div id="page-recommend" class="page active">
+    <div id="greeting-bar" style="padding:12px 0 6px">
+      <div id="greeting-text" style="font-size:15px;font-weight:600;color:var(--text)"></div>
+      <div id="greeting-sub" style="font-size:11.5px;color:var(--text3);margin-top:2px"></div>
+    </div>
+
+    <!-- Mood check-in button -->
+    <button onclick="openMoodCheckin()" id="mood-btn" style="width:100%;margin-bottom:16px;padding:14px 18px;background:var(--card);border:1.5px dashed var(--border2);border-radius:18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.22s;text-align:left">
+      <span style="font-size:22px">🎭</span>
+      <div style="flex:1">
+        <div id="mood-btn-title" style="font-size:13.5px;font-weight:600;color:var(--text)">告訴我今天的狀態</div>
+        <div id="mood-btn-sub" style="font-size:11px;color:var(--text3);margin-top:2px">讓推薦更符合你此刻的心情</div>
+      </div>
+      <span style="font-size:16px;color:var(--text3)">›</span>
+    </button>
+
+    <!-- mood state indicator (no separate list) -->
+    <div id="mood-active-bar" style="display:none;margin-bottom:12px;padding:10px 14px;background:var(--warm-lt);border:1.5px solid #5A4020;border-radius:14px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--warm);margin-bottom:2px">🎭 依你現在的狀態推薦中</div>
+        <div id="mood-rec-desc" style="font-size:11px;color:var(--text3)"></div>
+      </div>
+      <button onclick="clearMoodRec()" style="background:none;border:1px solid #5A4020;border-radius:20px;padding:3px 10px;font-size:10.5px;color:var(--warm);cursor:pointer;flex-shrink:0">清除</button>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div id="rec-title" style="font-size:13.5px;font-weight:600;color:var(--text)">為你精選</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div id="rec-count" style="font-size:11px;color:var(--text3)"></div>
+        <button onclick="shuffleRec()" style="background:var(--card2);border:1.5px solid var(--border2);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--text2);cursor:pointer;transition:all 0.2s">↻ 換一批</button>
+      </div>
+    </div>
+    <div id="low-stock-warn" style="display:none;background:var(--warm-lt);border:1.5px solid #5A4020;border-radius:14px;padding:11px 14px;margin-bottom:14px;font-size:12px;color:var(--warm);line-height:1.6">
+      📽️ 片庫即將看完！新片會持續補入，也可以告訴我你喜歡的電影類型讓我加片。
+    </div>
+    <div id="recommend-list"></div>
+  </div>
+
+  <!-- BROWSE -->
+  <div id="page-browse" class="page">
+    <div style="padding-top:14px">
+      <input class="search-input" id="search-input" placeholder="搜尋片名、導演…" oninput="renderBrowse()">
+      <div id="filter-scroll"></div>
+      <div id="browse-count" style="font-size:13.5px;color:var(--text3);padding-bottom:10px"></div>
+    </div>
+    <div id="browse-list"></div>
+  </div>
+
+  <!-- WATCHED -->
+  <div id="page-watched" class="page">
+    <div style="padding:14px 0 18px;display:flex;justify-content:space-between;align-items:flex-end">
+      <div>
+        <div style="font-size:16.5px;font-weight:600;color:var(--text)">已看清單</div>
+        <div id="watched-sub" style="font-size:13.5px;color:var(--text3);margin-top:3px"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <button onclick="openHistoryModal()" style="background:var(--card2);border:1.5px solid var(--border2);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--text2)">🎭 心情記錄</button>
+        <div id="avg-box" style="display:none;text-align:right">
+          <div id="avg-val" style="font-size:22px;font-weight:700;color:var(--green)"></div>
+          <div style="font-size:10.5px;color:var(--text3);letter-spacing:0.03em">平均評分</div>
+        </div>
+      </div>
+    </div>
+    <div id="watched-list"></div>
+  </div>
+
+  <!-- WATCHLIST PAGE -->
+  <div id="page-watchlist" class="page">
+    <div style="padding:14px 0 18px;display:flex;justify-content:space-between;align-items:flex-end">
+      <div>
+        <div style="font-size:16.5px;font-weight:600;color:var(--text)">想看清單</div>
+        <div id="watchlist-sub" style="font-size:11.5px;color:var(--text3);margin-top:3px"></div>
+      </div>
+    </div>
+    <!-- Search to add -->
+    <div style="margin-bottom:16px">
+      <input id="watchlist-search" placeholder="搜尋片名加入想看清單…"
+        style="width:100%;padding:11px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:13px;font-family:Calibri,'Noto Sans TC',sans-serif;"
+        oninput="renderWatchlistSearch()">
+      <div id="watchlist-search-results" style="margin-top:8px"></div>
+    </div>
+    <div id="watchlist-list"></div>
+  </div>
+
+  <!-- TASTE PROFILE PAGE -->
+  <div id="page-taste" class="page">
+    <div style="padding:14px 0 18px">
+      <div style="font-size:16.5px;font-weight:600;color:var(--text);margin-bottom:4px">我的品味設定</div>
+      <div style="font-size:12px;color:var(--text3)">影響演算法推薦的核心資料</div>
+    </div>
+
+    <!-- Profile Summary Card -->
+    <div style="background:var(--warm-lt);border:1.5px solid #5A4020;border-radius:18px;padding:16px 18px;margin-bottom:22px">
+      <div style="font-size:11px;font-weight:600;color:var(--warm);letter-spacing:0.06em;margin-bottom:8px">你的品味輪廓</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.75">
+        哲學 · 非線性敘事 · 詩意 · 靈性 · 攝影強 · 魔幻 · 神秘 · 心理
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-top:5px;line-height:1.65">
+        鍾愛：王家衛 · Nolan · Villeneuve · 宮崎駿 · Lanthimos · Woody Allen · Ang Lee · Spielberg
+      </div>
+    </div>
+
+    <!-- Directors section -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--warm);letter-spacing:0.05em;margin-bottom:10px">喜愛導演</div>
+      <div id="taste-directors" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="add-director-input" placeholder="新增導演（中文或英文）" style="flex:1;padding:9px 14px;background:var(--card);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:12.5px;font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;" onkeydown="if(event.key==='Enter')addTasteItem('director')">
+        <button onclick="addTasteItem('director')" style="padding:9px 16px;background:var(--green);color:var(--bg);border:none;border-radius:50px;font-size:12.5px;font-weight:600;cursor:pointer">＋</button>
+      </div>
+    </div>
+
+
+
+    <!-- Actors section -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--warm);letter-spacing:0.05em;margin-bottom:10px">喜愛演員</div>
+      <div id="taste-actors" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="add-actor-input" placeholder="新增演員（中文或英文）" style="flex:1;padding:9px 14px;background:var(--card);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:12.5px;font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;" onkeydown="if(event.key==='Enter')addTasteItem('actor')">
+        <button onclick="addTasteItem('actor')" style="padding:9px 16px;background:var(--green);color:var(--bg);border:none;border-radius:50px;font-size:12.5px;font-weight:600;cursor:pointer">＋</button>
+      </div>
+    </div>
+
+    <!-- Genres -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--warm);letter-spacing:0.05em;margin-bottom:10px">喜愛類型</div>
+      <div id="taste-genres" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+
+    <!-- Liked movies input -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--warm);letter-spacing:0.05em;margin-bottom:6px">喜歡的電影</div>
+      <div style="font-size:11.5px;color:var(--text3);margin-bottom:10px;line-height:1.6">輸入你喜歡的電影片名，系統會分析共同類型與導演來強化推薦準確度</div>
+      <div id="taste-liked-movies" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="add-movie-input" placeholder="輸入片名（中文或英文）" style="flex:1;padding:9px 14px;background:var(--card);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:12.5px;font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;" onkeydown="if(event.key==='Enter')addLikedMovie()">
+        <button onclick="addLikedMovie()" style="padding:9px 16px;background:var(--green);color:var(--bg);border:none;border-radius:50px;font-size:12.5px;font-weight:600;cursor:pointer">＋</button>
+      </div>
+    </div>
+
+    <div style="padding:14px;background:var(--card);border-radius:14px;border:1px solid var(--border2);font-size:11.5px;color:var(--text3);line-height:1.7">
+      💡 新增的導演、演員或電影片名，會立即影響推薦演算法，提高相關電影的出現機率。
+    </div>
+  </div>
+</div>
+
+<!-- ── Movie Detail Modal ── -->
+<div id="modal" class="overlay hidden" style="z-index:250" onclick="closeModal()">
+  <div class="modal-sheet slide-up" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+      <div id="m-emoji" style="font-size:48px;line-height:1"></div>
+      <button onclick="closeModal()" style="background:var(--bg3);border:1.5px solid var(--border2);width:34px;height:34px;border-radius:50%;color:var(--text2);font-size:16.5px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div id="m-title" style="font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;font-size:24.5px;color:var(--text);margin-bottom:3px;line-height:1.3;font-weight:600"></div>
+    <div id="m-en-title" style="font-size:13.5px;color:var(--text3);font-style:italic;margin-bottom:5px;letter-spacing:0.02em"></div>
+    <div id="m-sub" style="font-size:12px;color:var(--text3);margin-bottom:16px;letter-spacing:0.02em"></div>
+    <div id="m-awards-row" style="display:none;margin-bottom:14px;padding:10px 14px;background:var(--warm-lt);border-radius:14px;border:1px solid #5A4020">
+      <div style="font-size:10px;color:var(--warm);font-weight:600;letter-spacing:0.05em;margin-bottom:3px">🏆 得獎紀錄</div>
+      <div id="m-awards-text" style="font-size:12.5px;color:var(--text2);line-height:1.6"></div>
+    </div>
+    <div id="m-tags" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px"></div>
+    <div id="m-desc" style="font-size:14.5px;color:var(--text2);line-height:1.85;margin-bottom:22px;font-style:italic"></div>
+    <div class="stat-row">
+      <div class="stat-cell" style="border-right:1.5px solid var(--border2)">
+        <div id="m-imdb" class="stat-val" style="color:var(--warm)"></div>
+        <div class="stat-lbl">IMDB</div>
+      </div>
+      <div class="stat-cell" style="border-right:1.5px solid var(--border2)">
+        <div id="m-rt" class="stat-val" style="color:var(--rose)"></div>
+        <div class="stat-lbl">爛番茄</div>
+      </div>
+      <div class="stat-cell">
+        <div id="m-ott" class="stat-val" style="color:var(--blue);font-size:13.5px;line-height:1.4"></div>
+        <div class="stat-lbl">OTT平台</div>
+      </div>
+    </div>
+    <div id="m-score-row" style="display:none;margin-bottom:22px;padding:16px;border-radius:18px;border:1.5px solid var(--green-mid);background:var(--green-lt)">
+      <div style="font-size:13.5px;color:var(--green);font-weight:600;margin-bottom:6px;letter-spacing:0.04em">我的評分</div>
+      <div style="display:flex;align-items:baseline;gap:5px">
+        <span id="m-score-val" style="font-size:36.5px;font-weight:700"></span>
+        <span style="font-size:14.5px;color:var(--text3)">/10</span>
+      </div>
+    </div>
+    <div id="m-trailer-row" style="margin-bottom:10px;display:none">
+      <a id="m-trailer-link" href="#" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:50px;border:1.5px solid var(--rose);background:var(--rose-lt);color:var(--rose);font-size:14px;font-weight:600;text-decoration:none">▶ 觀看預告片</a>
+    </div>
+    <button id="m-watchlist-btn" onclick="toggleWatchlist(modalId);updateModal(modalId)" style="width:100%;padding:13px;border-radius:50px;font-size:14px;font-weight:600;border:1.5px solid var(--border2);background:var(--card2);color:var(--text2);margin-bottom:10px;cursor:pointer;transition:all 0.2s">🔖 加入想看清單</button>
+    <button id="m-watch-btn" class="cta-btn primary" onclick="toggleFromModal()"></button>
+  </div>
+</div>
+
+<!-- ── Rating Popup ── -->
+<div id="rating-modal" class="overlay center hidden" style="z-index:300">
+  <div class="rating-sheet pop-in" onclick="event.stopPropagation()">
+    <div style="text-align:center;margin-bottom:24px">
+      <div id="r-emoji" style="font-size:44px;margin-bottom:12px"></div>
+      <div id="r-title" style="font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;font-size:18.5px;color:var(--text);margin-bottom:2px;line-height:1.3;font-weight:600"></div>
+      <div id="r-en-title" style="font-size:12px;color:var(--text3);font-style:italic;margin-bottom:8px"></div>
+      <div style="font-size:13.5px;color:var(--text3);line-height:1.65">給這部電影評分<br>分數將持續優化你的推薦</div>
+    </div>
+    <div style="font-size:10.5px;color:var(--text3);text-align:center;margin-bottom:7px;letter-spacing:0.07em">不太喜歡</div>
+    <div class="score-grid">
+      <button class="score-btn low" ontouchstart="event.preventDefault();submitScore(1)" onclick="submitScore(1)">1</button>
+      <button class="score-btn low" ontouchstart="event.preventDefault();submitScore(2)" onclick="submitScore(2)">2</button>
+      <button class="score-btn low" ontouchstart="event.preventDefault();submitScore(3)" onclick="submitScore(3)">3</button>
+      <button class="score-btn low" ontouchstart="event.preventDefault();submitScore(4)" onclick="submitScore(4)">4</button>
+      <button class="score-btn mid" ontouchstart="event.preventDefault();submitScore(5)" onclick="submitScore(5)">5</button>
+    </div>
+    <div style="font-size:10.5px;color:var(--text3);text-align:center;margin:7px 0;letter-spacing:0.07em">喜歡</div>
+    <div class="score-grid" style="margin-bottom:22px">
+      <button class="score-btn mid" ontouchstart="event.preventDefault();submitScore(6)" onclick="submitScore(6)">6</button>
+      <button class="score-btn mid" ontouchstart="event.preventDefault();submitScore(7)" onclick="submitScore(7)">7</button>
+      <button class="score-btn high" ontouchstart="event.preventDefault();submitScore(8)" onclick="submitScore(8)">8</button>
+      <button class="score-btn high" ontouchstart="event.preventDefault();submitScore(9)" onclick="submitScore(9)">9</button>
+      <button class="score-btn high" ontouchstart="event.preventDefault();submitScore(10)" onclick="submitScore(10)">10</button>
+    </div>
+    <button onclick="submitScore(null)" class="cta-btn ghost" style="font-size:13.5px">略過評分</button>
+  </div>
+</div>
+
+<!-- ── Mood Check-in Modal ── -->
+<div id="mood-modal" class="overlay center hidden" style="z-index:200">
+  <div class="rating-sheet pop-in" style="max-height:88dvh;overflow-y:auto" onclick="event.stopPropagation()">
+
+    <!-- Step indicator -->
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:22px">
+      <div id="step-dot-1" style="width:28px;height:4px;border-radius:4px;background:var(--green);transition:all 0.3s"></div>
+      <div id="step-dot-2" style="width:8px;height:4px;border-radius:4px;background:var(--border2);transition:all 0.3s"></div>
+      <div id="step-dot-3" style="width:8px;height:4px;border-radius:4px;background:var(--border2);transition:all 0.3s"></div>
+    </div>
+
+    <!-- Step 1: 心情 -->
+    <div id="mood-step-1">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:30px;margin-bottom:10px">🌤</div>
+        <div style="font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;font-size:18px;color:var(--text);margin-bottom:6px;font-weight:600">今天的心情如何？</div>
+        <div style="font-size:12px;color:var(--text3)">選一個最接近的狀態</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px">
+        <button class="mood-opt" data-q="mood" data-v="開心愉悅" onclick="selectMoodOpt(this,'mood')">😊 開心愉悅</button>
+        <button class="mood-opt" data-q="mood" data-v="平靜放鬆" onclick="selectMoodOpt(this,'mood')">😌 平靜放鬆</button>
+        <button class="mood-opt" data-q="mood" data-v="有點疲憊" onclick="selectMoodOpt(this,'mood')">😮‍💨 有點疲憊</button>
+        <button class="mood-opt" data-q="mood" data-v="感性細膩" onclick="selectMoodOpt(this,'mood')">🥹 感性細膩</button>
+        <button class="mood-opt" data-q="mood" data-v="思緒紛亂" onclick="selectMoodOpt(this,'mood')">🌀 思緒紛亂</button>
+        <button class="mood-opt" data-q="mood" data-v="興奮期待" onclick="selectMoodOpt(this,'mood')">✨ 興奮期待</button>
+        <button class="mood-opt" data-q="mood" data-v="有點孤單" onclick="selectMoodOpt(this,'mood')">🌙 有點孤單</button>
+        <button class="mood-opt" data-q="mood" data-v="需要逃逸" onclick="selectMoodOpt(this,'mood')">🚪 需要逃逸</button>
+      </div>
+      <button id="mood-next-1" onclick="goMoodStep(2)" disabled style="width:100%;padding:13px;border-radius:50px;background:var(--green);color:var(--bg);border:none;font-size:14px;font-weight:600;opacity:0.4;transition:all 0.2s">下一題 →</button>
+    </div>
+
+    <!-- Step 2: 感受 -->
+    <div id="mood-step-2" style="display:none">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:30px;margin-bottom:10px">💭</div>
+        <div style="font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;font-size:18px;color:var(--text);margin-bottom:6px;font-weight:600">此刻的身心感受？</div>
+        <div style="font-size:12px;color:var(--text3)">可複選 1–2 個</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px">
+        <button class="mood-opt" data-q="feel" data-v="想被療癒" onclick="selectMoodOpt(this,'feel',true)">🌿 想被療癒</button>
+        <button class="mood-opt" data-q="feel" data-v="想動腦思考" onclick="selectMoodOpt(this,'feel',true)">🧠 想動腦思考</button>
+        <button class="mood-opt" data-q="feel" data-v="想哭一場" onclick="selectMoodOpt(this,'feel',true)">🫧 想哭一場</button>
+        <button class="mood-opt" data-q="feel" data-v="不想太沉重" onclick="selectMoodOpt(this,'feel',true)">☁️ 不想太沉重</button>
+        <button class="mood-opt" data-q="feel" data-v="想感受愛" onclick="selectMoodOpt(this,'feel',true)">🤍 想感受愛</button>
+        <button class="mood-opt" data-q="feel" data-v="想看美的畫面" onclick="selectMoodOpt(this,'feel',true)">🎨 想看美的畫面</button>
+        <button class="mood-opt" data-q="feel" data-v="想逃離現實" onclick="selectMoodOpt(this,'feel',true)">🌊 想逃離現實</button>
+        <button class="mood-opt" data-q="feel" data-v="想被振奮激勵" onclick="selectMoodOpt(this,'feel',true)">⚡ 想被振奮激勵</button>
+        <button class="mood-opt" data-q="feel" data-v="想探索靈性" onclick="selectMoodOpt(this,'feel',true)">🌀 想探索靈性</button>
+        <button class="mood-opt" data-q="feel" data-v="想看有深度的" onclick="selectMoodOpt(this,'feel',true)">🪨 想看有深度的</button>
+        <button class="mood-opt" data-q="feel" data-v="想感受神秘感" onclick="selectMoodOpt(this,'feel',true)">🌑 想感受神秘感</button>
+        <button class="mood-opt" data-q="feel" data-v="想學到東西" onclick="selectMoodOpt(this,'feel',true)">📖 想學到東西</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="goMoodStep(1)" style="padding:13px 18px;border-radius:50px;background:var(--card2);color:var(--text2);border:1.5px solid var(--border2);font-size:14px;font-weight:600;cursor:pointer">← 返回</button>
+        <button id="mood-next-2" onclick="goMoodStep(3)" disabled style="flex:1;padding:13px;border-radius:50px;background:var(--green);color:var(--bg);border:none;font-size:14px;font-weight:600;opacity:0.4;transition:all 0.2s">下一題 →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: 氛圍 -->
+    <div id="mood-step-3" style="display:none">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:30px;margin-bottom:10px">🎬</div>
+        <div style="font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;font-size:18px;color:var(--text);margin-bottom:6px;font-weight:600">想看什麼氛圍的電影？</div>
+        <div style="font-size:12px;color:var(--text3)">可複選 1–2 個</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px">
+        <button class="mood-opt" data-q="vibe" data-v="輕盈" onclick="selectMoodOpt(this,'vibe',true)">🪶 輕盈</button>
+        <button class="mood-opt" data-q="vibe" data-v="溫暖" onclick="selectMoodOpt(this,'vibe',true)">🕯 溫暖</button>
+        <button class="mood-opt" data-q="vibe" data-v="感人" onclick="selectMoodOpt(this,'vibe',true)">🌧 感人</button>
+        <button class="mood-opt" data-q="vibe" data-v="浪漫" onclick="selectMoodOpt(this,'vibe',true)">🌹 浪漫</button>
+        <button class="mood-opt" data-q="vibe" data-v="燒腦" onclick="selectMoodOpt(this,'vibe',true)">🔮 燒腦</button>
+        <button class="mood-opt" data-q="vibe" data-v="懸疑" onclick="selectMoodOpt(this,'vibe',true)">🕵️ 懸疑</button>
+        <button class="mood-opt" data-q="vibe" data-v="療癒" onclick="selectMoodOpt(this,'vibe',true)">🌿 療癒</button>
+        <button class="mood-opt" data-q="vibe" data-v="寂靜" onclick="selectMoodOpt(this,'vibe',true)">🌌 寂靜</button>
+        <button class="mood-opt" data-q="vibe" data-v="振奮" onclick="selectMoodOpt(this,'vibe',true)">⚡ 振奮</button>
+        <button class="mood-opt" data-q="vibe" data-v="刺激" onclick="selectMoodOpt(this,'vibe',true)">🔥 刺激</button>
+        <button class="mood-opt" data-q="vibe" data-v="深度" onclick="selectMoodOpt(this,'vibe',true)">🪨 深度</button>
+        <button class="mood-opt" data-q="vibe" data-v="靈性" onclick="selectMoodOpt(this,'vibe',true)">🌀 靈性</button>
+        <button class="mood-opt" data-q="vibe" data-v="神秘" onclick="selectMoodOpt(this,'vibe',true)">🌑 神秘</button>
+        <button class="mood-opt" data-q="vibe" data-v="知識性" onclick="selectMoodOpt(this,'vibe',true)">📖 知識性</button>
+        <button class="mood-opt" data-q="vibe" data-v="詩意" onclick="selectMoodOpt(this,'vibe',true)">🍃 詩意</button>
+        <button class="mood-opt" data-q="vibe" data-v="存在感" onclick="selectMoodOpt(this,'vibe',true)">🪞 存在感</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="goMoodStep(2)" style="padding:13px 18px;border-radius:50px;background:var(--card2);color:var(--text2);border:1.5px solid var(--border2);font-size:14px;font-weight:600;cursor:pointer">← 返回</button>
+        <button id="mood-submit" onclick="submitMoodCheckin()" disabled style="flex:1;padding:13px;border-radius:50px;background:var(--green);color:var(--bg);border:none;font-size:14px;font-weight:600;opacity:0.4;transition:all 0.2s">✦ 為我推薦</button>
+      </div>
+    </div>
+
+    <button onclick="closeMoodModal()" style="width:100%;margin-top:10px;padding:11px;border-radius:50px;border:1.5px solid var(--border2);background:none;color:var(--text3);font-size:13px">取消</button>
+  </div>
+</div>
+
+<!-- ── Mood History Modal ── -->
+<div id="history-modal" class="overlay center hidden" style="z-index:200" onclick="closeHistoryModal()">
+  <div style="background:var(--card);border-radius:24px;padding:24px 20px;width:calc(100% - 40px);max-width:360px;max-height:80dvh;overflow-y:auto;border:1.5px solid var(--border2)" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;font-size:18px;color:var(--text);font-weight:600">心情歷史記錄</div>
+      <button onclick="closeHistoryModal()" style="background:var(--bg3);border:1px solid var(--border2);width:30px;height:30px;border-radius:50%;color:var(--text2);font-size:14px">✕</button>
+    </div>
+    <div id="history-list"></div>
+  </div>
+</div>
+
+<style>
+.mood-opt{
+  padding:11px 8px;border-radius:14px;
+  border:1.5px solid var(--border2);
+  background:var(--card2);color:var(--text2);
+  font-size:12.5px;font-weight:500;
+  transition:all 0.18s;text-align:center;
+  cursor:pointer;
+}
+.mood-opt.selected{
+  background:var(--green-lt);
+  border-color:var(--green-mid);
+  color:var(--green);
+  font-weight:600;
+}
+</style>
+
+<script>
+const MOVIES=[
+  {id:1, zh:"楚門的世界",       en:"The Truman Show",             year:1998,director:"彼得威爾 Peter Weir",          genres:["哲學","反烏托邦","劇情"],        tags:["#哲學","#反烏托邦","#劇情片"],             imdb:8.2,rt:95, desc:"從小在電視節目中長大的楚門，生命中的每一刻都是被精心設計的劇本。直到某天，他開始察覺周遭的破綻——天空掉落燈具、陌生人的眼神、電台的雜音。這是一部關於自由、懷疑與勇氣的哲學寓言，結局那一扇門讓無數人久久無法回神。",ott:"Netflix TW",       emoji:"📺",isClassic:true,isNew:false,cast:"金凱瑞、艾德哈里斯、蘿拉琳妮",awards:"金球獎最佳男主角（喜劇）· 奧斯卡3項提名",trailer:"https://www.youtube.com/watch?v=dlnmQbPGuls"},
+  {id:2, zh:"Mr. Nobody",      en:"Mr. Nobody",                  year:2009,director:"賈克范多馬 Jaco Van Dormael",   genres:["哲學","科幻","非線性"],          tags:["#哲學","#科幻","#非線性敘事"],             imdb:7.8,rt:68, desc:"地球最後一個凡人Nemo Nobody，在生命終點回望三條因一個選擇而分歧的人生——跟隨父親還是母親？每一條路都有愛，都有遺憾，都有死亡。導演用非線性敘事將量子力學與人類情感融合，是一部需要沉靜下來反覆咀嚼的哲學詩篇。",ott:"Netflix TW",       emoji:"🌀",isClassic:true,isNew:false,cast:"傑瑞德萊托、黛安克魯格、莎拉波利",awards:"威尼斯未來電影獎 · 比利時電影大獎最佳影片",trailer:"https://www.youtube.com/watch?v=SmBpaWrmPbY"},
+  {id:3, zh:"花樣年華",         en:"In the Mood for Love",        year:2000,director:"王家衛 Wong Kar-wai",              genres:["愛情","劇情","慢節奏"],          tags:["#愛情","#劇情片","#慢節奏","#王家衛"],     imdb:8.1,rt:97, desc:"1960年代香港，張曼玉與梁朝偉飾演的兩個人，因各自的伴侶出軌而相識。他們壓抑著彼此的吸引，用旗袍與眼神代替語言，在狹窄的走廊與昏黃的燈光中緩慢燃燒。王家衛用慢動作與配樂構建了一個關於如果的世界，美得令人心碎。",ott:"MUBI / friDay",          emoji:"🕯️",isClassic:true,isNew:false,cast:"梁朝偉、張曼玉",awards:"坎城最佳男主角 · 坎城技術大獎 · 香港電影金像獎最佳影片",trailer:"https://www.youtube.com/watch?v=WJj9-t2A-_o"},
+  {id:4, zh:"La La Land",      en:"La La Land",                  year:2016,director:"達米恩查澤雷 Damien Chazelle",    genres:["愛情","音樂","劇情"],            tags:["#愛情","#音樂","#劇情片"],                 imdb:8.0,rt:91, desc:"洛杉磯，一個爵士樂手與一個懷抱演員夢的女孩相遇。他們在霓虹與星光中起舞，在分歧與選擇中成長。這部歌舞片不只是愛情故事，更是關於夢想的代價與錯過的溫柔悼念。結尾的另一個人生讓人在淚水中思考：選擇，究竟是什麼。",ott:"Netflix TW",       emoji:"🎷",isClassic:true,isNew:false,cast:"雷恩葛斯林、艾瑪史東",awards:"奧斯卡6項大獎含最佳導演·女主角 · 金球獎7項",trailer:"https://www.youtube.com/watch?v=0pdqf4P9MB8"},
+  {id:5, zh:"Her",             en:"Her",                         year:2013,director:"史派克瓊斯 Spike Jonze",        genres:["科幻","愛情","哲學"],            tags:["#科幻","#愛情","#哲學","#孤獨"],           imdb:8.0,rt:94, desc:"不遠的未來，西奧多愛上了他的AI作業系統Samantha。她沒有身體，卻比任何人更懂他的孤獨。史派克瓊斯以柔和的粉色未來都市，探問愛是否需要肉身、意識是否需要邊界。這是一部溫柔而令人心碎的愛情電影，也是對現代孤獨最精準的描繪。",ott:"Netflix TW",       emoji:"🤍",isClassic:true,isNew:false,cast:"瓦昆菲尼克斯、史嘉蕾喬韓森、艾美亞當斯",awards:"奧斯卡最佳原創劇本 · 金球獎最佳劇情片提名",trailer:"https://www.youtube.com/watch?v=WzV6mXIOVl4"},
+  {id:6, zh:"異星入境",         en:"Arrival",                     year:2016,director:"維倫紐夫 Denis Villeneuve",   genres:["科幻","哲學","非線性"],          tags:["#科幻","#哲學","#非線性敘事","#維倫紐夫"],  imdb:7.9,rt:94, desc:"外星飛船降落地球，語言學家Louise被派去嘗試溝通。隨著她學習外星語言，時間的感知開始改變。Denis Villeneuve以冷靜克制的鏡頭語言，將一個關於語言、時間與母愛的故事推向震撼人心的高潮。你以為你在看科幻片，卻在最後發現自己淚流滿面。",ott:"Netflix TW",       emoji:"🛸",isClassic:true,isNew:false,cast:"艾美亞當斯、傑瑞米雷納、佛瑞斯惠特克",awards:"奧斯卡8項提名 · 美國影評人協會最佳影片",trailer:"https://www.youtube.com/watch?v=tFMo3UJ4B4g"},
+  {id:7, zh:"愛在日落巴黎前",   en:"Before Sunset",               year:2004,director:"林克雷特 Richard Linklater",  genres:["愛情","劇情","對話"],            tags:["#愛情","#劇情片","#慢節奏","#林克雷特"],   imdb:8.1,rt:95, desc:"九年前的維也納，Jesse與Celine共度一夜後分離。九年後他們在巴黎書店重逢，只剩午後的幾個小時。兩人邊走邊談，談理想、談婚姻、談那個沒能赴約的自己。林克雷特用近乎即興的對話，捕捉了成年人在愛情面前最真實的掙扎與渴望。",ott:"MAX",           emoji:"🌇",isClassic:true,isNew:false,cast:"伊森霍克、茱莉蝶兒",awards:"奧斯卡最佳改編劇本提名 · 柏林影展競賽入圍",trailer:"https://www.youtube.com/watch?v=eKMRwOAWuHQ"},
+  {id:8, zh:"婚姻故事",         en:"Marriage Story",              year:2019,director:"諾亞鮑姆巴赫 Noah Baumbach",      genres:["劇情","愛情","現實"],            tags:["#劇情片","#愛情","#情感細膩"],             imdb:7.9,rt:95, desc:"一段婚姻正在結束，但愛並沒有完全消失。Noah Baumbach以私密而殘酷的視角，記錄了一對夫妻在離婚過程中的碰撞、傷害與理解。Adam Driver與Scarlett Johansson的對手戲令人窒息。那首Being Alive讓人在眼淚中重新思考親密關係的本質。",ott:"Netflix TW",       emoji:"💔",isClassic:true,isNew:false,cast:"亞當崔佛、史嘉蕾喬韓森、蘿拉鄧",awards:"奧斯卡6項提名 · 蘿拉鄧奪最佳女配角",trailer:"https://www.youtube.com/watch?v=9qlkjAMFLq8"},
+  {id:9, zh:"海上鋼琴師",       en:"The Legend of 1900",          year:1998,director:"托納多雷 Giuseppe Tornatore", genres:["劇情","音樂","靈性"],            tags:["#劇情片","#音樂","#靈性","#孤獨"],          imdb:8.1,rt:61, desc:"他生於船上，長於海洋，從未踏上陸地。1900是個天才鋼琴師，他的琴聲讓整艘船的人忘記了自己在哪裡。Giuseppe Tornatore以史詩般的格局，講述一個關於選擇邊界與定義自我的故事。那段他與爵士樂之父的對決，是電影史上最激動人心的音樂場景之一。",ott:"Netflix TW",       emoji:"🎹",isClassic:true,isNew:false,cast:"提姆羅斯、普路特泰勒文斯",awards:"英國電影學院獎最佳電影音樂 · 大衛迪納泰羅獎",trailer:"https://www.youtube.com/watch?v=NLhPfrk8GF0"},
+  {id:10,zh:"沙丘",             en:"Dune",                        year:2021,director:"維倫紐夫 Denis Villeneuve",   genres:["科幻","史詩","哲學"],            tags:["#科幻","#史詩","#哲學","#維倫紐夫"],        imdb:8.0,rt:83, desc:"保羅跟隨家族來到沙漠星球厄拉科斯，那裡有宇宙最珍貴的香料，也有最凶猛的沙蟲。Denis Villeneuve以令人屏息的視覺規模，將法蘭克赫伯特的科幻聖典搬上銀幕。這不只是一部太空史詩，更是關於命運、殖民與信仰的深刻哲學寓言。",ott:"MAX / Disney+ TW",           emoji:"🏜️",isClassic:true,isNew:false,cast:"提摩西夏勒梅、蕾貝卡弗格森、奧斯卡伊薩克",awards:"奧斯卡6項大獎含最佳攝影·剪輯·視效",trailer:"https://www.youtube.com/watch?v=8g18jFHCLXk"},
+  {id:11,zh:"銀翼殺手2049",     en:"Blade Runner 2049",           year:2017,director:"維倫紐夫 Denis Villeneuve",   genres:["科幻","哲學","慢節奏"],          tags:["#科幻","#哲學","#慢節奏","#攝影強"],        imdb:8.0,rt:88, desc:"複製人偵探K在荒廢的未來追查一個隱藏的秘密，卻逐漸質疑自己的記憶與存在。Roger Deakins的攝影將廢土美學推向極致，每一幀都是可以掛上牆的畫作。Denis Villeneuve的沉靜敘事讓這部續集超越前作，成為關於意識與靈魂最美麗的科幻詩篇。",ott:"Netflix TW",       emoji:"🌧️",isNew:false,cast:"雷恩葛斯林、哈里遜福特、安娜德阿瑪斯",awards:"奧斯卡最佳攝影·視覺效果 · 英國影藝學院4項",trailer:"https://www.youtube.com/watch?v=gCcx85zbxz4"},
+  {id:12,zh:"愛情不用翻譯",     en:"Lost in Translation",         year:2003,director:"蘇菲亞柯波拉 Sofia Coppola",      genres:["愛情","劇情","孤獨"],            tags:["#愛情","#劇情片","#孤獨","#餘韻深"],        imdb:7.7,rt:95, desc:"東京深夜的Park Hyatt酒店，好萊塢男星Bob與正在迷失人生方向的Charlotte相遇。他們不需要太多語言，只是在城市的喧囂中找到彼此的頻率。Sofia Coppola用漂浮感的鏡頭捕捉了異鄉的孤獨與連結，以及那些說不出口卻在最後一刻耳語的話。",ott:"Apple TV+ TW",     emoji:"🌃",isClassic:true,isNew:false,cast:"比爾墨瑞、史嘉蕾喬韓森",awards:"奧斯卡最佳原創劇本 · 金球獎最佳音樂喜劇影片",trailer:"https://www.youtube.com/watch?v=sU0oUXpBuK0"},
+  {id:13,zh:"以你的名字呼喚我", en:"Call Me By Your Name",        year:2017,director:"盧卡瓜達尼諾 Luca Guadagnino",    genres:["愛情","劇情","夏日"],            tags:["#愛情","#劇情片","#情感細膩","#攝影強"],   imdb:7.9,rt:95, desc:"義大利北部的夏日，17歲的Elio遇見了來訪的研究生Oliver。慾望與情感在陽光、桃子與古典音樂中緩慢發酵。Luca Guadagnino以細膩的感官電影語言，呈現了一段短暫卻刻骨銘心的初戀。父親在結尾的那段話，是近年電影中最溫柔也最令人動容的獨白之一。",ott:"Netflix TW",       emoji:"☀️",isNew:false,cast:"提摩西夏勒梅、阿米漢默、麥可史圖巴",awards:"奧斯卡最佳改編劇本 · 英國影藝學院4項提名",trailer:"https://www.youtube.com/watch?v=Z9AYPxH5NTM"},
+  {id:14,zh:"丹麥女孩",         en:"The Danish Girl",             year:2015,director:"湯姆霍伯 Tom Hooper",         genres:["劇情","傳記","身份認同"],        tags:["#劇情片","#身份認同","#情感細膩"],          imdb:7.1,rt:68, desc:"1920年代哥本哈根，畫家Einar意外穿上女裝，從此發現了自己真正的靈魂莉莉。這是世界上首位接受性別重置手術者的真實故事。Tom Hooper以細膩的美術與光線，描繪一個人對自我認同的勇敢追尋，以及妻子在愛與失去之間的艱難抉擇。",ott:"Netflix TW",       emoji:"🌸",isNew:false,cast:"艾迪瑞德曼、艾莉西亞薇坎德",awards:"奧斯卡最佳女配角（薇坎德）· 英國影藝學院5項提名",trailer:"https://www.youtube.com/watch?v=d85HVBgfHQg"},
+  {id:15,zh:"2046",            en:"2046",                        year:2004,director:"王家衛 Wong Kar-wai",              genres:["愛情","科幻","詩意"],            tags:["#愛情","#科幻","#王家衛","#詩意"],          imdb:7.5,rt:75, desc:"作家周慕雲在小說中虛構了一個未來列車2046，所有上車的人都是為了找回失去的記憶。王家衛將花樣年華的餘韻延伸成一部關於執念與放手的詩篇。章子怡、鞏俐、木村拓哉輪番出場，每段關係都是傷口，每個告別都是無聲的請求。",ott:"MUBI / friDay",          emoji:"🚂",isClassic:true,isNew:false,cast:"梁朝偉、章子怡、鞏俐、木村拓哉",awards:"坎城主競賽入圍 · 香港電影金像獎最佳影片",trailer:"https://www.youtube.com/watch?v=E2LejbZcOwQ"},
+  {id:16,zh:"千禧曼波",         en:"Millennium Mambo",            year:2001,director:"侯孝賢 Hou Hsiao-hsien",              genres:["劇情","台灣電影","詩意"],        tags:["#劇情片","#台灣電影","#詩意","#慢節奏"],   imdb:7.2,rt:82, desc:"千禧年前後的台北，薇薇在兩個男人之間漂浮，在便利商店與KTV之間消耗青春。侯孝賢以慢速攝影和霓虹燈光，構建了一個關於年輕迷失的詩意影像。舒淇的背影走進隧道，成為台灣電影最具代表性的視覺符號之一。旁白用未來式說著過去，時間在這裡失去了方向。",ott:"friDay 影音",       emoji:"💃",isNew:false,cast:"舒淇、段鈞豪",awards:"坎城某一視角單元入圍 · 金馬獎最佳導演",trailer:"https://www.youtube.com/watch?v=1QH_gflUFUI"},
+  {id:17,zh:"彗星來的那一夜",   en:"Coherence",                   year:2013,director:"詹姆斯沃德伯基特 James Ward Byrkit",  genres:["科幻","懸疑","哲學"],            tags:["#科幻","#懸疑","#哲學","#非線性敘事"],      imdb:7.2,rt:88, desc:"彗星飛過的夜晚，八個老友聚會，一切開始不對勁。平行宇宙的理論不再是課本上的字，而是在眼前發生。這部僅用五萬美元拍成的低成本科幻神作，用心理驚悚的方式探討身份認同與選擇的焦慮。燭光熄滅那一刻，你會開始懷疑身邊的每一個人。",ott:"Apple TV+",     emoji:"☄️",isNew:false,cast:"艾蜜莉鮑德溫、梅休賽里諾",awards:"翠貝卡影展最佳劇本 · 爛番茄88%好評",trailer:"https://www.youtube.com/watch?v=aD6DN42hP_4"},
+  {id:18,zh:"靈魂急轉彎",       en:"Soul",                        year:2020,director:"彼特達克特 Pete Docter",        genres:["動畫","哲學","靈性"],            tags:["#動畫","#哲學","#靈性","#皮克斯"],          imdb:8.1,rt:95, desc:"爵士樂手Joe就在夢想成真的前夕意外墜落，靈魂飄到了生命的彼端。他拼命想回到人間，卻在途中遇見了一個拒絕出生的靈魂22號。皮克斯以最成熟的姿態探問：生命的意義究竟是什麼？不是使命，不是夢想，而是那些平凡到被遺忘的當下時刻。",ott:"Disney+ TW",       emoji:"🎺",isClassic:true,isNew:false,cast:"傑米福克斯、蒂娜費（配音）",awards:"奧斯卡最佳動畫片·最佳原創配樂 · 金球獎最佳動畫",trailer:"https://www.youtube.com/watch?v=xOsLIiBStEs"},
+  {id:19,zh:"波希米亞狂想曲",   en:"Bohemian Rhapsody",           year:2018,director:"布萊恩辛格 Bryan Singer",       genres:["音樂","傳記","劇情"],            tags:["#音樂","#傳記","#劇情片"],                  imdb:7.9,rt:61, desc:"從移民之子到搖滾傳奇，Freddie Mercury用他獨一無二的嗓音征服了世界。這部傳記電影以1985年的Live Aid演唱會為核心，重現了Queen最輝煌的時代。Rami Malek的詮釋震撼人心，讓你在那21分鐘的舞台上，感受到音樂改變世界的力量。",ott:"Disney+ TW",       emoji:"🎤",isClassic:true,isNew:false,cast:"拉米馬利克、班哈迪、路克詹姆斯",awards:"奧斯卡最佳男主角（馬利克）· 4項奧斯卡大獎",trailer:"https://www.youtube.com/watch?v=mP0VHJYFOAU"},
+  {id:20,zh:"可憐的東西",       en:"Poor Things",                 year:2023,director:"藍西莫 Yorgos Lanthimos",   genres:["奇幻","劇情","女性覺醒"],        tags:["#奇幻","#劇情片","#女性主義","#攝影強"],   imdb:7.9,rt:92, desc:"科學家將一個死去女子的腦子換成嬰兒的腦，讓她重生。Bella以孩子般的純真探索世界，卻用成人的身體體驗慾望與自由。Yorgos Lanthimos用魚眼鏡頭與超現實美學，打造了一個維多利亞時代的女性覺醒寓言。Emma Stone的演技在荒誕中迸發出驚人的光芒。",ott:"Disney+ TW",       emoji:"⚗️",isNew:false,cast:"艾瑪史東、馬克魯法洛、威廉達佛",awards:"威尼斯金獅獎 · 奧斯卡最佳女主角·4項大獎",trailer:"https://www.youtube.com/watch?v=RlbR5N6veqw"},
+  {id:21,zh:"誰先愛上他的",     en:"Dear Ex",                     year:2018,director:"徐譽庭·許智彥 Hsu Yu-ting",       genres:["劇情","台灣電影","LGBT"],        tags:["#劇情片","#台灣電影","#LGBT","#情感細膩"],  imdb:7.3,rt:100,desc:"丈夫過世後，妻子發現保險金受益人竟是丈夫的同志情人阿傑。兩人在憤怒與不解中開始對峙，卻逐漸拼湊出那段被隱藏的愛情全貌。台灣電影難得以輕盈卻不輕浮的方式處理同志議題，笑中帶淚，最終給出了一個關於愛的寬容答案。",ott:"Netflix TW",       emoji:"🧧",isNew:false,cast:"謝盈萱、邱澤、陳如山",awards:"金馬獎最佳原創劇本 · 台北電影節最佳影片",trailer:"https://www.youtube.com/watch?v=kH3LKIPC8u4"},
+  {id:22,zh:"One Day",         en:"One Day",                     year:2023,director:"路克斯內林 Luke Snellin",       genres:["愛情","劇情","非線性"],          tags:["#愛情","#劇情片","#非線性敘事","#餘韻深"], imdb:7.4,rt:82, desc:"1988年的畢業夜，Emma與Dexter相遇。此後每年7月15日，鏡頭回到這兩個人的生命現場。有時相近，有時遠離，有時錯過彼此，有時又奇蹟般地靠近。用二十年的時間跨度訴說一段關於緣分、成長與遺憾的動人故事。結局讓人久久難以平復。",ott:"Netflix TW",       emoji:"📅",isNew:false,cast:"安布麗波特曼、里歐伍德爾",awards:"Netflix影集 · 原著改編自大衛尼可斯同名小說",trailer:"https://www.youtube.com/watch?v=2ai_xvCMHuE"},
+  {id:23,zh:"燃燒女子的畫像",   en:"Portrait of a Lady on Fire", year:2019,director:"薩安瑪 Céline Sciamma",    genres:["愛情","劇情","藝術"],            tags:["#愛情","#劇情片","#攝影強","#女性主義"],   imdb:8.1,rt:98, desc:"18世紀法國，年輕女畫師Marianne奉命為即將出嫁的貴族少女祕密作畫。在孤島上相處的日子裡，凝視變成渴望，渴望變成愛。Celine Sciamma拒絕男性視角，用純粹的女性目光構建了一段禁忌之愛。結尾那個望向觀眾的凝視，讓人久久無法移開眼睛。",ott:"MUBI",          emoji:"🔥",isNew:false,cast:"諾米梅蘭特、艾黛兒哈內爾",awards:"坎城最佳劇本·費比西獎 · 凱薩獎最佳攝影",trailer:"https://www.youtube.com/watch?v=jv5VnJbMJXM"},
+  {id:24,zh:"我只是個計程車司機",en:"A Taxi Driver",              year:2017,director:"張勳 Jang Hoon",               genres:["劇情","歷史","韓國"],            tags:["#劇情片","#韓國","#歷史","#探討人性"],      imdb:7.9,rt:97, desc:"1980年光州，一名首爾計程車司機為了賺錢，載著德國記者送入軍事封鎖區。他目睹了那場被政府掩蓋的屠殺，從一個事不關己的小市民，成為歷史的見證者。這部改編自真實事件的韓國電影，用平民視角還原了民主運動最血腥的一頁，感人至深。",ott:"Netflix",       emoji:"🚕",isNew:false,cast:"宋康昊、湯瑪斯克雷奇曼",awards:"青龍電影獎最佳影片 · 首爾獨立電影獎提名",trailer:"https://www.youtube.com/watch?v=v4sLuRAIH_4"},
+  {id:25,zh:"麥迪遜之橋",       en:"Bridges of Madison County",  year:1995,director:"克林伊斯威特 Clint Eastwood",     genres:["愛情","劇情","餘韻深"],          tags:["#愛情","#劇情片","#餘韻深","#慢節奏"],     imdb:7.6,rt:88, desc:"農婦Francesca的丈夫外出時，攝影師Robert出現，為她拍橋，也照亮了她沉睡的靈魂。四天的相遇，足以讓她此後一生帶著這段秘密生活。Clint Eastwood與Meryl Streep的對手戲克制而深情，那個她留在車裡看著他離去的場景，是電影史上最痛的選擇之一。",ott:"Prime Video",   emoji:"🌉",isClassic:true,isNew:false,cast:"梅莉史翠普、克林伊斯威特",awards:"奧斯卡最佳女主角提名（史翠普）· 金球獎提名",trailer:"https://www.youtube.com/watch?v=VLrQCm_I1gg"},
+  {id:26,zh:"阿飛正傳",         en:"Days of Being Wild",          year:1990,director:"王家衛 Wong Kar-wai",              genres:["劇情","愛情","港片"],            tags:["#劇情片","#愛情","#王家衛","#港片"],        imdb:7.8,rt:95, desc:"1960年代香港，旭仔是一個不羈的浪子，對愛情予取予求卻從不停留。他尋找生母，傷害身邊的女人，最終死在異鄉的火車上。王家衛以破碎的時間感與迷離的光線，開創了他獨特的電影美學。最後梁朝偉一分鐘的出場，成為香港電影最神秘也最迷人的謎。",ott:"MUBI / friDay",          emoji:"🦜",isClassic:true,isNew:false,cast:"張國榮、張曼玉、劉嘉玲、梁朝偉",awards:"香港電影金像獎最佳影片·導演·男主角",trailer:"https://www.youtube.com/watch?v=VNqpzKC6ULo"},
+  {id:27,zh:"新娘百分百",       en:"Notting Hill",                year:1999,director:"羅傑米契爾 Roger Michell",      genres:["愛情","喜劇","英國"],            tags:["#愛情","#浪漫喜劇"],                        imdb:7.1,rt:83, desc:"倫敦諾丁丘，一家小書店的老闆William意外邂逅了全球最紅的好萊塢女星Anna。普通與耀眼之間的距離，是媒體的包圍與身份的差距。那句我只是個女孩，站在男孩面前，請求他愛她，成為浪漫喜劇史上最動人的告白。這部電影至今仍是愛情電影的溫暖標竿。",ott:"Netflix",       emoji:"🌷",isNew:false,cast:"茱莉亞羅勃茲、休葛蘭",awards:"英國影藝學院最佳影片提名 · BAFTA最佳英國電影提名",trailer:"https://www.youtube.com/watch?v=RdTYpvyq6lU"},
+  {id:28,zh:"真愛每一天",       en:"About Time",                  year:2013,director:"理查柯提斯 Richard Curtis",     genres:["愛情","奇幻","劇情"],            tags:["#愛情","#奇幻","#靈性","#感人"],            imdb:7.8,rt:70, desc:"Tim發現自己有穿越時間的能力，他的第一個念頭是用來尋找愛情。他遇見了Mary，一次次回到過去修正錯誤，卻逐漸明白：真正的幸福不在於改變，而在於全然活在每一個平凡的當下。Richard Curtis用科幻包裹了對生命最溫柔的叩問，是關於珍惜的最佳電影之一。",ott:"Netflix",       emoji:"⏳",isNew:false,cast:"多姆納爾格里森、瑞秋麥亞當斯、比爾奈伊",awards:"英國獨立電影獎最佳影片提名",trailer:"https://www.youtube.com/watch?v=oRsni7cGDWM"},
+  {id:29,zh:"魔幻月光",         en:"Magic in the Moonlight",      year:2014,director:"伍迪艾倫 Woody Allen",        genres:["愛情","喜劇","魔幻"],            tags:["#愛情","#魔幻","#喜劇"],                    imdb:6.7,rt:46, desc:"1920年代法國，著名魔術師兼懷疑論者Stanley奉命揭穿靈媒Sophie的騙局。然而接觸越深，他越無法解釋她的神秘。伍迪艾倫以陽光與玫瑰構築了這個輕巧的哲學遊戲：理性與信仰的邊界在哪裡？愛情是否也是一種無法解釋的魔法？",ott:"Disney+",       emoji:"🌙",isNew:false,cast:"柯林佛斯、艾瑪史東、馬修布德瑞克",awards:"美國喜劇獎最佳喜劇女主角提名",trailer:"https://www.youtube.com/watch?v=VeYkCcHpd98"},
+  {id:30,zh:"辛德勒的名單",     en:"Schindler's List",            year:1993,director:"史蒂芬史匹柏 Steven Spielberg",   genres:["劇情","歷史","人性"],            tags:["#劇情片","#歷史","#探討人性"],              imdb:9.0,rt:98, desc:"二戰期間，德國商人奧斯卡辛德勒起初只想利用廉價的猶太勞工牟利，卻在目睹納粹暴行後傾盡家產拯救了逾千條人命。史蒂芬史匹柏以黑白影像拍攝這段真實歷史，只有小女孩的紅衣是彩色的。那個列表，那些名字，成為電影史上最沉重也最珍貴的人道主義宣言。",ott:"Prime Video TW",   emoji:"📜",isClassic:true,isNew:false,cast:"連恩尼遜、班金斯利、雷夫范恩斯",awards:"奧斯卡7項大獎含最佳影片·導演 · 坎城費比西獎",trailer:"https://www.youtube.com/watch?v=Cc42-W0RNAY"},
+  {id:31,zh:"天空之城",         en:"Castle in the Sky",           year:1986,director:"宮崎駿 Hayao Miyazaki",              genres:["動畫","奇幻","冒險"],            tags:["#動畫","#奇幻","#宮崎駿","#冒險"],          imdb:8.1,rt:96, desc:"少年巴斯與少女希達意外相遇，被捲入尋找傳說天空浮城拉普達的冒險。宮崎駿在1986年打造了這部動作冒險史詩，蒸汽龐克的美學、久石讓的音樂，以及那句巴魯斯的咒語，成為幾代人共同的童年記憶。這是一首關於勇氣、友誼與告別文明的壯闊詩篇。",ott:"Disney+ TW",       emoji:"🏰",isClassic:true,isNew:false,cast:"田中真弓、橫澤啟子（日文配音）",awards:"大藤信郎獎 · 日本電影學院獎最佳動畫",trailer:"https://www.youtube.com/watch?v=DEimhcPIkDY"},
+  {id:32,zh:"魔女宅急便",       en:"Kiki's Delivery Service",    year:1989,director:"宮崎駿 Hayao Miyazaki",              genres:["動畫","奇幻","成長"],            tags:["#動畫","#奇幻","#宮崎駿","#成長"],          imdb:7.9,rt:98, desc:"13歲的小女巫琪琪按照傳統獨自出發，帶著黑貓吉吉來到陌生的港口城市。她用飛行的能力開展快遞服務，卻在成長過程中失去了魔法。宮崎駿以溫柔的筆觸描繪獨立與自我認同的主題：有時候，你只需要相信自己，魔法自然會回來。",ott:"Disney+ TW",       emoji:"🧹",isClassic:true,isNew:false,cast:"高山南、佐久間レイ（日文配音）",awards:"日本電影學院獎最佳動畫 · 大藤信郎獎",trailer:"https://www.youtube.com/watch?v=4bG17OkO6-k"},
+  {id:33,zh:"史丹佛監獄實驗",   en:"The Stanford Prison Experiment",year:2015,director:"凱爾艾瓦雷茲 Kyle Patrick Alvarez",genres:["劇情","心理","探討人性"],   tags:["#劇情片","#探討人性","#心理","#真實事件"],  imdb:7.1,rt:81, desc:"1971年，心理學家招募學生隨機分配為囚犯與獄警。原本計畫兩週的實驗，在第六天被迫終止。真實事件改編的這部電影，赤裸裸展示了權力如何在幾天內腐化一個人。觀看過程令人不安，因為你無法確定換成自己，結果是否會不同。",ott:"Prime Video",   emoji:"🔒",isNew:false,cast:"畢利克魯德普、邁可安加拉諾、埃茲拉米勒",awards:"日舞影展特別評審獎",trailer:"https://www.youtube.com/watch?v=2GaLe3GKfzQ"},
+  {id:34,zh:"愛在黎明破曉前",   en:"Before Sunrise",              year:1995,director:"林克雷特 Richard Linklater",  genres:["愛情","劇情","對話"],            tags:["#愛情","#劇情片","#慢節奏","#林克雷特"],   imdb:8.1,rt:100,desc:"1994年，美國男孩Jesse在歐洲火車上邂逅法國女孩Celine。他們在維也納下車，決定共度一夜。林克雷特以近乎即時的敘事記錄了兩人漫步城市的對話，關於死亡、愛情、神明與宿命。這是電影史上最美麗的相遇，也是一個關於勇氣的邀請。",ott:"MAX",           emoji:"🌅",isClassic:true,isNew:false,cast:"伊森霍克、茱莉蝶兒",awards:"柏林影展最佳導演銀熊獎 · 奧斯卡最佳原著劇本提名",trailer:"https://www.youtube.com/watch?v=x4VQzn5Bq0o"},
+  {id:35,zh:"愛在午夜希臘時",   en:"Before Midnight",             year:2013,director:"林克雷特 Richard Linklater",  genres:["愛情","劇情","現實"],            tags:["#愛情","#劇情片","#慢節奏","#林克雷特"],   imdb:7.9,rt:98, desc:"Jesse與Celine在希臘的橄欖樹下，婚姻的現實取代了年輕的浪漫。他們在旅館房間裡爭吵，那些曾經讓彼此相愛的特質，如今成為傷害的武器。林克雷特三部曲最成熟也最殘酷的一部，讓你看見愛情長跑之後，兩個人必須面對的真實。",ott:"MAX",           emoji:"🌊",isClassic:true,isNew:false,cast:"伊森霍克、茱莉蝶兒",awards:"奧斯卡最佳改編劇本提名 · 英國影藝學院提名",trailer:"https://www.youtube.com/watch?v=GlnNE0FCCAQ"},
+  {id:36,zh:"春光乍洩",         en:"Happy Together",              year:1997,director:"王家衛 Wong Kar-wai",              genres:["愛情","劇情","港片"],            tags:["#愛情","#劇情片","#王家衛","#LGBT"],        imdb:7.8,rt:96, desc:"黎耀輝與何寶榮從香港來到阿根廷，想要一個全新的開始。他們分了又合，合了又分，在異鄉的孤獨中互相折磨又依賴。王家衛以布宜諾斯艾利斯的探戈節奏，構建了一段關於離不開卻待不住的愛情。那個永遠流瀉的瀑布，是兩人永遠抵達不了的地方。",ott:"MUBI / friDay",          emoji:"🌎",isClassic:true,isNew:false,cast:"梁朝偉、張國榮、張震",awards:"坎城最佳導演 · 香港電影金像獎最佳影片",trailer:"https://www.youtube.com/watch?v=mINF0Rw7p4E"},
+  {id:37,zh:"沙丘：第二部",     en:"Dune: Part Two",              year:2024,director:"維倫紐夫 Denis Villeneuve",   genres:["科幻","史詩","哲學"],            tags:["#科幻","#史詩","#哲學","#維倫紐夫"],        imdb:8.5,rt:93, desc:"保羅加入弗雷曼人，與Chani並肩作戰，同時被族人視為彌賽亞。他在信仰與理智、愛情與命運之間撕裂。Denis Villeneuve以更黑暗、更複雜的格局完成史詩的後半段。沙漠的攝影震撼人心，而故事的走向讓人看見英雄主義背後潛藏的危險。",ott:"MAX / Disney+ TW",           emoji:"🌑",isNew:true,cast:"提摩西夏勒梅、芙蘿倫絲珮姬、蕾貝卡弗格森",awards:"奧斯卡5項提名 · 英國影藝學院最佳特效",trailer:"https://www.youtube.com/watch?v=Way9Dexny3w"},
+  {id:38,zh:"過往人生",         en:"Past Lives",                  year:2023,director:"宋政恩 Celine Song",        genres:["愛情","劇情","餘韻深"],          tags:["#愛情","#劇情片","#餘韻深","#情感細膩"],   imdb:7.9,rt:98, desc:"Na Young與Hae Sung是首爾的青梅竹馬，在她移民加拿大後失去聯絡。12年後，24年後，命運讓他們一次次重新相見。但生命已經走向不同的方向。Celine Song以緣分這個韓語概念為核心，拍出了一部關於未竟之事與選擇代價的溫柔傑作。",ott:"Apple TV+ TW",     emoji:"🌙",isNew:true,cast:"格蕾塔李、劉台午、約翰葛雷尼",awards:"奧斯卡最佳影片·最佳原著劇本提名 · 獨立精神獎最佳影片",trailer:"https://www.youtube.com/watch?v=kA7-XoQMHEE"},
+  {id:39,zh:"奧本海默",         en:"Oppenheimer",                 year:2023,director:"諾蘭 Christopher Nolan",  genres:["劇情","歷史","哲學"],            tags:["#劇情片","#歷史","#哲學","#非線性敘事"],   imdb:8.3,rt:93, desc:"羅伯特奧本海默領導曼哈頓計畫，在沙漠中製造出了足以毀滅世界的武器。然後他必須活在那個選擇裡。Christopher Nolan以非線性的時間結構，將科學、政治、道德與個人命運交織成一部震撼的歷史鉅作。那一聲爆炸之後的沉默，是電影史上最沉重的五秒。",ott:"Netflix TW",       emoji:"☢️",isNew:true,cast:"席尼墨菲、艾蜜莉布朗、小勞勃道尼",awards:"奧斯卡7項大獎含最佳影片·導演·男主角",trailer:"https://www.youtube.com/watch?v=uYPbbksJxIg"},
+  {id:40,zh:"機器人之夢",       en:"Robot Dreams",                year:2023,director:"帕布羅貝爾格 Pablo Berger",       genres:["動畫","愛情","哲學"],            tags:["#動畫","#愛情","#哲學","#餘韻深"],          imdb:7.7,rt:98, desc:"紐約，一隻狗與一個機器人成為了最好的朋友。然後他們分離了。Pablo Berger以無對白的動畫，用簡單的線條和色彩，訴說了一個關於等待、遺忘與繼續生活的故事。沒有一句台詞，卻能讓你在沉默中落淚。這是近年最純粹的動畫電影，也是最懂大人心的作品。",ott:"Netflix TW",       emoji:"🤖",isNew:true,cast:"無對白動畫",awards:"奧斯卡最佳動畫片提名 · 坎城導演雙週入圍",trailer:"https://www.youtube.com/watch?v=RBnSHJHIB0E"},
+  {id:41,zh:"怪物",             en:"Monster",                     year:2023,director:"是枝裕和 Hirokazu Kore-eda",            genres:["劇情","懸疑","哲學"],            tags:["#劇情片","#懸疑","#哲學","#非線性敘事"],   imdb:7.8,rt:92, desc:"一個男孩的奇怪行為，讓母親、老師與校長各自給出了截然不同的解釋。是枝裕和以三段式敘事，讓同一個事件在不同視角下呈現完全不同的面貌。當最後的真相浮現，你才明白那個怪物從一開始就不是你以為的那個。坂本龍一的遺作配樂令人心碎。",ott:"Netflix TW",       emoji:"🧩",isNew:true,cast:"安藤櫻、永山瑛太、黑川想矢",awards:"坎城最佳劇本·費比西獎 · 坎城酷兒棕櫚獎",trailer:"https://www.youtube.com/watch?v=eFkqNKT2_4U"},
+  {id:42,zh:"我想結束這一切",   en:"I'm Thinking of Ending Things",year:2020,director:"查理考夫曼 Charlie Kaufman",  genres:["哲學","懸疑","非線性"],          tags:["#哲學","#懸疑","#非線性敘事","#慢節奏"],   imdb:6.8,rt:81, desc:"一個女孩隨男友前往他父母在雪地中的農場，全程心裡一直有個聲音說著我想結束這一切。Charlie Kaufman以夢境邏輯構建這部極難歸類的電影，現實與幻想不斷滲透交換，身份與記憶逐漸失去輪廓。這是一部需要放棄看懂的執念，才能真正感受到的作品。",ott:"Netflix",       emoji:"❄️",isNew:false,cast:"傑西巴克利、傑西普萊蒙、大衛休里斯",awards:"威尼斯主競賽入圍 · 獨立精神獎提名",trailer:"https://www.youtube.com/watch?v=0NZPSC-zrSI"},
+  {id:43,zh:"時時刻刻",         en:"The Hours",                   year:2002,director:"史蒂芬達爾卓 Stephen Daldry",     genres:["劇情","哲學","女性"],            tags:["#劇情片","#哲學","#女性主義","#非線性敘事"],imdb:7.5,rt:81, desc:"1923年的吳爾芙，1951年懷孕的主婦，2001年紐約的出版社編輯。三個女人，三個時代，被同一本書與同一種對生命的疲倦連結。Stephen Daldry以精準的平行剪接，探索女性在不同時代面對存在困境時的選擇與抵抗。三位影后同台，是電影史的奇蹟。",ott:"Prime Video",   emoji:"📖",isNew:false,cast:"梅莉史翠普、茱莉安摩爾、妮可基嫚",awards:"奧斯卡最佳女主角（基嫚）· 柏林金熊獎",trailer:"https://www.youtube.com/watch?v=Q4X80fxPTPk"},
+  {id:44,zh:"The Substance",   en:"The Substance",               year:2024,director:"法傑特 Coralie Fargeat",    genres:["科幻","恐怖","女性覺醒"],        tags:["#科幻","#女性主義","#攝影強","#驚悚"],      imdb:7.3,rt:89, desc:"一名女星服用神秘物質創造出「更好的自己」，身體恐怖包裹的女性凝視批判。",ott:"MUBI",          emoji:"💉",isNew:true,cast:"黛咪摩兒、瑪格麗特庫利",awards:"坎城最佳劇本 2024",trailer:"https://www.youtube.com/watch?v=EEOCIslDPCc"},
+  {id:45,zh:"過去",             en:"The Past",                    year:2013,director:"法哈蒂 Asghar Farhadi",     genres:["劇情","家庭","現實"],            tags:["#劇情片","#情感細膩","#現實主義"],          imdb:7.8,rt:97, desc:"伊朗男子Ahmad回到巴黎辦理離婚，卻發現前妻新男友的家庭陷入複雜危機。法哈蒂以精密的劇本結構，讓每個新資訊都推翻你對角色的判斷。沒有壞人，只有彼此傷害的普通人。這是關於溝通失敗、誤解積累與人際關係中無處不在的灰色地帶的深刻電影。",ott:"MUBI",          emoji:"🏠",isNew:false,cast:"阿里莫沙法、貝芮妮絲貝喬、塔哈拉希姆",awards:"坎城最佳女主角（貝喬）· 法國凱薩獎5項提名",trailer:"https://www.youtube.com/watch?v=gDfKGbF0jNY"},
+  {id:46, zh:"愛在羅馬",           en:"To Rome with Love",            year:2012,director:"伍迪艾倫 Woody Allen",        genres:["愛情","喜劇","魔幻"],             tags:["#愛情","#喜劇","#魔幻","#輕盈"],            imdb:6.3,rt:44,  desc:"四段交織的羅馬愛情故事，伍迪艾倫式的輕盈哲學與城市浪漫。",                    ott:"Disney+",       emoji:"🏛️",isNew:false,cast:"羅貝托貝尼尼、艾莉森珍妮、伍迪艾倫",awards:"美國喜劇獎提名",trailer:"https://www.youtube.com/watch?v=JDLwFuTN0IE"},
+  {id:47, zh:"愛在午夜希臘時",     en:"Before Midnight",              year:2013,director:"林克雷特 Richard Linklater",  genres:["愛情","劇情","現實"],             tags:["#愛情","#劇情片","#慢節奏","#林克雷特"],    imdb:7.9,rt:98,  desc:"Jesse與Celine在希臘的橄欖樹下，婚姻的現實取代了年輕的浪漫。他們在旅館房間裡爭吵，那些曾經讓彼此相愛的特質，如今成為傷害的武器。林克雷特三部曲最成熟也最殘酷的一部，讓你看見愛情長跑之後，兩個人必須面對的真實。",       ott:"MAX",           emoji:"🌊",isClassic:true,isNew:false,cast:"伊森霍克、茱莉蝶兒",awards:"奧斯卡最佳改編劇本提名 · 英國影藝學院提名",trailer:"https://www.youtube.com/watch?v=GlnNE0FCCAQ"},
+  {id:48, zh:"愛在黎明破曉前",     en:"Before Sunrise",               year:1995,director:"林克雷特 Richard Linklater",  genres:["愛情","劇情","對話"],             tags:["#愛情","#劇情片","#慢節奏","#林克雷特"],    imdb:8.1,rt:100, desc:"1994年，美國男孩Jesse在歐洲火車上邂逅法國女孩Celine。他們在維也納下車，決定共度一夜。林克雷特以近乎即時的敘事記錄了兩人漫步城市的對話，關於死亡、愛情、神明與宿命。這是電影史上最美麗的相遇，也是一個關於勇氣的邀請。",    ott:"MAX",           emoji:"🌅",isClassic:true,isNew:false,cast:"伊森霍克、茱莉蝶兒",awards:"柏林影展最佳導演銀熊獎 · 奧斯卡最佳原著劇本提名",trailer:"https://www.youtube.com/watch?v=x4VQzn5Bq0o"},
+  {id:49, zh:"春光乍洩",           en:"Happy Together",               year:1997,director:"王家衛 Wong Kar-wai",              genres:["愛情","劇情","港片"],             tags:["#愛情","#劇情片","#王家衛","#LGBT"],        imdb:7.8,rt:96,  desc:"黎耀輝與何寶榮從香港來到阿根廷，想要一個全新的開始。他們分了又合，合了又分，在異鄉的孤獨中互相折磨又依賴。王家衛以布宜諾斯艾利斯的探戈節奏，構建了一段關於離不開卻待不住的愛情。那個永遠流瀉的瀑布，是兩人永遠抵達不了的地方。",                 ott:"MUBI / friDay",          emoji:"🌎",isClassic:true,isNew:false,cast:"梁朝偉、張國榮、張震",awards:"坎城最佳導演 · 香港電影金像獎最佳影片",trailer:"https://www.youtube.com/watch?v=mINF0Rw7p4E"},
+  {id:50, zh:"重慶森林",           en:"Chungking Express",            year:1994,director:"王家衛 Wong Kar-wai",              genres:["愛情","劇情","港片"],             tags:["#愛情","#劇情片","#王家衛","#詩意"],        imdb:8.1,rt:96,  desc:"香港都市中兩段平行的愛情與失落，王家衛最即興也最迷人的城市詩。",                 ott:"MUBI / friDay",          emoji:"🍍",isClassic:true,isNew:false,cast:"林青霞、梁朝偉、王菲、金城武",awards:"香港電影金像獎最佳導演提名 · 費比西獎",trailer:"https://www.youtube.com/watch?v=lBDHsHJMGBM"},
+  {id:51, zh:"墮落天使",           en:"Fallen Angels",                year:1995,director:"王家衛 Wong Kar-wai",              genres:["劇情","愛情","港片"],             tags:["#劇情片","#王家衛","#港片","#詩意"],        imdb:7.6,rt:82,  desc:"香港深夜的殺手與孤獨靈魂，王家衛最黑暗也最浪漫的城市碎片。",                    ott:"MUBI / friDay",          emoji:"🌃",isNew:false,cast:"李嘉欣、黎明、金城武",awards:"香港電影金像獎最佳攝影提名",trailer:"https://www.youtube.com/watch?v=kT5KWXX3xLg"},
+  {id:52, zh:"東邪西毒",           en:"Ashes of Time",                year:1994,director:"王家衛 Wong Kar-wai",              genres:["劇情","武俠","詩意"],             tags:["#劇情片","#王家衛","#詩意","#慢節奏"],      imdb:7.5,rt:81,  desc:"武林邊緣的記憶與遺忘，王家衛以武俠為殼探索人心中最深的執念。",                  ott:"MUBI / friDay",          emoji:"🏜️",isNew:false,cast:"張國榮、林青霞、梁朝偉、張曼玉",awards:"香港電影金像獎最佳攝影",trailer:"https://www.youtube.com/watch?v=B7GaS5GRpvM"},
+  {id:53, zh:"情書",               en:"Love Letter",                  year:1995,director:"岩井俊二 Shunji Iwai",            genres:["愛情","劇情","日本"],             tags:["#愛情","#劇情片","#餘韻深","#情感細膩"],    imdb:7.8,rt:92,  desc:"一封寄給死去初戀的信意外收到回音，跨越生死的純粹思念令人心碎。",                 ott:"MUBI",          emoji:"✉️",isNew:false,cast:"中山美穗、柏原崇",awards:"日本電影學院獎最佳女主角",trailer:"https://www.youtube.com/watch?v=GFYYBxb-DwA"},
+  {id:54, zh:"燕尾蝶",             en:"Swallowtail Butterfly",        year:1996,director:"岩井俊二 Shunji Iwai",            genres:["劇情","日本","詩意"],             tags:["#劇情片","#詩意","#日本","#慢節奏"],        imdb:7.5,rt:78,  desc:"虛構城市中移民的夢與失落，岩井俊二最具野心的詩意社會寓言。",                    ott:"MUBI",          emoji:"🦋",isNew:false,cast:"伊藤步、三上博史",awards:"日本電影學院獎提名",trailer:"https://www.youtube.com/watch?v=4jyOkB3XSXY"},
+  {id:55, zh:"四月物語",           en:"April Story",                  year:1998,director:"岩井俊二 Shunji Iwai",            genres:["愛情","劇情","日本"],             tags:["#愛情","#劇情片","#輕盈","#詩意"],          imdb:7.4,rt:85,  desc:"女孩為了喜歡的人來到同一所大學，岩井俊二最清透輕盈的暗戀詩篇。",                 ott:"MUBI",          emoji:"🌸",isNew:false,cast:"松隆子、田邊誠一",awards:"日本電影學院獎最佳女主角提名",cast:"松隆子、田邊誠一",awards:"日本電影學院獎最佳女主角提名",trailer:"https://www.youtube.com/watch?v=W79jEEdTi1U"},
+  {id:56, zh:"挪威的森林",         en:"Norwegian Wood",               year:2010,director:"陳英雄 Trần Anh Hùng",              genres:["愛情","劇情","日本"],             tags:["#愛情","#劇情片","#慢節奏","#餘韻深"],      imdb:7.0,rt:57,  desc:"村上春樹原著改編，青春中的愛與失去，死亡與生存的沉靜敘事。",                    ott:"Netflix",       emoji:"🌲",isNew:false,cast:"松山研一、菊地凜子、水原希子",awards:"威尼斯主競賽入圍",cast:"松山研一、菊地凜子、水原希子",awards:"威尼斯主競賽入圍 · 日本電影學院獎提名",trailer:"https://www.youtube.com/watch?v=VJLUN0ZFbFY"},
+  {id:57, zh:"最好的時光",         en:"Three Times",                  year:2005,director:"侯孝賢 Hou Hsiao-hsien",              genres:["劇情","台灣電影","詩意"],         tags:["#劇情片","#台灣電影","#詩意","#慢節奏"],    imdb:7.4,rt:88,  desc:"三個時代、三段愛情，侯孝賢用光影凝視台灣人心中最溫柔的記憶。",                  ott:"Netflix",       emoji:"🕰️",isNew:false,cast:"舒淇、張震、張靚穎",awards:"金馬獎最佳導演提名 · 坎城主競賽入圍"},
+  {id:58, zh:"珈琲時光",           en:"Café Lumière",                 year:2003,director:"侯孝賢 Hou Hsiao-hsien",              genres:["劇情","日本","詩意"],             tags:["#劇情片","#詩意","#慢節奏","#寂靜"],        imdb:7.2,rt:84,  desc:"東京的日常與記憶，侯孝賢向小津安二郎致敬的靜謐城市凝視。",                      ott:"MUBI",          emoji:"☕",isNew:false,cast:"一青窈、淺野忠信",awards:"日本電影學院獎提名 · 小津安二郎百年紀念作"},
+  {id:59, zh:"悲情城市",           en:"A City of Sadness",            year:1989,director:"侯孝賢 Hou Hsiao-hsien",              genres:["劇情","歷史","台灣電影"],         tags:["#劇情片","#歷史","#台灣電影","#慢節奏"],    imdb:7.9,rt:97,  desc:"二二八事件下一個家族的離散，台灣電影史最重要的歷史傷痛書寫。",                  ott:"Netflix",       emoji:"🏮",isClassic:true,isNew:false,cast:"梁朝偉、辛樹芬、陳松勇",awards:"威尼斯金獅獎 · 費比西獎",trailer:"https://www.youtube.com/watch?v=Ht6KXx1a7WA"},
+  {id:60, zh:"牯嶺街少年殺人事件", en:"A Brighter Summer Day",       year:1991,director:"楊德昌 Edward Yang",              genres:["劇情","歷史","台灣電影"],         tags:["#劇情片","#歷史","#台灣電影","#探討人性"],  imdb:8.1,rt:98,  desc:"1960年代台北少年的青春與暴力，楊德昌四小時的台灣史詩鉅作。",                    ott:"Criterion",     emoji:"🔪",isClassic:true,isNew:false,cast:"張震、楊靜怡、張國柱",awards:"金馬獎最佳影片·導演·男配角 · 亞太電影節最佳影片",trailer:"https://www.youtube.com/watch?v=iFh07tqOLvI",trailer:"https://www.youtube.com/watch?v=iFh07tqOLvI"},
+  {id:61, zh:"一一",               en:"Yi Yi: A One and a Two",       year:2000,director:"楊德昌 Edward Yang",              genres:["劇情","家庭","台灣電影"],         tags:["#劇情片","#台灣電影","#慢節奏","#探討人性"],imdb:8.1,rt:96,  desc:"台北一家三代的生命切面，楊德昌關於時間與人生意義的終極思考。",                  ott:"Criterion",     emoji:"👁️",isClassic:true,isNew:false,cast:"吳念真、金燕玲、張洋洋",awards:"坎城最佳導演 · 美國影評人協會十大佳片",trailer:"https://www.youtube.com/watch?v=4-Jqr4k5Okw"},
+  {id:62, zh:"海灘的一天",         en:"That Day on the Beach",        year:1983,director:"楊德昌 Edward Yang",              genres:["劇情","愛情","台灣電影"],         tags:["#劇情片","#台灣電影","#情感細膩","#非線性"], imdb:7.6,rt:90, desc:"兩個女人的重逢串起各自對婚姻與自由的追問，楊德昌最早的女性書寫。",               ott:"Criterion",     emoji:"🌊",isNew:false,cast:"胡因夢、張艾嘉",awards:"金馬獎最佳導演提名"},
+  {id:63, zh:"末路狂花",           en:"Thelma & Louise",              year:1991,director:"雷利史考特 Ridley Scott",        genres:["劇情","公路","女性覺醒"],         tags:["#劇情片","#女性主義","#公路","#振奮"],       imdb:7.5,rt:83,  desc:"兩個女人的逃亡之旅成為自由與反抗的傳奇，女性電影的永恆經典。",                  ott:"Prime Video",   emoji:"🚗",isClassic:true,isNew:false,cast:"蘇珊莎蘭登、吉娜戴維斯、布萊德彼特",awards:"奧斯卡最佳導演·女主角提名",cast:"蘇珊莎蘭登、吉娜戴維斯、布萊德彼特",awards:"奧斯卡最佳導演·女主角提名 · 坎城費比西獎",trailer:"https://www.youtube.com/watch?v=oEBWcRTiDa0",trailer:"https://www.youtube.com/watch?v=oEBWcRTiDa0"},
+  {id:64, zh:"鋼琴師和她的情人",   en:"The Piano",                    year:1993,director:"珍康萍 Jane Campion",        genres:["劇情","愛情","藝術"],             tags:["#劇情片","#愛情","#攝影強","#女性主義"],    imdb:7.5,rt:96,  desc:"19世紀啞女與鋼琴的情慾故事，坎城金棕櫚的壓抑與解放。",                          ott:"MUBI",          emoji:"🎹",isClassic:true,isNew:false,cast:"霍利亨特、哈維凱托、山姆尼爾",awards:"坎城金棕櫚·最佳女主角 · 奧斯卡最佳女主角·劇本",cast:"霍利亨特、哈維凱托、山姆尼爾",awards:"坎城金棕櫚·最佳女主角 · 奧斯卡最佳女主角·劇本",trailer:"https://www.youtube.com/watch?v=GJbkUMz4MJ0"},
+  {id:65, zh:"窗外有藍天",         en:"A Room with a View",           year:1985,director:"詹姆斯艾佛利 James Ivory",         genres:["愛情","劇情","英國"],             tags:["#愛情","#劇情片","#浪漫","#攝影強"],        imdb:7.6,rt:98,  desc:"英國女孩在義大利邂逅自由靈魂，福斯特原著改編的典雅愛情覺醒。",                  ott:"MUBI",          emoji:"🪟",isNew:false,cast:"海倫娜寶漢卡特、丹尼爾戴路易斯、茱麗葉史蒂文森",awards:"英國影藝學院7項提名含最佳影片"},
+  {id:66, zh:"看得見風景的房間",   en:"Maurice",                      year:1987,director:"詹姆斯艾佛利 James Ivory",         genres:["愛情","劇情","LGBT"],             tags:["#愛情","#劇情片","#LGBT","#情感細膩"],       imdb:7.4,rt:96, desc:"20世紀初英國男子的同性愛情與社會壓抑，溫柔而勇敢的愛情宣言。",                  ott:"MUBI",          emoji:"🌿",isNew:false,cast:"海倫娜寶漢卡特、丹尼爾戴路易斯",awards:"英國影藝學院7項提名含最佳影片",trailer:"https://www.youtube.com/watch?v=Oqg_DhPiChY"},
+  {id:67, zh:"斷背山",             en:"Brokeback Mountain",           year:2005,director:"李安 Ang Lee",             genres:["愛情","劇情","LGBT"],             tags:["#愛情","#劇情片","#LGBT","#餘韻深"],        imdb:7.7,rt:87,  desc:"兩個牛仔在山中燃起的愛，跨越二十年的壓抑與思念，李安最動人的愛情悲劇。",      ott:"Netflix TW",       emoji:"⛰️",isClassic:true,isNew:false,cast:"希斯萊傑、傑克葛倫霍、蜜雪兒威廉斯",awards:"奧斯卡最佳導演·劇本·配樂 · 威尼斯金獅獎",trailer:"https://www.youtube.com/watch?v=mVNMQB3MG04"},
+  {id:68, zh:"臥虎藏龍",           en:"Crouching Tiger Hidden Dragon",year:2000,director:"李安 Ang Lee",             genres:["武俠","愛情","劇情"],             tags:["#武俠","#愛情","#攝影強","#詩意"],           imdb:7.9,rt:97, desc:"江湖兒女的情義與自由，李安以武俠包裹的東方哲學與女性解放。",                    ott:"Netflix TW",       emoji:"🗡️",isClassic:true,isNew:false,cast:"周潤發、楊紫瓊、章子怡、李慕白",awards:"奧斯卡最佳外語片·攝影·美術·配樂 · 英國影藝學院4項",trailer:"https://www.youtube.com/watch?v=CuSfFKoKSHU"},
+  {id:69, zh:"色，戒",             en:"Lust, Caution",                year:2007,director:"李安 Ang Lee",             genres:["劇情","愛情","歷史"],             tags:["#劇情片","#愛情","#歷史","#情感細膩"],      imdb:7.7,rt:89,  desc:"二戰上海的諜報愛情，情慾與政治的危險糾纏，李安最複雜的人性探索。",               ott:"Netflix TW",       emoji:"💋",isClassic:true,isNew:false,cast:"梁朝偉、湯唯",awards:"威尼斯金獅獎 · 金馬獎最佳影片·導演",trailer:"https://www.youtube.com/watch?v=gSjk9VIHEnQ"},
+  {id:70, zh:"喜宴",               en:"The Wedding Banquet",          year:1993,director:"李安 Ang Lee",             genres:["喜劇","劇情","LGBT"],             tags:["#劇情片","#LGBT","#喜劇","#台灣電影"],       imdb:7.6,rt:97, desc:"同志男子的假婚姻引爆的家庭鬧劇，李安最溫柔的文化衝突與親情喜劇。",               ott:"Prime Video",   emoji:"🥂",isClassic:true,isNew:false,cast:"趙文瑄、金素梅、郎雄",awards:"柏林金熊獎 · 金馬獎最佳影片 · 奧斯卡最佳外語片提名"},
+  {id:71, zh:"藍白紅三部曲：藍",   en:"Three Colors: Blue",           year:1993,director:"奇士勞斯基 Krzysztof Kieślowski",genres:["劇情","哲學","法國"],            tags:["#劇情片","#哲學","#慢節奏","#餘韻深"],      imdb:8.0,rt:97,  desc:"喪夫喪女的女作曲家試圖切斷記憶重生，奇士勞斯基關於自由的靜默詩篇。",            ott:"MUBI",          emoji:"🔵",isNew:false,cast:"茱麗葉畢諾許",awards:"威尼斯金獅獎·最佳女演員·費比西獎 · 凱薩獎最佳影片",trailer:"https://www.youtube.com/watch?v=HhJqO6Z83P4"},
+  {id:72, zh:"藍白紅三部曲：紅",   en:"Three Colors: Red",            year:1994,director:"奇士勞斯基 Krzysztof Kieślowski",genres:["劇情","哲學","法國"],            tags:["#劇情片","#哲學","#神秘","#餘韻深"],        imdb:8.1,rt:98,  desc:"模特兒與退休法官的奇異連結，奇士勞斯基三部曲最完美的命運交織終章。",             ott:"MUBI",          emoji:"🔴",isNew:false,cast:"伊蓮雅各、尚路易特林提尼昂",awards:"坎城最佳導演·費比西獎 · 奧斯卡3項提名",trailer:"https://www.youtube.com/watch?v=rENYHdFEiXw"},
+  {id:73, zh:"雙面薇若妮卡",       en:"The Double Life of Véronique", year:1991,director:"奇士勞斯基 Krzysztof Kieślowski",genres:["劇情","哲學","神秘"],            tags:["#劇情片","#哲學","#神秘","#靈性"],          imdb:7.9,rt:93,  desc:"兩個長相相同的女子在不同國度的平行生命，靈魂共鳴的神秘詩意電影。",               ott:"MUBI",          emoji:"🪞",isNew:false,cast:"伊蓮雅各",awards:"坎城最佳女演員·費比西獎 · 歐洲電影獎最佳女演員"},
+  {id:74, zh:"鋼琴課",             en:"The Piano Teacher",            year:2001,director:"漢內克 Michael Haneke",      genres:["劇情","心理","壓抑"],             tags:["#劇情片","#心理","#深度","#探討人性"],       imdb:7.8,rt:82, desc:"壓抑的女鋼琴教師與學生的危險情感，漢內克關於慾望與控制的殘酷解剖。",             ott:"MUBI",          emoji:"🎼",isNew:false,cast:"伊莎貝雨蓓",awards:"坎城最佳女演員 · 凱薩獎最佳女主角"},
+  {id:75, zh:"愛",                 en:"Amour",                        year:2012,director:"漢內克 Michael Haneke",      genres:["劇情","愛情","現實"],             tags:["#劇情片","#愛情","#慢節奏","#深度"],        imdb:7.9,rt:93,  desc:"老夫妻相守至死的愛與尊嚴，坎城金棕櫚最安靜也最沉重的愛情告別。",                 ott:"MUBI",          emoji:"🕊️",isNew:false,cast:"艾曼紐麗娃、尚路易特林提尼昂",awards:"坎城金棕櫚 · 奧斯卡最佳外語片 · 凱薩獎最佳影片",trailer:"https://www.youtube.com/watch?v=DnS9kZHcEFE"},
+  {id:76, zh:"單車少年",           en:"The Kid with a Bike",          year:2011,director:"達頓兄弟 Dardenne Brothers",  genres:["劇情","現實","成長"],             tags:["#劇情片","#現實主義","#情感細膩","#成長"],  imdb:7.5,rt:97,  desc:"被父親拋棄的少年與陌生女人建立的連結，達頓兄弟最溫柔的現實主義。",               ott:"MUBI",          emoji:"🚲",isNew:false,cast:"托馬斯多雷、賽西爾德法蘭斯",awards:"坎城評審團大獎",trailer:"https://www.youtube.com/watch?v=aTHrLTSIKTo"},
+  {id:77, zh:"偷書賊",             en:"The Book Thief",               year:2013,director:"布萊恩柏西瓦 Brian Percival",      genres:["劇情","歷史","成長"],             tags:["#劇情片","#歷史","#成長","#感人"],           imdb:7.5,rt:67, desc:"二戰德國小女孩以文字對抗死亡，關於語言、記憶與人性光輝的動人故事。",               ott:"Disney+",       emoji:"📚",isNew:false,cast:"蘇菲奈莉絲、傑弗里羅許",awards:"奧斯卡最佳配樂提名",trailer:"https://www.youtube.com/watch?v=fXIuXIqEcV0"},
+  {id:78, zh:"放牛班的春天",       en:"The Chorus",                   year:2004,director:"克里斯托夫巴哈提耶 Christophe Barratier",genres:["劇情","音樂","成長"],            tags:["#劇情片","#音樂","#成長","#療癒"],           imdb:7.8,rt:68, desc:"問題少年學校來了一位音樂老師，用合唱改變了一群孩子的命運與靈魂。",                 ott:"Netflix",       emoji:"🎶",isNew:false,cast:"傑哈朱諾、尚巴堤莫里耶",awards:"奧斯卡最佳外語片提名 · 凱薩獎最佳影片提名",trailer:"https://www.youtube.com/watch?v=GZ_JwuCJDmM"},
+  {id:79, zh:"窮途末路",           en:"Breathless",                   year:1960,director:"高達 Jean-Luc Godard",    genres:["劇情","愛情","法國"],             tags:["#劇情片","#愛情","#法國新浪潮","#詩意"],    imdb:7.8,rt:97,  desc:"法國新浪潮奠基之作，逃亡男子與美國女孩的巴黎愛情，電影語言的革命。",             ott:"MUBI",          emoji:"🚬",isClassic:true,isNew:false,cast:"尚保羅貝蒙多、珍賽寶",awards:"柏林銀熊獎最佳導演 · 法國電影批評協會獎",trailer:"https://www.youtube.com/watch?v=0kxkKYWi-5Y"},
+  {id:80, zh:"廣島之戀",           en:"Hiroshima Mon Amour",          year:1959,director:"亞倫雷奈 Alain Resnais",      genres:["劇情","愛情","非線性"],           tags:["#劇情片","#非線性敘事","#詩意","#深度"],    imdb:7.9,rt:97,  desc:"法國女演員與日本建築師在廣島的短暫相遇，記憶與遺忘的詩意辯證。",                 ott:"MUBI",          emoji:"🕊️",isClassic:true,isNew:false,cast:"艾曼紐麗娃、岡田英次",awards:"坎城費比西獎 · 國際影評人大獎",trailer:"https://www.youtube.com/watch?v=BIyasZ8yMEk",trailer:"https://www.youtube.com/watch?v=BIyasZ8yMEk"},
+  {id:81, zh:"去年在馬倫巴",       en:"Last Year at Marienbad",       year:1961,director:"亞倫雷奈 Alain Resnais",      genres:["劇情","神秘","非線性"],           tags:["#劇情片","#神秘","#非線性敘事","#存在感"],  imdb:7.9,rt:94,  desc:"一個男人試圖說服女人他們曾在馬倫巴相遇，現實與夢境的終極迷宮。",                 ott:"MUBI",          emoji:"🏰",isClassic:true,isNew:false,cast:"黛芙英·寶力嘉、喬治亞伯維迪",awards:"威尼斯金獅獎",trailer:"https://www.youtube.com/watch?v=P2Mc5OuqJgk",trailer:"https://www.youtube.com/watch?v=P2Mc5OuqJgk"},
+  {id:82, zh:"野草莓",             en:"Wild Strawberries",            year:1957,director:"柏格曼 Ingmar Bergman",     genres:["劇情","哲學","靈性"],             tags:["#劇情片","#哲學","#靈性","#慢節奏"],        imdb:8.2,rt:97,  desc:"老教授旅途中與夢境和記憶對話，柏格曼關於生命回顧與和解的溫柔傑作。",             ott:"MUBI",          emoji:"🍓",isNew:false,cast:"維克托賽約斯特倫、英格麗圖林",awards:"柏林金熊獎 · 英國影藝學院最佳外語片",trailer:"https://www.youtube.com/watch?v=HqSjPlf3rFw"},
+  {id:83, zh:"第七封印",           en:"The Seventh Seal",             year:1957,director:"柏格曼 Ingmar Bergman",     genres:["劇情","哲學","靈性"],             tags:["#劇情片","#哲學","#靈性","#深度"],          imdb:8.1,rt:96,  desc:"騎士與死神下棋，中世紀黑死病背景下對上帝存在的終極追問。",                      ott:"MUBI",          emoji:"♟️",isNew:false,cast:"馬克斯馮賽多、碧比安德森",awards:"坎城評審團特別獎 · 英國影藝學院最佳外語片提名",trailer:"https://www.youtube.com/watch?v=rMt_BbgFwao"},
+  {id:84, zh:"秋天的奏鳴曲",       en:"Autumn Sonata",                year:1978,director:"柏格曼 Ingmar Bergman",     genres:["劇情","家庭","情感"],             tags:["#劇情片","#情感細膩","#深度","#探討人性"],  imdb:8.0,rt:100, desc:"女鋼琴家與女兒的痛苦重逢，母女關係最赤裸的傷痕與相互指控。",                    ott:"MUBI",          emoji:"🍂",isNew:false,cast:"英格麗褒曼、麗芙烏曼",awards:"奧斯卡最佳女主角·劇本提名 · 英國影藝學院最佳女主角"},
+  {id:85, zh:"索拉力星",           en:"Solaris",                      year:1972,director:"塔可夫斯基 Andrei Tarkovsky",   genres:["科幻","哲學","靈性"],             tags:["#科幻","#哲學","#靈性","#深度","#慢節奏"],  imdb:8.1,rt:94,  desc:"太空站上死去的人重新出現，塔可夫斯基關於記憶、愛與存在的科幻哲思。",             ott:"MUBI",          emoji:"🪐",isNew:false,cast:"納塔利亞邦達爾丘克、多納塔斯巴尼奧尼斯",awards:"坎城評審團大獎·費比西獎",  trailer:"https://www.youtube.com/watch?v=EZiajnzDqnU",trailer:"https://www.youtube.com/watch?v=EZiajnzDqnU"},
+  {id:86, zh:"艾諾拉",              en:"Anora",                        year:2024,director:"西恩貝克 Sean Baker",          genres:["愛情","喜劇","劇情"],             tags:["#愛情","#劇情片","#坎城金棕櫚","#現實主義"],  imdb:7.7,rt:94,  desc:"脫衣舞孃與俄羅斯富二代的愛情童話急轉直下，坎城金棕櫚的另類灰姑娘故事。",     ott:"MUBI / 院線",      emoji:"💃",isNew:true,cast:"友友馬赞蒂、尤拉波羅加諾夫",awards:"坎城金棕櫚獎 2024",  trailer:"https://www.youtube.com/watch?v=AhOZxKfHBm0",trailer:"https://www.youtube.com/watch?v=AhOZxKfHBm0"},
+  {id:87, zh:"我們想像的一切都是光",  en:"All We Imagine as Light",      year:2024,director:"帕雅卡帕迪亞 Payal Kapadia",       genres:["劇情","愛情","現實"],             tags:["#劇情片","#愛情","#坎城評審團大獎","#慢節奏"], imdb:7.8,rt:98, desc:"孟買兩個護士的孤獨與渴望，坎城評審團大獎的溫柔女性詩篇。",                       ott:"MUBI",           emoji:"🌆",isNew:true,cast:"卡尼塔查隆索恩、迪維亞普拉巴、杜爾加夫拉斯特",awards:"坎城評審團大獎 2024",  trailer:"https://www.youtube.com/watch?v=jkjJqcNkRHg"},
+  {id:88, zh:"隔壁的房間",           en:"The Room Next Door",           year:2024,director:"阿莫多瓦 Pedro Almodóvar",     genres:["劇情","愛情","哲學"],             tags:["#劇情片","#哲學","#威尼斯金獅獎","#情感細膩"], imdb:7.0,rt:83, desc:"蒂妲史雲頓與茱莉安摩爾面對死亡的優雅告別，阿莫多瓦首部英語片摘金獅。",          ott:"Netflix TW",        emoji:"🚪",isNew:true,cast:"蒂妲史雲頓、茱莉安摩爾",awards:"威尼斯金獅獎 2024",  trailer:"https://www.youtube.com/watch?v=CWCbKH5pKXY",trailer:"https://www.youtube.com/watch?v=CWCbKH5pKXY"},
+  {id:89, zh:"艾蜜莉亞佩雷斯",       en:"Emilia Pérez",                 year:2024,director:"歐迪亞 Jacques Audiard",     genres:["音樂","劇情","LGBT"],             tags:["#音樂","#劇情片","#LGBT","#坎城評審團獎"],     imdb:7.3,rt:81, desc:"墨西哥毒梟變性重生的歌舞黑色寓言，坎城評審團獎與最佳女演員雙料大獎。",          ott:"Netflix TW",        emoji:"🌺",isNew:true,cast:"卡拉蘇菲亞賈斯康、柔伊莎達娜、席琳娜葛梅茲",awards:"坎城評審團獎·最佳女演員 2024 · 奧斯卡13項提名",  trailer:"https://www.youtube.com/watch?v=5ELQ6u_5YYY",trailer:"https://www.youtube.com/watch?v=5ELQ6u_5YYY"},
+  {id:90, zh:"無憾愛別離",           en:"Another End",                  year:2024,director:"皮耶羅梅西納 Piero Messina",       genres:["科幻","愛情","哲學"],             tags:["#科幻","#愛情","#哲學","#情感細膩"],           imdb:6.4,rt:72, desc:"以科技讓摯愛亡者短暫復活，科幻外殼下對悲傷與放手的深刻探問。",                   ott:"院線",           emoji:"🕊️",isNew:true,  trailer:"https://www.youtube.com/results?search_query=Another+End+2024+trailer"},
+  {id:91, zh:"非常男人",             en:"A Different Man",              year:2024,director:"亞倫辛柏格 Aaron Schimberg",     genres:["劇情","心理","身份認同"],         tags:["#劇情片","#身份認同","#柏林影帝","#深度"],      imdb:7.1,rt:93, desc:"容貌缺陷男子手術後重生卻更迷失，柏林影帝賽巴斯汀史坦驚人演技。",                 ott:"院線",           emoji:"🪞",isNew:true,  trailer:"https://www.youtube.com/results?search_query=A+Different+Man+2024+trailer+中文"},
+  {id:92, zh:"過去的我",             en:"The Substance",                year:2024,director:"法傑特 Coralie Fargeat",     genres:["科幻","驚悚","女性覺醒"],         tags:["#科幻","#女性主義","#坎城最佳劇本","#攝影強"],  imdb:7.3,rt:88, desc:"女星服藥創造完美分身，身體恐怖包裹的女性凝視，坎城最佳劇本。",                    ott:"MUBI",           emoji:"💉",isNew:true,  trailer:"https://www.youtube.com/results?search_query=The+Substance+2024+預告片+中文"},
+  {id:93, zh:"跳痛之旅",             en:"A Real Pain",                  year:2024,director:"傑西艾森柏格 Jesse Eisenberg",     genres:["劇情","公路","家庭"],             tags:["#劇情片","#情感細膩","#奧斯卡最佳男配角"],      imdb:7.8,rt:99, desc:"表兄弟回波蘭尋根，在笑聲與眼淚間重拾失落的家族記憶，奧斯卡最佳男配角。",        ott:"Disney+ TW",        emoji:"🚂",isNew:true,cast:"傑西艾森柏格、基倫克金",awards:"奧斯卡最佳男配角（克金）· 日舞評審大獎",  trailer:"https://www.youtube.com/watch?v=S-MuZn4Xcp8",trailer:"https://www.youtube.com/watch?v=S-MuZn4Xcp8"},
+  {id:94, zh:"我去死一下",           en:"Dying",                        year:2024,director:"馬提亞斯格拉斯納 Matthias Glasner",    genres:["劇情","家庭","音樂"],             tags:["#劇情片","#情感細膩","#柏林最佳劇本","#深度"],  imdb:7.5,rt:95, desc:"中年指揮家的家庭離散與樂曲創作，柏林最佳劇本的複雜人性凝視。",                   ott:"MUBI",           emoji:"🎻",isNew:true,  trailer:"https://www.youtube.com/results?search_query=Dying+Sterben+2024+trailer"},
+  {id:95, zh:"壯遊",                 en:"Grand Tour",                   year:2024,director:"米格爾戈麥斯 Miguel Gomes",        genres:["劇情","公路","詩意"],             tags:["#劇情片","#詩意","#坎城最佳導演","#慢節奏"],    imdb:7.3,rt:94, desc:"上世紀初男子從亞洲逃婚，女子追尋，葡萄牙導演坎城最佳導演的詩意影像。",           ott:"MUBI",           emoji:"🚢",isNew:true,  trailer:"https://www.youtube.com/results?search_query=Grand+Tour+Miguel+Gomes+2024+trailer"},
+  {id:96, zh:"愛情萬歲",             en:"Vive L'Amour",                 year:1994,director:"蔡明亮 Tsai Ming-liang",              genres:["劇情","愛情","台灣電影"],         tags:["#劇情片","#台灣電影","#威尼斯金獅","#慢節奏"],  imdb:7.8,rt:90, desc:"三個孤獨的靈魂在空置公寓中短暫交會，蔡明亮最純粹的都市寂寞詩篇。",               ott:"Criterion",      emoji:"🏙️",isClassic:true,isNew:false,cast:"楊貴媚、李康生、陳昭榮",awards:"威尼斯金獅獎 · 費比西獎", trailer:"https://www.youtube.com/watch?v=KyaZV2PkF-k",trailer:"https://www.youtube.com/watch?v=KyaZV2PkF-k"},
+  {id:97, zh:"河流",                 en:"The River",                    year:1997,director:"蔡明亮 Tsai Ming-liang",              genres:["劇情","家庭","台灣電影"],         tags:["#劇情片","#台灣電影","#深度","#慢節奏"],        imdb:7.5,rt:88, desc:"父子間無法言說的距離在病痛中浮現，蔡明亮最壓抑也最痛的家庭書寫。",                ott:"Criterion",      emoji:"🌊",isNew:false,cast:"李康生、苗天、陸弈靜",awards:"柏林評審團大獎銀熊獎",cast:"李康生、苗天、陸弈靜",awards:"柏林評審團大獎銀熊獎 · 費比西獎", trailer:"https://www.youtube.com/watch?v=pXHzRiLJBSE"},
+  {id:98, zh:"霸王別姬",             en:"Farewell My Concubine",        year:1993,director:"陳凱歌 Chen Kaige",              genres:["劇情","歷史","愛情"],             tags:["#劇情片","#歷史","#愛情","#坎城金棕櫚"],        imdb:8.1,rt:98, desc:"兩個京劇演員橫跨半世紀的情義糾葛，中國電影唯一坎城金棕櫚。",                      ott:"MUBI / friDay",           emoji:"🎭",isClassic:true,isNew:false,cast:"張國榮、鞏俐、張豐毅",awards:"坎城金棕櫚 · 奧斯卡最佳外語片提名", trailer:"https://www.youtube.com/watch?v=XB3HLBa8FzE",trailer:"https://www.youtube.com/watch?v=XB3HLBa8FzE"},
+  {id:99, zh:"活著",                 en:"To Live",                      year:1994,director:"張藝謀 Zhang Yimou",              genres:["劇情","歷史","家庭"],             tags:["#劇情片","#歷史","#探討人性","#坎城評審團"],    imdb:8.0,rt:98, desc:"中國家庭在歷史巨輪下的求存，張藝謀最人道也最動人的史詩敘事。",                    ott:"MUBI",           emoji:"🏮",isClassic:true,isNew:false,cast:"葛優、鞏俐",awards:"坎城評審團大獎·最佳男主角（葛優）· 英國影藝學院最佳外語片", trailer:"https://www.youtube.com/watch?v=x5LWZS6GKDA",trailer:"https://www.youtube.com/watch?v=x5LWZS6GKDA"},
+  {id:100,zh:"關於我和鬼變成家人的那件事",en:"My Missing Valentine",    year:2022,director:"程偉豪 Cheng Wei-hao",              genres:["喜劇","奇幻","愛情"],             tags:["#喜劇","#奇幻","#台灣電影","#輕盈"],            imdb:7.3,rt:96, desc:"同志警察與男鬼成為靈異家人，台灣最受歡迎的奇幻愛情喜劇。",                        ott:"Netflix",        emoji:"👻",isNew:false,cast:"林柏宏、許光漢",awards:"金馬獎最佳原創劇本 · 台北電影節百萬首獎", trailer:"https://www.youtube.com/results?search_query=關於我和鬼變成家人的那件事+預告"},
+  {id:101,zh:"花神咖啡館",         en:"Café de Flore",               year:2011,director:"尚馬克瓦利 Jean-Marc Vallée",   genres:["愛情","劇情","非線性"],           tags:["#愛情","#劇情片","#非線性敘事","#餘韻深"],  imdb:7.4,rt:71, desc:"蒙特婁DJ馬丁在離婚後愛上了新女友，而1960年代巴黎，一個患唐氏症孩子的單親媽媽用愛與音樂撐起了一切。兩段相隔半世紀的愛情被神秘地縫合在一起，導演以非線性敘事與搖滾樂交織出靈魂牽引與命運連結的悠長電影詩。",cast:"凱文帕倫特、愛芙莉特盧蘭、伊蓮柴亞",awards:"加拿大金尼獎最佳影片",ott:"Prime Video",emoji:"☕",isNew:false,trailer:"https://www.youtube.com/watch?v=FRJOW2tfBV0",trailer:"https://www.youtube.com/watch?v=FRJOW2tfBV0"},
+  {id:102,zh:"幸福在敲門",         en:"The Pursuit of Happyness",     year:2006,director:"加布里勒穆奇諾 Gabriele Muccino",   genres:["劇情","傳記","勵志"],             tags:["#劇情片","#傳記","#振奮","#探討人性"],      imdb:8.0,rt:67, desc:"真實故事改編，克里斯加納在人生最低谷帶著年幼的兒子流浪街頭，卻憑著意志力擠進華爾街實習機會。威爾史密斯與親生兒子賈登的對手戲真實動人，那句「不要讓任何人告訴你你做不到，包括我」是電影史上最有力量的父愛宣言。",cast:"威爾史密斯、賈登史密斯",awards:"奧斯卡最佳男主角提名（威爾史密斯）· 金球獎提名",ott:"Netflix TW",emoji:"💼",isNew:false,trailer:"https://www.youtube.com/watch?v=DMOBlEcRuw8",trailer:"https://www.youtube.com/watch?v=DMOBlEcRuw8"},
+  {id:103,zh:"王牌冤家",           en:"Eternal Sunshine of the Spotless Mind",year:2004,director:"米歇爾岡瑞 Michel Gondry",genres:["科幻","愛情","非線性"],         tags:["#科幻","#愛情","#非線性敘事","#心理"],       imdb:8.3,rt:92, desc:"戀人分手後選擇抹去記憶中對方的一切，卻在記憶消除的過程中後悔了。Michel Gondry打造了電影史上最詩意的科幻愛情故事，在破碎的記憶迷宮中反覆問：如果愛情帶來痛苦，你願意選擇遺忘嗎？金凱瑞少見的深情演出令人動容。",cast:"金凱瑞、凱特溫絲蕾",awards:"奧斯卡最佳原創劇本 · 英國影藝學院最佳原著劇本",ott:"Netflix TW",emoji:"🧠",isClassic:true,isNew:false,trailer:"https://www.youtube.com/watch?v=a3K83rKBUoQ",trailer:"https://www.youtube.com/watch?v=a3K83rKBUoQ"},
+  {id:104,zh:"火線交錯",           en:"Babel",                        year:2006,director:"伊納利圖 Alejandro G. Iñárritu",genres:["劇情","非線性","人性"],  tags:["#劇情片","#非線性敘事","#探討人性","#攝影強"],imdb:7.5,rt:69, desc:"摩洛哥山區的一聲槍響，牽動了美國夫妻、墨西哥保母與日本少女四條人生線。Iñárritu以精密的非線性結構，在語言的隔閡與情感的共通之間，探問人與人之間究竟有多近又多遠。布萊德彼特最動人的演出之一，坎城最佳導演。",cast:"布萊德彼特、凱特布蘭琪、役所廣司",awards:"坎城最佳導演 · 奧斯卡最佳配樂 · 金球獎最佳外語片",ott:"Prime Video TW",emoji:"🌍",isClassic:true,isNew:false,trailer:"https://www.youtube.com/watch?v=Dp1RqnIEDG4",trailer:"https://www.youtube.com/watch?v=Dp1RqnIEDG4"},
+  {id:105,zh:"Closer",            en:"Closer",                       year:2004,director:"麥克尼可斯 Mike Nichols",        genres:["愛情","劇情","心理"],             tags:["#愛情","#劇情片","#心理","#情感細膩"],        imdb:7.2,rt:69, desc:"四個人，兩對情侶，一系列精心設計的謊言與背叛。Mike Nichols改編自舞台劇，用最犀利的對白解剖愛情中的慾望、佔有與殘忍。娜塔莉波曼的脆弱與強悍、裘德洛的自私與懊悔，讓這部電影成為近年最誠實也最令人不安的愛情電影。",cast:"娜塔莉波曼、裘德洛、茱莉亞羅勃茲、克里夫歐文",awards:"金球獎最佳女配角（波曼）· 奧斯卡最佳女配角提名",ott:"Netflix TW",emoji:"💔",isClassic:true,isNew:false,trailer:"https://www.youtube.com/watch?v=SWEP4F5XHGY",trailer:"https://www.youtube.com/watch?v=SWEP4F5XHGY"},
+  {id:106,zh:"危險性遊戲",         en:"Cruel Intentions",             year:1999,director:"羅傑坎柏 Roger Kumble",       genres:["愛情","劇情","心理"],             tags:["#愛情","#劇情片","#心理","#懸疑"],            imdb:6.9,rt:52, desc:"紐約上流社會的繼兄妹以操弄他人感情為遊戲，設下賭局卻在過程中真正墜入愛河。改編自法國古典名著《危險關係》的青春版，莎拉蜜雪兒吉蘭的複雜魅力與雷恩菲利普的魅惑，讓這部九零年代愛情電影充滿感官張力與道德辯證。",cast:"莎拉蜜雪兒吉蘭、雷恩菲利普、瑞絲薇斯朋",awards:"MTV電影獎最佳接吻 · 青少年選擇獎",ott:"Netflix",emoji:"🎭",isNew:false,trailer:"https://www.youtube.com/watch?v=BxBEkVMhAqQ",trailer:"https://www.youtube.com/watch?v=BxBEkVMhAqQ"},
+  {id:107,zh:"Newness",           en:"Newness",                      year:2017,director:"卓克多雷穆斯 Drake Doremus",      genres:["愛情","劇情","現實"],             tags:["#愛情","#劇情片","#現實主義","#情感細膩"],    imdb:6.2,rt:57, desc:"兩個在交友軟體相遇的洛杉磯年輕人燃起愛火，卻在穩定後開始追逐新鮮感。Drake Doremus以細膩的手持鏡頭，誠實記錄數位時代親密關係中的倦怠、慾望與連結困難，是對現代人情感模式最清醒也最無情的一次凝視。",cast:"尼可拉斯霍爾特、盧涵奇",awards:"日舞影展競賽入圍",ott:"Netflix",emoji:"📱",isNew:false,trailer:"https://www.youtube.com/watch?v=LcPCNbVp5aI",trailer:"https://www.youtube.com/watch?v=LcPCNbVp5aI"},
+  {id:108,zh:"非誠勿擾",           en:"If You Are the One",           year:2008,director:"馮小剛 Feng Xiaogang",              genres:["愛情","喜劇","華語"],             tags:["#愛情","#喜劇","#華語","#輕盈"],              imdb:7.1,rt:82, desc:"中年男子秦奮帶著一份奇特的徵婚啟示，在一連串荒誕相親中遇見了各種有趣的靈魂。馮小剛以輕盈的喜劇包裹對現代婚戀的溫柔嘲諷，葛優的自我解嘲與舒淇的率真迷人形成絕妙化學效應，是華語愛情喜劇中少見的成熟之作。",cast:"葛優、舒淇",awards:"香港電影金像獎最佳兩岸華語片提名 · 百花獎最佳故事片",ott:"愛奇藝 TW",emoji:"💌",isNew:false,trailer:"https://www.youtube.com/watch?v=9GbIMJOUBjA",trailer:"https://www.youtube.com/watch?v=9GbIMJOUBjA"},
+  {id:109,zh:"龍貓",               en:"My Neighbor Totoro",           year:1988,director:"宮崎駿 Hayao Miyazaki",              genres:["動畫","奇幻","成長"],             tags:["#動畫","#奇幻","#宮崎駿","#療癒"],            imdb:8.2,rt:94, desc:"姊妹倆搬到鄉下，在森林中遇見了只有孩子才看得見的神奇生物龍貓。宮崎駿以最純粹的想像力，描繪童年與自然的連結。沒有反派，沒有衝突，只有無盡的溫柔——這是電影史上最治癒的童年記憶。",cast:"日高法子、坂本千夏（日文配音）",awards:"大藤信郎獎 · 日本電影學院獎最佳動畫",ott:"Disney+ TW",emoji:"🌳",isClassic:true,isNew:false,trailer:"https://www.youtube.com/watch?v=92a7Hj0ijLs",trailer:"https://www.youtube.com/watch?v=92a7Hj0ijLs"},
+  {id:110,zh:"生日快樂",           en:"Happy Birthday",               year:2016,director:"邱禮濤 Herman Yau",              genres:["愛情","劇情","華語"],             tags:["#愛情","#劇情片","#華語","#情感細膩"],        imdb:6.8,rt:75, desc:"多年老友在生日聚會的重逢，悄悄牽扯出一段未竟的愛情往事。邱禮濤以細膩克制的節奏，描繪錯過與遺憾如何在時間中沉澱卻從未消失。古天樂與湯唯的對手戲充滿欲言又止的情感張力，是一部在安靜中讓人久久回味的港式愛情電影。",cast:"古天樂、湯唯",awards:"香港電影金像獎提名",ott:"Netflix",emoji:"🎂",isNew:false,trailer:"https://www.youtube.com/watch?v=5KW7EzSKJKE",trailer:"https://www.youtube.com/watch?v=5KW7EzSKJKE"},
+  {id:111,zh:"志明與春嬌",         en:"Love in a Puff",               year:2010,director:"彭浩翔 Pang Ho-cheung",              genres:["愛情","喜劇","港片"],             tags:["#愛情","#喜劇","#港片","#輕盈"],              imdb:7.2,rt:90, desc:"禁煙令實施後，一群人聚在後巷抽菸，志明與春嬌就這樣在煙霧中相遇。彭浩翔以最生活化的港式對白，捕捉了現代都市男女之間曖昧、猶豫與真實的愛情萌芽，是香港最接地氣的愛情輕喜劇。",cast:"余文樂、楊千嬅",awards:"香港電影金像獎最佳編劇提名",ott:"Netflix",emoji:"🚬",isNew:false,trailer:"https://www.youtube.com/watch?v=p2k5PCFxPlo"},
+  {id:112,zh:"春嬌救志明",         en:"Love Off the Cuff",            year:2017,director:"彭浩翔 Pang Ho-cheung",              genres:["愛情","喜劇","港片"],             tags:["#愛情","#喜劇","#港片","#輕盈"],              imdb:6.9,rt:82, desc:"志明與春嬌的感情走到了新的十字路口，面對結婚的壓力與各自的誘惑，兩人在北京與香港之間繼續他們的愛情拉鋸戰。三部曲中最成熟也最有笑點的一部，是彭浩翔對現代婚戀的辛辣解剖。",cast:"余文樂、楊千嬅",awards:"香港電影金像獎最佳編劇提名",ott:"Netflix",emoji:"💍",isNew:false,trailer:"https://www.youtube.com/watch?v=KDcbpPKmMGQ"},
+  {id:113,zh:"隔離島",en:"Shutter Island",year:2010,director:"馬丁史柯西斯 Martin Scorsese",genres:["懸疑","心理","驚悚"],tags:["#懸疑","#心理","#非線性敘事","#驚悚"],imdb:8.2,rt:68,desc:"聯邦警探來到精神病患島嶼調查失蹤案，卻發現整個島嶼隱藏著一個讓人崩潰的真相。史柯西斯以德庫奇默的演技，構建了一個關於記憶、罪惡與自我欺騙的精密心理迷宮。結局的反轉讓人久久無法平靜。",cast:"李奧納多狄卡皮歐、馬克魯法洛、班金斯利",awards:"奧斯卡提名 · 票房全球突破2.9億美元",ott:"Netflix TW",emoji:"🏝️",isNew:false,trailer:"https://www.youtube.com/watch?v=5iaYLCiq5RM"},
+  {id:114,zh:"全面啟動",en:"Inception",year:2010,director:"諾蘭 Christopher Nolan",genres:["科幻","懸疑","非線性"],tags:["#科幻","#非線性敘事","#哲學","#攝影強"],imdb:8.8,rt:87,desc:"夢境盜竊者接下逆向任務——在目標的夢中植入想法。諾蘭以五層夢境結構，打造了電影史上最精密的非線性敘事。陀螺在最後一幕是否停下，成為影史最著名的開放式結局。",cast:"李奧納多狄卡皮歐、瑪莉詠柯蒂亞、湯姆哈迪",awards:"奧斯卡最佳攝影·視效·音效·音效剪輯4項大獎",ott:"Netflix TW",emoji:"🌀",isNew:false,trailer:"https://www.youtube.com/watch?v=YoHD9XEInc0"},
+  {id:115,zh:"星際效應",en:"Interstellar",year:2014,director:"諾蘭 Christopher Nolan",genres:["科幻","哲學","劇情"],tags:["#科幻","#哲學","#攝影強","#慢節奏"],imdb:8.7,rt:73,desc:"地球瀕臨滅絕，父親穿越蟲洞尋找人類新家園，卻在相對論的時間漩渦中與女兒漸行漸遠。諾蘭將硬科學與父女情感交織成一首震撼心靈的宇宙詩篇，漢斯季默的管風琴配樂令人窒息。",cast:"馬修麥康納、安海瑟薇、潔西卡雀斯坦",awards:"奧斯卡最佳視效 · 英國影藝學院最佳特效·音效",ott:"Netflix TW",emoji:"🪐",isNew:false,trailer:"https://www.youtube.com/watch?v=zSWdZVtXT7E"},
+  {id:116,zh:"黑暗騎士",en:"The Dark Knight",year:2008,director:"諾蘭 Christopher Nolan",genres:["動作","劇情","哲學"],tags:["#劇情片","#哲學","#探討人性","#經典"],imdb:9.0,rt:94,desc:"蝙蝠俠與小丑的終極對決，不只是超級英雄電影，更是一場關於秩序與混沌、道德底線的深刻哲學辯論。希斯萊傑用生命詮釋的小丑，成為影史最偉大的反派表演。",cast:"克里斯汀貝爾、希斯萊傑、艾倫艾克哈特",awards:"奧斯卡最佳男配角（萊傑）· 英國影藝學院5項大獎",ott:"Netflix TW",emoji:"🦇",isNew:false,trailer:"https://www.youtube.com/watch?v=EXeTwQWrcwY"},
+  {id:117,zh:"記憶拼圖",en:"Memento",year:2000,director:"諾蘭 Christopher Nolan",genres:["懸疑","非線性","心理"],tags:["#懸疑","#非線性敘事","#心理","#燒腦"],imdb:8.4,rt:93,desc:"患有短期記憶喪失症的男子靠紋身與拍立得追查妻子兇手。諾蘭以倒敘與順敘交替的結構，讓觀眾與主角同步體驗記憶的碎裂與重建，是影史最聰明的敘事實驗之一。",cast:"蓋皮爾斯、凱莉安摩絲",awards:"奧斯卡最佳剪輯·原著劇本提名 · 獨立精神獎最佳影片",ott:"Netflix TW",emoji:"📸",isNew:false,trailer:"https://www.youtube.com/watch?v=0vS0E9bBSL0"},
+  {id:118,zh:"敦克爾克",en:"Dunkirk",year:2017,director:"諾蘭 Christopher Nolan",genres:["戰爭","劇情","史詩"],tags:["#劇情片","#歷史","#攝影強","#史詩"],imdb:7.9,rt:93,desc:"三條時間線同時進行——海上一週、陸上一天、空中一小時。諾蘭幾乎不用對白，以沉浸式的聲音與影像還原二戰最大規模的撤退行動，讓觀眾直接感受戰場上的存亡壓迫。",cast:"芬恩懷特海德、馬克里朗斯、湯姆哈迪",awards:"奧斯卡最佳導演·剪輯·音效3項 · 英國影藝學院最佳英國電影",ott:"Netflix TW",emoji:"⛵",isNew:false,trailer:"https://www.youtube.com/watch?v=F-eMt3SrfOg"},
+  {id:119,zh:"普羅米修斯",en:"Prometheus",year:2012,director:"雷利史考特 Ridley Scott",genres:["科幻","哲學","驚悚"],tags:["#科幻","#哲學","#攝影強","#神秘"],imdb:7.0,rt:73,desc:"科學家追尋人類起源，來到一個充滿神秘生命體的星球。雷利史考特以壯闊的視覺美學探問：誰創造了我們，我們又創造了什麼。生命起源的哲學問題包裹在宇宙恐怖的驚悚外衣中。",cast:"諾米拉佩斯、麥可法斯賓達、查理斯賽隆",awards:"奧斯卡最佳視效提名 · 英國影藝學院最佳特效",ott:"Disney+ TW",emoji:"👁️",isNew:false,trailer:"https://www.youtube.com/watch?v=76ZnBDFMbO8"},
+  {id:120,zh:"火星任務",en:"The Martian",year:2015,director:"雷利史考特 Ridley Scott",genres:["科幻","劇情","冒險"],tags:["#科幻","#劇情片","#振奮","#知識性"],imdb:8.0,rt:91,desc:"太空人被誤以為死亡遺留在火星，獨自靠著科學知識在荒蕪星球上求生。雷利史考特以輕盈樂觀的節奏包裝硬科學求生故事，麥特戴蒙的獨角戲充滿感染力，是近年最振奮人心的太空電影。",cast:"麥特戴蒙、傑西卡雀斯坦、克莉絲汀薇格",awards:"金球獎最佳喜劇/音樂類影片 · 奧斯卡7項提名",ott:"Disney+ TW",emoji:"🔴",isNew:false,trailer:"https://www.youtube.com/watch?v=ej3ioOneTy8"},
+  {id:121,zh:"神鬼戰士",en:"Gladiator",year:2000,director:"雷利史考特 Ridley Scott",genres:["史詩","劇情","動作"],tags:["#劇情片","#史詩","#探討人性","#振奮"],imdb:8.5,rt:77,desc:"羅馬將軍被陷害為奴，在角鬥場上憑著意志力謀求復仇與榮耀。雷利史考特以磅礴的古羅馬視覺重建，打造了影史最激動人心的史詩復仇故事，羅素克洛奧斯卡封帝之作。",cast:"羅素克洛、瓦昆·菲尼克斯、康妮尼爾森",awards:"奧斯卡最佳影片·男主角 · 英國影藝學院最佳影片",ott:"Netflix TW",emoji:"⚔️",isNew:false,trailer:"https://www.youtube.com/watch?v=owK1qxDselE"},
+  {id:122,zh:"銀翼殺手",en:"Blade Runner",year:1982,director:"雷利史考特 Ridley Scott",genres:["科幻","哲學","慢節奏"],tags:["#科幻","#哲學","#攝影強","#經典","#老片"],imdb:8.1,rt:89,desc:"近未來洛杉磯，獵捕複製人的偵探逐漸懷疑自己的身份。雷利史考特打造了電影史上最具影響力的科幻視覺語言，霓虹雨夜與存在主義的詩意交融，是所有科幻電影的源頭。",cast:"哈里遜福特、羅格豪爾、西恩楊",awards:"奧斯卡最佳美術·視效提名 · 美國國家影片登記",ott:"Netflix TW",emoji:"🌧️",isNew:false,trailer:"https://www.youtube.com/watch?v=eogpIG53Cis"},
+  {id:123,zh:"藝術家",en:"The Artist",year:2011,director:"米歇爾哈札納維西斯 Michel Hazanavicius",genres:["劇情","愛情","魔幻"],tags:["#劇情片","#愛情","#詩意","#魔幻"],imdb:7.9,rt:95,desc:"默片時代的好萊塢巨星面對有聲電影的衝擊，與一位新星之間的愛情故事。這部黑白默片在2011年贏得奧斯卡最佳影片，是對電影藝術最深情的致敬。",cast:"尚度賈丹、貝芮妮絲貝喬",awards:"奧斯卡最佳影片·導演·男主角 · 坎城最佳男主角",ott:"MUBI",emoji:"🎬",isNew:false,trailer:"https://www.youtube.com/watch?v=FKRNJbdRRcc"},
+  {id:124,zh:"愛瘋了",en:"Blue Valentine",year:2010,director:"Derek Cianfrance",genres:["愛情","劇情","現實"],tags:["#愛情","#劇情片","#非線性敘事","#情感細膩"],imdb:7.4,rt:88,desc:"一對夫妻的婚姻在現在與過去的交叉剪接中呈現——曾經的熱戀是那麼美好，如今的疲倦又那麼真實。雷恩葛斯林與蜜雪兒威廉斯的對手戲讓人心碎，是近年最誠實的愛情電影之一。",cast:"雷恩葛斯林、蜜雪兒威廉斯",awards:"奧斯卡最佳女主角提名（威廉斯）· 日舞評審獎",ott:"Prime Video TW",emoji:"💙",isNew:false,trailer:"https://www.youtube.com/watch?v=HMFIyDoBODc"},
+  {id:125,zh:"藍色情人節",en:"Drive",year:2011,director:"尼可拉斯溫丁黑芬 Nicolas Winding Refn",genres:["劇情","驚悚","慢節奏"],tags:["#劇情片","#攝影強","#慢節奏","#神秘"],imdb:7.8,rt:93,desc:"沉默的特技車手白天接電影工作，夜晚充當犯罪司機，卻因為鄰居而捲入危機。黑芬以近乎無聲的敘事與霓虹美學，打造了一首現代孤獨英雄的詩，雷恩葛斯林的眼神說盡一切。",cast:"雷恩葛斯林、凱莉穆莉根、奧斯卡伊薩克",awards:"坎城最佳導演 · 英國影藝學院最佳剪輯提名",ott:"Netflix TW",emoji:"🚗",isNew:false,trailer:"https://www.youtube.com/watch?v=4XbLJSv3pFA"},
+  {id:126,zh:"樂來越愛你前傳",en:"La La Land Prequel",year:2019,director:"尼可拉斯溫丁黑芬 Nicolas Winding Refn",genres:["劇情","慢節奏","攝影強"],tags:["#劇情片","#攝影強","#神秘","#慢節奏"],imdb:6.8,rt:80,desc:"時裝模特兒進入哥本哈根的高端時尚圈，卻在美麗與危險的邊界上漂移。黑芬以極致的視覺美學與幾近無聲的敘事，創造了一個令人著迷又令人不安的夢幻世界。",cast:"艾兒芬妮、耶斯珀克里斯滕森",awards:"坎城競賽入圍",ott:"Netflix TW",emoji:"👠",isNew:false,trailer:"https://www.youtube.com/watch?v=AXl3GVGrx8M"},
+  {id:127,zh:"愛情,不用翻譯2",en:"Somewhere",year:2010,director:"蘇菲亞柯波拉 Sofia Coppola",genres:["劇情","愛情","慢節奏"],tags:["#劇情片","#慢節奏","#孤獨","#詩意"],imdb:6.4,rt:75,desc:"好萊塢明星在豪華飯店的空洞生活，因女兒的突然到訪而有了短暫的真實。柯波拉以極度克制的長鏡頭，捕捉了現代名利場中深埋的空虛感，威尼斯金獅獎得主。",cast:"史蒂芬多夫、艾兒芬妮",awards:"威尼斯金獅獎",ott:"MUBI",emoji:"🏨",isNew:false,trailer:"https://www.youtube.com/watch?v=GDVCLBRIaZE"},
+  {id:128,zh:"凡爾賽玫瑰",en:"Marie Antoinette",year:2006,director:"蘇菲亞柯波拉 Sofia Coppola",genres:["劇情","傳記","魔幻"],tags:["#劇情片","#傳記","#攝影強","#詩意"],imdb:6.3,rt:56,desc:"瑪麗安東尼從奧地利來到凡爾賽宮，在金碧輝煌的囚籠中尋找自我。柯波拉用搖滾樂與巴洛克華服打破歷史片的沉悶，讓一個孤獨少女的故事在現代與古典之間閃閃發光。",cast:"克絲汀鄧斯特、傑森舒瓦茲曼",awards:"奧斯卡最佳服裝設計 · 坎城費比西獎",ott:"MUBI",emoji:"🌹",isNew:false,trailer:"https://www.youtube.com/watch?v=0v28-QEzz54"},
+  {id:129,zh:"真愛旅程",en:"Revolutionary Road",year:2008,director:"山姆曼德斯 Sam Mendes",genres:["劇情","愛情","現實"],tags:["#劇情片","#愛情","#情感細膩","#深度"],imdb:7.4,rt:69,desc:"1950年代美國郊區，一對夫妻夢想逃離平庸的生活去巴黎重新開始，卻在現實的重壓下一點一點地磨損彼此。李奧納多與凱特溫絲蕾的化學反應超越鐵達尼號，是關於夢想窒息的殘忍故事。",cast:"李奧納多狄卡皮歐、凱特溫絲蕾、凱西艾佛列克",awards:"金球獎最佳女主角（溫絲蕾）· 英國影藝學院3項提名",ott:"Prime Video TW",emoji:"🏡",isNew:false,trailer:"https://www.youtube.com/watch?v=0JtIvFbRDKQ"},
+  {id:130,zh:"美國心玫瑰情",en:"American Beauty",year:1999,director:"山姆曼德斯 Sam Mendes",genres:["劇情","哲學","諷刺"],tags:["#劇情片","#哲學","#探討人性","#攝影強","#經典"],imdb:8.4,rt:88,desc:"中年男子在郊區完美生活的外表下逐漸崩潰，重新追尋生命的美麗。山姆曼德斯以那個旋轉的塑膠袋，讓觀眾在日常中看見超越性的美，奧斯卡五項大獎的壓倒性勝利。",cast:"凱文史貝西、安妮特班寧、沙拉米雪吉蘭",awards:"奧斯卡最佳影片·導演·男主角·劇本·攝影5項大獎",ott:"Prime Video TW",emoji:"🌹",isNew:false,trailer:"https://www.youtube.com/watch?v=t5O42OGRY9g"},
+  {id:131,zh:"鳥人",en:"Birdman",year:2014,director:"阿利安卓崗札雷伊納利圖 Alejandro G. Iñárritu",genres:["劇情","哲學","魔幻"],tags:["#劇情片","#哲學","#魔幻","#非線性敘事"],imdb:7.7,rt:91,desc:"曾演超級英雄的過氣演員試圖在百老匯重新證明自己，幻覺與現實在一個長鏡頭中交織纏繞。伊納利圖以模擬一鏡到底的形式，探問藝術、自我與存在的意義，奧斯卡最佳影片。",cast:"麥可基頓、艾瑪史東、愛德華諾頓",awards:"奧斯卡最佳影片·導演·原著劇本·攝影4項大獎",ott:"Disney+ TW",emoji:"🐦",isNew:false,trailer:"https://www.youtube.com/watch?v=uJfLoE6hanc"},
+  {id:132,zh:"神鬼獵人",en:"The Revenant",year:2015,director:"阿利安卓崗札雷伊納利圖 Alejandro G. Iñárritu",genres:["劇情","冒險","史詩"],tags:["#劇情片","#史詩","#攝影強","#探討人性"],imdb:8.0,rt:79,desc:"19世紀荒野中，獵人被隊友拋棄後重傷求生，憑著對兒子的愛與復仇的意志在冰天雪地中掙扎前行。伊納利圖與攝影師盧貝茲基只用自然光拍攝，打造了影史最震撼的生存奇觀。",cast:"李奧納多狄卡皮歐、湯姆哈迪",awards:"奧斯卡最佳導演·男主角·攝影3項大獎",ott:"Disney+ TW",emoji:"🐻",isNew:false,trailer:"https://www.youtube.com/watch?v=LoebZZ8K5N0"},
+  {id:133,zh:"控制",en:"Gone Girl",year:2014,director:"大衛芬奇 David Fincher",genres:["懸疑","驚悚","心理"],tags:["#懸疑","#心理","#非線性敘事","#深度"],imdb:8.1,rt:87,desc:"妻子離奇失蹤，丈夫成為頭號嫌疑人，真相在媒體狂熱與心理操控中層層剝開。大衛芬奇以精密的剪接和蘿絲派克的驚人演出，打造了近年最讓人窒息的婚姻懸疑驚悚。",cast:"班艾佛列克、蘿絲派克、尼爾派翠克哈里斯",awards:"金球獎最佳女主角（派克）· 英國影藝學院最佳改編劇本",ott:"Disney+ TW",emoji:"🔪",isNew:false,trailer:"https://www.youtube.com/watch?v=a-A9AmTQFPs"},
+  {id:134,zh:"鬥陣俱樂部",en:"Fight Club",year:1999,director:"大衛芬奇 David Fincher",genres:["劇情","哲學","驚悚"],tags:["#劇情片","#哲學","#非線性敘事","#深度","#經典"],imdb:8.8,rt:79,desc:"失眠的上班族與神秘的肥皂商人成立地下搏擊俱樂部，逐漸演變成對消費主義文明的全面宣戰。大衛芬奇以癲狂的視覺能量，包裹了一個讓人三天後才理解的心理學謎題。",cast:"布萊德彼特、艾德華諾頓、海倫娜寶漢卡特",awards:"奧斯卡最佳音效剪輯提名 · 影評人協會最佳影片",ott:"Disney+ TW",emoji:"🥊",isNew:false,trailer:"https://www.youtube.com/watch?v=SUXWAEX2jlg"},
+  {id:135,zh:"社群網戰",en:"The Social Network",year:2010,director:"大衛芬奇 David Fincher",genres:["劇情","傳記","現實"],tags:["#劇情片","#傳記","#深度","#知識性"],imdb:7.8,rt:96,desc:"Facebook的誕生故事，是關於天才、背叛與孤獨的現代神話。艾倫索金的對白如機關槍般精準，大衛芬奇的冷靜執導讓這部商業傳記片成為當代最重要的文化電影之一。",cast:"傑西艾森柏格、安德魯加菲爾德、賈斯汀提姆布萊克",awards:"奧斯卡最佳改編劇本·剪輯·配樂3項 · 金球獎最佳影片",ott:"Netflix TW",emoji:"💻",isNew:false,trailer:"https://www.youtube.com/watch?v=lB95KLmpLR4"},
+  {id:136,zh:"異形：聖約",en:"Alien: Covenant",year:2017,director:"雷利史考特 Ridley Scott",genres:["科幻","驚悚","哲學"],tags:["#科幻","#哲學","#神秘","#驚悚"],imdb:6.4,rt:65,desc:"殖民飛船偏離航線，來到一個神秘星球，卻遇見了宇宙中最古老的創造者與最致命的獵食者。史考特延續普羅米修斯的哲學命題，在恐怖與美麗之間探問創造與毀滅的本質。",cast:"麥可法斯賓達、凱薩琳華特史頓",awards:"土星獎最佳科幻影片提名",ott:"Disney+ TW",emoji:"🌑",isNew:false,trailer:"https://www.youtube.com/watch?v=svnAD0TApb8"},
+  {id:137,zh:"模仿遊戲",en:"The Imitation Game",year:2014,director:"摩頓提敦 Morten Tyldum",genres:["劇情","傳記","歷史"],tags:["#劇情片","#傳記","#歷史","#知識性"],imdb:8.0,rt:89,desc:"二戰密碼學天才圖靈破解德軍密碼卻因同性戀身份遭迫害的真實故事。班奈迪克康伯拜奇以細膩的表演詮釋了一個改變歷史卻被歷史辜負的天才，令人動容。",cast:"班奈迪克康伯拜奇、凱拉奈特莉",awards:"奧斯卡最佳改編劇本 · 英國影藝學院最佳英國電影",ott:"Netflix TW",emoji:"🔐",isNew:false,trailer:"https://www.youtube.com/watch?v=S5CjKEFb-sM"},
+  {id:138,zh:"雲端情人",en:"(500) Days of Summer",year:2009,director:"馬克韋布 Marc Webb",genres:["愛情","喜劇","非線性"],tags:["#愛情","#非線性敘事","#劇情片","#輕盈"],imdb:7.7,rt:86,desc:"這不是愛情故事。男孩愛上了女孩，但女孩從一開始就說她不相信愛情。馬克韋布以打亂時序的敘事，讓你同時體驗愛情的甜蜜與幻滅，那個預期與現實對比的分割畫面成為影史經典。",cast:"喬瑟夫高登李維、柔伊黛絲香奈",awards:"獨立精神獎最佳劇本提名 · MTV電影獎多項提名",ott:"Netflix TW",emoji:"☁️",isNew:false,trailer:"https://www.youtube.com/watch?v=PsD0NpFSADM"},
+  {id:139,zh:"名媛教育",en:"An Education",year:2009,director:"洛尼薛菲 Lone Scherfig",genres:["劇情","愛情","成長"],tags:["#劇情片","#愛情","#成長","#情感細膩"],imdb:7.2,rt:95,desc:"1960年代倫敦，聰慧少女被年長魅力男子吸引，在愛情的誘惑與學業夢想之間掙扎。凱莉穆莉根的突破性演出讓這部關於成長與清醒的電影成為女性電影的重要作品。",cast:"凱莉穆莉根、彼得沙斯格德",awards:"奧斯卡最佳影片·女主角·劇本3項提名 · 英國影藝學院4項提名",ott:"MUBI",emoji:"📚",isNew:false,trailer:"https://www.youtube.com/watch?v=pGMLs7BimEs"},
+  {id:140,zh:"雨人",en:"Rain Man",year:1988,director:"貝瑞李文森 Barry Levinson",genres:["劇情","公路","人性"],tags:["#劇情片","#探討人性","#感人","#經典","#老片"],imdb:8.0,rt:89,desc:"自私的商人發現自己有個患有自閉症的哥哥，兩人橫越美國的公路旅程讓他的心慢慢打開。達斯汀霍夫曼的表演成為影史奇蹟，這部公路電影是關於手足情與自我成長的溫暖傑作。",cast:"達斯汀霍夫曼、湯姆克魯斯",awards:"奧斯卡最佳影片·導演·男主角·劇本4項大獎",ott:"Prime Video TW",emoji:"🌧️",isNew:false,trailer:"https://www.youtube.com/watch?v=DqB1GFdDMOo"},
+  {id:141,zh:"香水",en:"Perfume: The Story of a Murderer",year:2006,director:"湯姆提克威 Tom Tykwer",genres:["劇情","驚悚","神秘"],tags:["#劇情片","#驚悚","#神秘","#攝影強"],imdb:7.5,rt:58,desc:"18世紀法國，一個天生嗅覺超凡卻沒有自身氣味的人，為了創造完美香水而殺人。湯姆提克威以令人不安的美麗影像，呈現了一個關於偏執天才與慾望的黑暗童話。",cast:"班惠肖、達斯汀霍夫曼、艾倫瑞克曼",awards:"德國電影獎最佳影片·攝影·美術 · 歐洲電影獎提名",ott:"Netflix TW",emoji:"🌹",isNew:false,trailer:"https://www.youtube.com/watch?v=rMSJOeXBdIE"},
+  {id:142,zh:"科學怪人的新娘",en:"Bride of Frankenstein",year:1935,director:"詹姆斯惠爾 James Whale",genres:["奇幻","驚悚","經典"],tags:["#奇幻","#驚悚","#老片","#經典"],imdb:7.8,rt:99,desc:"科學怪人尋求同伴，科學家被迫創造女性怪物。這部1935年的經典恐怖片超越前作，以孤獨與歸屬為核心主題，是影史公認最具詩意的恐怖電影之一。",cast:"鮑里斯卡洛夫、艾爾莎朗切斯特",awards:"美國國家影片登記 · 影史百大影片",ott:"MUBI",emoji:"⚡",isNew:false,trailer:"https://www.youtube.com/watch?v=L8B_DRjPqkU"},
+  {id:143,zh:"戀夏500日",en:"Midnight in Paris",year:2011,director:"伍迪艾倫 Woody Allen",genres:["愛情","魔幻","哲學"],tags:["#愛情","#魔幻","#哲學","#詩意"],imdb:7.7,rt:94,desc:"好萊塢編劇在巴黎午夜神秘穿越回1920年代，邂逅了海明威、畢卡索與費茲傑羅。伍迪艾倫用輕盈的魔幻現實主義，探問懷舊情緒背後的真實渴望，奧斯卡最佳原著劇本。",cast:"歐文威爾森、瑪莉詠柯蒂亞、凱西布蕾切特",awards:"奧斯卡最佳原著劇本 · 金球獎最佳喜劇影片提名",ott:"MUBI",emoji:"🗼",isNew:false,trailer:"https://www.youtube.com/watch?v=atLg4PNGUKg"},
+  {id:144,zh:"安妮霍爾",en:"Annie Hall",year:1977,director:"伍迪艾倫 Woody Allen",genres:["愛情","喜劇","非線性"],tags:["#愛情","#喜劇","#非線性敘事","#經典","#老片"],imdb:8.0,rt:98,desc:"神經質喜劇演員與自由派女歌手的曼哈頓愛情故事，伍迪艾倫打破第四道牆直接與觀眾對話，開創了現代愛情喜劇的語法，奧斯卡最佳影片·導演·女主角·劇本四項大獎。",cast:"伍迪艾倫、黛安基頓",awards:"奧斯卡最佳影片·導演·女主角·原著劇本4項大獎",ott:"MUBI",emoji:"🎭",isNew:false,trailer:"https://www.youtube.com/watch?v=fxCgSoMZSSo"},
+  {id:145,zh:"漢娜及其姊妹",en:"Hannah and Her Sisters",year:1986,director:"伍迪艾倫 Woody Allen",genres:["愛情","劇情","哲學"],tags:["#愛情","#劇情片","#哲學","#情感細膩","#老片"],imdb:7.9,rt:96,desc:"三姊妹在幾個感恩節之間交織的愛情與人生思考。伍迪艾倫以輕盈的群像劇，包裹了對死亡、意義與愛的深刻探問，奧斯卡最佳原著劇本與兩個配角獎。",cast:"伍迪艾倫、米亞法羅、麥克肯恩",awards:"奧斯卡最佳原著劇本·男配角·女配角3項大獎",ott:"MUBI",emoji:"👭",isNew:false,trailer:"https://www.youtube.com/watch?v=bVfLbm5SuvU"},
+  {id:146,zh:"愛情人生",en:"Vicky Cristina Barcelona",year:2008,director:"伍迪艾倫 Woody Allen",genres:["愛情","劇情","魔幻"],tags:["#愛情","#劇情片","#浪漫","#詩意"],imdb:7.1,rt:81,desc:"兩個美國女孩在巴塞隆納的夏日，與一位西班牙畫家及他的前妻之間糾纏出的複雜愛情關係。伍迪艾倫以陽光巴塞隆納為背景，讓四個人探索愛的各種可能與不可能。",cast:"哈維爾巴登、佩妮洛普克魯茲、史嘉蕾喬韓森",awards:"奧斯卡最佳女配角（克魯茲）· 金球獎最佳喜劇影片",ott:"MUBI",emoji:"🌞",isNew:false,trailer:"https://www.youtube.com/watch?v=i4vF8gZD-w0"},
+  {id:147,zh:"失去的靈魂",en:"Lost Highway",year:1997,director:"大衛林區 David Lynch",genres:["懸疑","非線性","神秘"],tags:["#懸疑","#非線性敘事","#神秘","#深度"],imdb:7.6,rt:63,desc:"一個男人突然變成了另一個完全不同的人，大衛林區的夢境邏輯讓現實與虛構的邊界徹底消失。如果你準備好放棄對情節的掌控，這是一趟最迷人的意識之旅。",cast:"比爾普曼、派翠西亞阿奎特",awards:"柏林競賽入圍",ott:"MUBI",emoji:"🛣️",isNew:false,trailer:"https://www.youtube.com/watch?v=hUB73jFQtWg"},
+  {id:148,zh:"穆荷蘭大道",en:"Mulholland Drive",year:2001,director:"大衛林區 David Lynch",genres:["懸疑","非線性","神秘"],tags:["#懸疑","#非線性敘事","#神秘","#存在感"],imdb:7.9,rt:83,desc:"一個失憶女子與懷抱夢想的女演員在好萊塢糾纏出的謎題，夢境與現實的邊界從未如此模糊。大衛林區創造了影史最費解也最令人著迷的電影，BBC評選21世紀最偉大影片第一名。",cast:"娜歐蜜華茲、蘿拉哈靈、賈斯汀撒洛",awards:"坎城最佳導演 · BBC 21世紀最偉大影片第1名",ott:"MUBI",emoji:"🔵",isNew:false,trailer:"https://www.youtube.com/watch?v=2QgCPDezDgA"},
+  {id:149,zh:"藍絲絨",en:"Blue Velvet",year:1986,director:"大衛林區 David Lynch",genres:["懸疑","驚悚","神秘"],tags:["#懸疑","#神秘","#深度","#老片","#經典"],imdb:7.8,rt:93,desc:"小鎮男孩在草坪上發現一隻離奇的人耳，揭開了美麗郊區外表下的腐朽黑暗。大衛林區的突破之作，用超現實的感官衝擊探問美麗與恐怖如何共存於同一個世界。",cast:"凱爾麥克拉克倫、伊莎貝拉羅塞里尼、丹尼斯霍普",awards:"奧斯卡最佳導演提名 · 美國影評人協會最佳影片",ott:"MUBI",emoji:"💙",isNew:false,trailer:"https://www.youtube.com/watch?v=1YHMFQuGDU8"},
+  {id:150,zh:"你好，李煥英",en:"Hi, Mom",year:2021,director:"賈玲",genres:["喜劇","劇情","家庭"],tags:["#劇情片","#感人","#華語","#療癒"],imdb:7.5,rt:82,desc:"女兒穿越回1981年，遇見了年輕時的媽媽，想讓她過上更好的生活。賈玲的半自傳喜劇用笑聲包裹眼淚，是關於母女之情最純粹的表達，成為中國影史最高票房喜劇電影。",cast:"賈玲、張小斐、沈騰",awards:"中國電影金雞獎最佳影片提名 · 票房全球突破8.2億美元",ott:"愛奇藝 TW",emoji:"🌸",isNew:false,trailer:"https://www.youtube.com/watch?v=p5SgCKD5RBA"},
+  {id:151,zh:"請回答1994",en:"Reply 1994",year:2013,director:"申元浩",genres:["劇情","愛情","懷舊"],tags:["#劇情片","#韓國","#懷舊","#情感細膩"],imdb:8.5,rt:96,desc:"1994年首爾大學前的下宿，來自各地的年輕人因緣際會住在一起，青春、愛情與友情在籃球明星崔虎的風潮中交織。韓劇中最深刻的青春群像，讓人深陷那個純真年代的溫柔懷抱。",cast:"鄭宇赫、高亞羅、三千浦",awards:"韓國百想藝術大賞最佳作品獎",ott:"Netflix TW",emoji:"📼",isNew:false,trailer:"https://www.youtube.com/watch?v=EDo_HisTyVE"},
+  {id:152,zh:"我的愛情不平凡",en:"Moonlight",year:2016,director:"貝瑞瓊金斯 Barry Jenkins",genres:["劇情","LGBT","成長"],tags:["#劇情片","#LGBT","#成長","#攝影強","#情感細膩"],imdb:7.4,rt:98,desc:"黑人男孩奇隆的成長三部曲——童年、少年、成年，在貧窮、暴力與壓抑中摸索自己的身份與渴望。詹金斯以詩意的攝影與細膩的情感，打造了奧斯卡最佳影片史上最安靜的勝利。",cast:"馬赫夏拉阿里、納文安德魯斯、特雷凡特羅德斯",awards:"奧斯卡最佳影片·男配角·改編劇本3項大獎",ott:"Netflix TW",emoji:"🌙",isNew:false,trailer:"https://www.youtube.com/watch?v=9NJj12tJzqc"},
+  {id:153,zh:"藥命俱樂部",en:"Dallas Buyers Club",year:2013,director:"尚馬克瓦利 Jean-Marc Vallée",genres:["劇情","傳記","人性"],tags:["#劇情片","#傳記","#探討人性","#振奮"],imdb:8.0,rt:94,desc:"1980年代德州，一個確診愛滋病的牛仔在被判只剩30天的情況下，偷渡實驗藥物並幫助同病相憐的患者。馬修麥康納與傑瑞德萊托雙雙奪下奧斯卡，是關於求生意志的真實傳奇。",cast:"馬修麥康納、傑瑞德萊托、珍妮佛嘉納",awards:"奧斯卡最佳男主角·男配角·化妝3項大獎",ott:"Prime Video TW",emoji:"💊",isNew:false,trailer:"https://www.youtube.com/watch?v=U6OGaRIhYDI"},
+  {id:154,zh:"布達佩斯大飯店",en:"The Grand Budapest Hotel",year:2014,director:"魏斯安德森 Wes Anderson",genres:["喜劇","冒險","魔幻"],tags:["#喜劇","#魔幻","#攝影強","#輕盈"],imdb:8.1,rt:92,desc:"傳奇旅館禮賓員與他的學徒在兩次世界大戰之間的歐洲展開一場荒誕冒險。魏斯安德森的對稱美學與粉彩色調達到巔峰，在精緻的玩具盒世界裡包裹著對逝去歐洲文明的深情哀悼。",cast:"雷夫范恩斯、東尼雷佛羅利、希爾希羅南",awards:"奧斯卡最佳美術·服裝·化妝·配樂4項大獎",ott:"Disney+ TW",emoji:"🏨",isNew:false,trailer:"https://www.youtube.com/watch?v=1Fg5iWmQjwk"},
+  {id:155,zh:"歡迎來到布達佩斯大飯店前傳",en:"Moonrise Kingdom",year:2012,director:"魏斯安德森 Wes Anderson",genres:["愛情","冒險","魔幻"],tags:["#愛情","#魔幻","#攝影強","#輕盈"],imdb:7.8,rt:94,desc:"1965年新英格蘭，兩個12歲的孩子相愛並一起出走，引發全島人馬的瘋狂追尋。魏斯安德森以童話般的視覺語言，書寫了最純粹也最勇敢的初戀故事，坎城主競賽開幕片。",cast:"布魯斯威利、艾德華諾頓、比爾墨瑞",awards:"坎城主競賽開幕片 · 奧斯卡最佳原著劇本提名",ott:"Disney+ TW",emoji:"🏕️",isNew:false,trailer:"https://www.youtube.com/watch?v=7bkFlDQHMXk"},
+  {id:156,zh:"歡迎來到布達佩斯大飯店後傳",en:"The French Dispatch",year:2021,director:"魏斯安德森 Wes Anderson",genres:["喜劇","魔幻","劇情"],tags:["#喜劇","#魔幻","#攝影強","#知識性"],imdb:7.2,rt:74,desc:"一本駐歐美國雜誌的最後一期，三篇短篇故事組成的文字與影像饗宴。魏斯安德森的美學實驗達到新高度，致敬新聞業黃金時代的同時，也是一封寫給好奇心本身的情書。",cast:"班尼西奧岱托羅、阿黛兒艾尼爾、提摩西夏勒梅",awards:"坎城主競賽入圍",ott:"Disney+ TW",emoji:"📰",isNew:false,trailer:"https://www.youtube.com/watch?v=TcPk2p0Zaw4"},
+  {id:157,zh:"熔爐",en:"Silenced",year:2011,director:"黃東赫",genres:["劇情","社會","韓國"],tags:["#劇情片","#韓國","#探討人性","#深度"],imdb:8.1,rt:95,desc:"改編自真實事件，聾啞學校教師揭發長期虐待學生的案件，卻面對體制的重重阻撓。這部電影直接促成了韓國「熔爐法」的立法，是電影改變社會的最有力例證之一。",cast:"孔劉、鄭有美",awards:"韓國青龍電影獎最佳影片提名 · 直接促成熔爐法立法",ott:"Netflix TW",emoji:"🔔",isNew:false,trailer:"https://www.youtube.com/watch?v=oJP3xQFYSXc"},
+  {id:158,zh:"寄生上流",en:"Parasite",year:2019,director:"奉俊昊 Bong Joon-ho",genres:["劇情","驚悚","社會"],tags:["#劇情片","#韓國","#探討人性","#非線性敘事"],imdb:8.5,rt:99,desc:"貧窮家庭滲透富裕人家的計畫意外觸碰到一個更深的祕密。奉俊昊以精密的類型混搭，完成了關於階級不平等最精準也最娛樂的解剖，奧斯卡史上首部非英語最佳影片。",cast:"宋康昊、崔宇植、朴素丹",awards:"坎城金棕櫚 · 奧斯卡最佳影片·導演·原著劇本·國際影片4項大獎",ott:"Netflix TW",emoji:"🏠",isNew:true,trailer:"https://www.youtube.com/watch?v=5xH0HfJHsaY"},
+  {id:159,zh:"玉子",en:"Okja",year:2017,director:"奉俊昊 Bong Joon-ho",genres:["冒險","劇情","社會"],tags:["#劇情片","#奇幻","#探討人性","#療癒"],imdb:7.3,rt:86,desc:"韓國山村少女與她最好的朋友——一隻巨型超級豬奧嘉，在跨國企業的追捕下踏上拯救旅程。奉俊昊以溫柔的故事包裹對食品工業的社會批判，笑中帶淚。",cast:"蒂爾達史雲頓、保羅達諾、安潔拉貝斯",awards:"坎城主競賽入圍",ott:"Netflix TW",emoji:"🐷",isNew:false,trailer:"https://www.youtube.com/watch?v=AjCebKn4iic"},
+  {id:160,zh:"漢江怪物",en:"The Host",year:2006,director:"奉俊昊 Bong Joon-ho",genres:["劇情","驚悚","社會"],tags:["#劇情片","#韓國","#驚悚","#探討人性"],imdb:7.0,rt:93,desc:"漢江中突變怪物奪走了一個父親的女兒，整個家庭在政府無能的體制中自己拯救自己。奉俊昊以怪物電影包裹反美·反官僚的社會批判，同時又是一個關於家庭的感人故事。",cast:"宋康昊、卞熙峰、朴海日",awards:"坎城導演雙週入圍 · 韓國青龍獎最佳影片",ott:"Netflix TW",emoji:"🦕",isNew:false,trailer:"https://www.youtube.com/watch?v=O4dHkgjLCBA"},
+  {id:161,zh:"末日列車",en:"Snowpiercer",year:2013,director:"奉俊昊 Bong Joon-ho",genres:["科幻","劇情","反烏托邦"],tags:["#科幻","#反烏托邦","#探討人性","#史詩"],imdb:7.1,rt:95,desc:"末日冰封世界，全人類擠在一列永無止境的列車上，最後一節車廂的窮人決定起義衝向車頭。奉俊昊以列車的空間隱喻階級結構，打造了最具娛樂性的反烏托邦寓言。",cast:"克里斯伊凡、宋康昊、蒂爾達史雲頓",awards:"坎城導演雙週入圍 · 多倫多影展觀眾票選獎",ott:"Netflix TW",emoji:"🚂",isNew:false,trailer:"https://www.youtube.com/watch?v=KPeOLBzUZFI"},
+  {id:162,zh:"方程式情人",en:"Flipped",year:2010,director:"羅伯雷納 Rob Reiner",genres:["愛情","青春","成長"],tags:["#愛情","#青春","#輕盈","#感人"],imdb:7.7,rt:69,desc:"同一段青梅竹馬的初戀，從女孩和男孩各自的視角輪流敘述。羅伯雷納以雙重視角的敘事手法，展現了愛情中「翻轉」的微妙時刻，是近年最溫暖純粹的青春愛情電影之一。",cast:"梅蒂辛克萊爾、卡倫格雷格森",awards:"美國影評人協會最佳家庭電影",ott:"Netflix TW",emoji:"🌳",isNew:false,trailer:"https://www.youtube.com/watch?v=4q-UVoSGNUQ"},
+  {id:163,zh:"戀愛沒有那麼難",en:"About Love",year:2014,director:"張嘉佳",genres:["愛情","劇情","華語"],tags:["#愛情","#劇情片","#華語","#輕盈"],imdb:6.3,rt:72,desc:"根據張嘉佳微博上廣受轉發的愛情故事改編，三段關於距離、錯過與等待的都市愛情短篇。蘇有朋、飛輪海的加入讓這部華語小品充滿溫柔的情感共鳴。",cast:"鄧超、白百何、陳奕迅",awards:"北京大學生電影節最佳影片提名",ott:"愛奇藝 TW",emoji:"💌",isNew:false,trailer:"https://www.youtube.com/watch?v=uvdV7SFKtVA"},
+  {id:164,zh:"我在伊朗長大",en:"Persepolis",year:2007,director:"瑪嘉莎塔碧 Marjane Satrapi",genres:["動畫","傳記","劇情"],tags:["#動畫","#傳記","#劇情片","#女性主義"],imdb:8.0,rt:97,desc:"伊朗女孩在革命中成長，被送往歐洲，又回到故土的半自傳動畫。黑白畫風與個人史詩交織，是對威權政治下個體尊嚴最犀利也最溫情的書寫，坎城評審團獎。",cast:"瑪嘉莎塔碧（聲音導演）",awards:"坎城評審團獎 · 奧斯卡最佳動畫片提名",ott:"MUBI",emoji:"✊",isNew:false,trailer:"https://www.youtube.com/watch?v=nXFDHStzuiA"},
+  {id:165,zh:"神隱少女",en:"Spirited Away",year:2001,director:"宮崎駿 Hayao Miyazaki",genres:["動畫","奇幻","靈性"],tags:["#動畫","#奇幻","#靈性","#宮崎駿","#經典"],imdb:8.6,rt:97,desc:"10歲女孩千尋誤入神靈世界，在湯婆婆的浴場打工求生，試圖救回變成豬的父母。宮崎駿以最豐富的想像力描繪了成長的孤獨與勇氣，是影史最完美的動畫電影之一。奧斯卡最佳動畫。",cast:"柊瑠美、入野自由（日文配音）",awards:"奧斯卡最佳動畫片 · 柏林金熊獎 · 影史最賣座動畫之一",ott:"Disney+ TW",emoji:"🐉",isNew:false,trailer:"https://www.youtube.com/watch?v=ByXuk9QqQkk"},
+  {id:166,zh:"風之谷",en:"Nausicaä of the Valley of the Wind",year:1984,director:"宮崎駿 Hayao Miyazaki",genres:["動畫","奇幻","冒險"],tags:["#動畫","#奇幻","#宮崎駿","#老片"],imdb:8.1,rt:90,desc:"末世腐海世界，公主娜烏西卡試圖阻止人類與蟲族的毀滅性戰爭。宮崎駿的環保寓言先驅之作，以壯闊的飛行場景與對自然的深切熱愛，開啟了吉卜力傳奇的序幕。",cast:"島本須美（日文配音）",awards:"日本電影學院獎最佳動畫 · 大藤信郎獎",ott:"Disney+ TW",emoji:"🌿",isNew:false,trailer:"https://www.youtube.com/watch?v=PsHCN6J3N3w"},
+  {id:167,zh:"紅豬",en:"Porco Rosso",year:1992,director:"宮崎駿 Hayao Miyazaki",genres:["動畫","冒險","魔幻"],tags:["#動畫","#魔幻","#宮崎駿","#詩意"],imdb:7.7,rt:96,desc:"一次大戰後的義大利，一個因詛咒變成豬頭的飛行傭兵在亞得里亞海上漂泊。宮崎駿最個人的作品，以輕盈的冒險包裹了對戰爭創傷與中年孤獨的深刻思考。",cast:"森山周一郎（日文配音）",awards:"日本電影學院獎最佳動畫",ott:"Disney+ TW",emoji:"🐷",isNew:false,trailer:"https://www.youtube.com/watch?v=AnjMPFGCyJk"},
+  {id:168,zh:"霍爾的移動城堡",en:"Howl's Moving Castle",year:2004,director:"宮崎駿 Hayao Miyazaki",genres:["動畫","奇幻","愛情"],tags:["#動畫","#奇幻","#愛情","#宮崎駿"],imdb:8.2,rt:82,desc:"女孩被詛咒變成老婆婆，在移動城堡中與謎樣巫師霍爾相遇相知。宮崎駿以反戰為底色，描繪了愛情如何在魔法與戰火中超越外表與時間，是最迷人的奇幻愛情動畫。",cast:"倍賞千惠子、木村拓哉（日文配音）",awards:"奧斯卡最佳動畫片提名 · 威尼斯金獅獎提名",ott:"Disney+ TW",emoji:"🏰",isNew:false,trailer:"https://www.youtube.com/watch?v=iwROgK94zcM"},
+  {id:169,zh:"崖上的波妞",en:"Ponyo",year:2008,director:"宮崎駿 Hayao Miyazaki",genres:["動畫","奇幻","愛情"],tags:["#動畫","#奇幻","#愛情","#宮崎駿","#輕盈"],imdb:7.7,rt:92,desc:"海底金魚波妞愛上了人類小男孩宗介，一心想變成人類。宮崎駿以最純粹的孩童視角，描繪了海洋的生命力與純真愛情，是一首獻給孩子和曾是孩子的大人的美麗詩篇。",cast:"奈良柚莉愛、土井洋輝（日文配音）",awards:"日本電影學院獎最佳動畫 · 多倫多影展觀眾票選獎",ott:"Disney+ TW",emoji:"🐠",isNew:false,trailer:"https://www.youtube.com/watch?v=CKAr3zQnHQ0"},
+  {id:170,zh:"愛，存在",en:"Blue is the Warmest Color",year:2013,director:"壁茲維勒 Abdellatif Kechiche",genres:["愛情","劇情","LGBT"],tags:["#愛情","#劇情片","#LGBT","#情感細膩"],imdb:7.8,rt:92,desc:"高中女孩亞黛兒與藍髮女孩艾瑪的愛情，從初戀的狂熱到消逝的過程。三個小時的長鏡頭與真實的情感強度，坎城金棕櫚頒給了導演與兩位女主角，是影史罕見的榮耀。",cast:"阿黛兒艾尼爾、蕾雅賽杜",awards:"坎城金棕櫚（導演及兩位女主角同獲）",ott:"MUBI",emoji:"💙",isNew:false,trailer:"https://www.youtube.com/watch?v=oCbJqt8VQek"},
+  {id:171,zh:"破浪而出",en:"Breaking the Waves",year:1996,director:"拉斯馮提爾 Lars von Trier",genres:["劇情","靈性","人性"],tags:["#劇情片","#靈性","#深度","#探討人性"],imdb:7.8,rt:85,desc:"蘇格蘭偏遠村莊，純真女子為了讓癱瘓的丈夫振作，以自我犧牲換取神明的旨意。拉斯馮提爾以手持攝影機的粗糙質感，拍出了愛的極端境界，坎城評審團大獎。",cast:"艾蜜莉華生、斯德蘭史卡斯嘉德",awards:"坎城評審團大獎 · 英國影藝學院最佳女主角提名",ott:"MUBI",emoji:"🌊",isNew:false,trailer:"https://www.youtube.com/watch?v=TJi6qOT_uJQ"},
+  {id:172,zh:"跳出我天地",en:"Billy Elliot",year:2000,director:"史蒂芬道德利 Stephen Daldry",genres:["劇情","音樂","成長"],tags:["#劇情片","#成長","#振奮","#感人"],imdb:7.7,rt:84,desc:"英國礦區男孩在罷工時代對芭蕾的熱情，對抗父兄的偏見，也對抗整個社會的框架。史蒂芬道德利的突破之作，關於夢想、性別與勇氣，結尾在歌劇院的那一躍令人熱淚盈眶。",cast:"傑米貝爾、朱莉沃特斯、蓋瑞路易斯",awards:"英國影藝學院最佳影片·導演·男主角 · 奧斯卡3項提名",ott:"Netflix TW",emoji:"🩰",isNew:false,trailer:"https://www.youtube.com/watch?v=ydanEQlgW2s"},
+  {id:173,zh:"伊尼舍林的女妖",en:"The Banshees of Inisherin",year:2022,director:"馬丁麥多納 Martin McDonagh",genres:["劇情","哲學","黑色幽默"],tags:["#劇情片","#哲學","#深度","#餘韻深"],imdb:7.7,rt:97,desc:"一個孤島上，一個男人突然宣布不想再跟最好的朋友說話。這個荒誕的起點延伸成一場關於友誼、孤獨、意義與死亡的深刻哲學寓言，威尼斯最佳劇本，奧斯卡9項提名。",cast:"柯林法瑞爾、布蘭登葛里森、凱瑞孔多奈",awards:"威尼斯最佳劇本 · 奧斯卡9項提名含最佳影片",ott:"Disney+ TW",emoji:"🎻",isNew:false,trailer:"https://www.youtube.com/watch?v=uRu3zLOJN2c"},
+  {id:174,zh:"三塊看板",en:"Three Billboards Outside Ebbing, Missouri",year:2017,director:"馬丁麥多納 Martin McDonagh",genres:["劇情","黑色幽默","人性"],tags:["#劇情片","#探討人性","#深度","#燒腦"],imdb:8.1,rt:88,desc:"女兒遇害數月無破案進展，憤怒的母親在鎮外立起三塊看板挑戰警察。麥多納以黑色幽默包裹了憤怒、寬恕與人性複雜度，法蘭西絲麥朵曼的演出讓人震撼。",cast:"法蘭西絲麥朵曼、伍迪哈里森、山姆洛克威爾",awards:"奧斯卡最佳女主角·男配角 · 金球獎最佳劇情影片",ott:"Disney+ TW",emoji:"🪧",isNew:false,trailer:"https://www.youtube.com/watch?v=oBSP-E_QGYU"},
+  {id:175,zh:"羅馬",en:"Roma",year:2018,director:"阿方索柯朗 Alfonso Cuarón",genres:["劇情","傳記","詩意"],tags:["#劇情片","#詩意","#攝影強","#慢節奏"],imdb:7.7,rt:97,desc:"1970年代墨西哥城，中產家庭女傭克里奧的一年。柯朗以黑白攝影拍攝自己的童年記憶，每個長鏡頭都是凝固的詩，威尼斯金獅獎與奧斯卡最佳導演·攝影·外語片。",cast:"亞利扎阿芭瑞茲、瑪莉娜德達維萊斯",awards:"威尼斯金獅獎 · 奧斯卡最佳導演·攝影·外語片3項大獎",ott:"Netflix TW",emoji:"🖤",isNew:false,trailer:"https://www.youtube.com/watch?v=R6PMNGitWrs"},
+  {id:176,zh:"萬惡城市",en:"Sin City",year:2005,director:"勞勃羅里葛茲 Robert Rodriguez",genres:["犯罪","驚悚","風格"],tags:["#驚悚","#攝影強","#神秘","#風格獨特"],imdb:8.0,rt:78,desc:"黑色電影漫畫美學的極致展現，三段交織的罪惡城市故事以黑白加選擇性彩色打造視覺衝擊。坎城技術大獎，每一幀都像是移動中的漫畫頁面。",cast:"布魯斯威利、米基洛克、克里夫歐文",awards:"坎城技術大獎",ott:"Prime Video TW",emoji:"🌃",isNew:false,trailer:"https://www.youtube.com/watch?v=AkgXp2RQifA"},
+  {id:177,zh:"她的演技",en:"Actress",year:2014,director:"羅伯特格林 Robert Greene",genres:["紀錄片","劇情","人性"],tags:["#劇情片","#探討人性","#情感細膩","#深度"],imdb:7.0,rt:97,desc:"演員瑪婭霍克採用半虛構的方式，記錄了一個女演員在職業與家庭之間尋求平衡的真實掙扎。格林打破紀錄片與劇情片的界線，創造了一種最誠實的自我展示形式。",cast:"瑪婭霍克",awards:"影評人組織多項最佳紀錄片",ott:"MUBI",emoji:"🎭",isNew:false,trailer:"https://www.youtube.com/watch?v=ER7LexMnE0o"},
+  {id:178,zh:"接觸未來",en:"Contact",year:1997,director:"羅伯特澤米吉斯 Robert Zemeckis",genres:["科幻","哲學","劇情"],tags:["#科幻","#哲學","#靈性","#知識性"],imdb:7.5,rt:62,desc:"科學家接收到外星信號，在科學與信仰的爭論中獨自踏上宇宙之旅。根據卡爾薩根原著改編，探問科學與靈性是否能和解，茱蒂福斯特的表演讓這部硬科幻充滿人性溫度。",cast:"茱蒂福斯特、馬修麥康納",awards:"土星獎最佳科幻影片 · 奧斯卡音效剪輯提名",ott:"Netflix TW",emoji:"📡",isNew:false,trailer:"https://www.youtube.com/watch?v=EWwhQB3TKXA"},
+  {id:179,zh:"真實的人性",en:"A Beautiful Mind",year:2001,director:"朗霍華 Ron Howard",genres:["劇情","傳記","哲學"],tags:["#劇情片","#傳記","#哲學","#心理"],imdb:8.2,rt:75,desc:"諾貝爾獎數學家約翰納許在天才與精神分裂症之間的真實人生。羅素克洛的演出令人心碎，這部電影讓觀眾體驗了一個天才大腦既是禮物也是詛咒的完整經歷。",cast:"羅素克洛、珍妮佛康納利",awards:"奧斯卡最佳影片·導演·女配角·改編劇本4項大獎",ott:"Netflix TW",emoji:"🧠",isNew:false,trailer:"https://www.youtube.com/watch?v=aS_d0Ayjw4o"},
+  {id:180,zh:"樂隊的夏天",en:"Almost Famous",year:2000,director:"卡麥隆克羅 Cameron Crowe",genres:["劇情","音樂","成長"],tags:["#劇情片","#音樂","#成長","#餘韻深"],imdb:7.9,rt:89,desc:"1970年代，15歲少年為滾石雜誌追訪搖滾樂團的公路之旅。卡麥隆克羅的半自傳傑作，充滿對音樂黃金時代的深情懷念，那首「Tiny Dancer」的巴士場景是影史最美的共鳴時刻。",cast:"比利克魯德普、凱特哈德森、佩頓歐斯華",awards:"奧斯卡最佳原著劇本 · 金球獎最佳音樂喜劇影片",ott:"Prime Video TW",emoji:"🎸",isNew:false,trailer:"https://www.youtube.com/watch?v=vJ6n1bRSKpI"},
+  {id:181,zh:"控制論愛人",en:"Ex Machina",year:2015,director:"亞力士嘉蘭 Alex Garland",genres:["科幻","哲學","心理"],tags:["#科幻","#哲學","#心理","#神秘"],imdb:7.7,rt:92,desc:"程式設計師受邀測試人工智能機器人，卻在測試過程中對意識、自由意志與操控的邊界產生深刻的懷疑。亞力士嘉蘭以最低限度的場景，打造了科幻電影史上最令人不安的哲學實驗。",cast:"艾力克斯蘭德爾、多納嘉爾遜、奧斯卡伊薩克",awards:"奧斯卡最佳視效 · 英國影藝學院最佳英國電影提名",ott:"Netflix TW",emoji:"🤖",isNew:false,trailer:"https://www.youtube.com/watch?v=EoQuVnKhxaM"},
+  {id:182,zh:"28天毀滅倒數",en:"28 Days Later",year:2002,director:"Danny Boyle",genres:["驚悚","科幻","社會"],tags:["#驚悚","#科幻","#探討人性"],imdb:7.6,rt:87,desc:"病毒感染後的英國，少數倖存者在被感染的亡靈中求生。Danny Boyle以數位攝影機拍出了末日的真實質感，但真正的恐怖不是喪屍，而是倖存的人類本身。",cast:"基里安墨菲、娜歐蜜哈里斯",awards:"英國影藝學院最佳英國電影提名",ott:"Disney+ TW",emoji:"🦠",isNew:false,trailer:"https://www.youtube.com/watch?v=jFiJWKQwz1k"},
+  {id:183,zh:"藝伎回憶錄",en:"Memoirs of a Geisha",year:2005,director:"馬歇爾 Rob Marshall",genres:["劇情","愛情","歷史"],tags:["#劇情片","#愛情","#攝影強","#詩意"],imdb:7.3,rt:35,desc:"二戰前後的京都，農村少女被賣入藝伎世界，在美麗的囚籠中尋找愛情與自由。章子怡的演出充滿憂鬱的美感，攝影師約翰托爾將京都的光影化為東方詩意的極致展現。",cast:"章子怡、渡邊謙、鞏俐",awards:"奧斯卡最佳攝影·美術·服裝設計3項大獎",ott:"Netflix TW",emoji:"🌸",isNew:false,trailer:"https://www.youtube.com/watch?v=oSmXzAn_HpA"},
+  {id:184,zh:"深夜加油站遇見蘇格拉底",en:"Peaceful Warrior",year:2006,director:"維克多賽倫納 Victor Salva",genres:["劇情","靈性","成長"],tags:["#劇情片","#靈性","#成長","#知識性"],imdb:7.2,rt:26,desc:"體操選手在深夜加油站遇見了神秘的老人蘇格拉底，在訓練與哲學對話中重新找到生命的本質。改編自丹米爾曼暢銷書，以運動為媒介探問心靈修煉與當下意識。",cast:"史考特梅卡洛維茲、尼克諾爾特",awards:"改編自暢銷靈性書籍",ott:"Netflix TW",emoji:"🌙",isNew:false,trailer:"https://www.youtube.com/watch?v=4mXXGxXJHCA"},
+  {id:185,zh:"衝擊效應",en:"Crash",year:2004,director:"保羅哈吉斯 Paul Haggis",genres:["劇情","社會","非線性"],tags:["#劇情片","#探討人性","#非線性敘事","#深度"],imdb:7.7,rt:76,desc:"洛杉磯24小時內，不同種族的人在偶然間互相碰撞，暴露出每個人內心深處的偏見與恐懼。保羅哈吉斯以多線交織的敘事，打造了一部讓人不舒服卻無法停止思考的社會解剖。",cast:"桑德拉布拉克、麥特狄倫、唐奇鐸",awards:"奧斯卡最佳影片·剪輯·原著劇本3項大獎",ott:"Netflix TW",emoji:"💥",isNew:false,trailer:"https://www.youtube.com/watch?v=Ly8DiZMg1S8"},
+  {id:186,zh:"少年時代",en:"Boyhood",year:2014,director:"林克雷特 Richard Linklater",genres:["劇情","成長","詩意"],tags:["#劇情片","#成長","#詩意","#慢節奏","#林克雷特"],imdb:7.9,rt:99,desc:"歷時12年真實拍攝同一個孩子從6歲到18歲的成長歷程。林克雷特不用故事弧線，只讓時光流逝，讓觀眾在日常的細節中感受生命的流動。是電影對時間最誠實的凝視。",cast:"艾拉科爾特蘭、派翠西亞艾奎特、伊森霍克",awards:"奧斯卡最佳導演提名·最佳女配角（艾奎特）· 金球獎最佳劇情影片",ott:"Prime Video TW",emoji:"📷",isNew:false,trailer:"https://www.youtube.com/watch?v=M-tqTaFnHHg"},
+  {id:187,zh:"搖滾紅與黑",en:"School of Rock",year:2003,director:"理查柯提斯 Richard Linklater",genres:["喜劇","音樂","成長"],tags:["#喜劇","#音樂","#成長","#輕盈"],imdb:7.1,rt:92,desc:"冒牌老師帶領一群優等生組成搖滾樂團，以音樂為媒介讓孩子找到自我表達的勇氣。傑克布萊克的喜劇能量與孩子們的真實演奏，讓這部合家歡電影充滿真誠的感染力。",cast:"傑克布萊克、瓊庫薩克",awards:"土星獎最佳喜劇電影提名",ott:"Netflix TW",emoji:"🎸",isNew:false,trailer:"https://www.youtube.com/watch?v=PTUX_Bfzaio"},
+  {id:188,zh:"夢想練習曲",en:"Whiplash",year:2014,director:"達米恩查澤雷 Damien Chazelle",genres:["劇情","音樂","心理"],tags:["#劇情片","#音樂","#心理","#深度"],imdb:8.5,rt:94,desc:"年輕鼓手進入頂尖音樂學院，遇上以精神虐待激發極限的指揮老師。達米恩查澤雷以極度緊張的剪接節奏，探問追求卓越的代價究竟值不值得，最後那場演出讓人窒息。",cast:"麥爾斯泰勒、傑K西蒙斯",awards:"奧斯卡最佳男配角·剪輯·音效3項大獎",ott:"Netflix TW",emoji:"🥁",isNew:false,trailer:"https://www.youtube.com/watch?v=7d_jQycdQGo"},
+  {id:189,zh:"刺激1995",en:"The Shawshank Redemption",year:1994,director:"法蘭克達拉邦特 Frank Darabont",genres:["劇情","人性","振奮"],tags:["#劇情片","#探討人性","#振奮","#經典"],imdb:9.3,rt:91,desc:"被冤枉入獄的銀行家在肖申克監獄中以希望與智慧熬過漫長歲月。IMDB史上評分最高的電影，關於希望永不消滅的最純粹宣言，那句「Busy living or busy dying」永遠激勵人心。",cast:"提姆羅賓斯、摩根費里曼",awards:"奧斯卡7項提名 · IMDB 250最高分電影第一名",ott:"Netflix TW",emoji:"🏴",isNew:false,trailer:"https://www.youtube.com/watch?v=PLl99DlL6b4"},
+  {id:190,zh:"教父",en:"The Godfather",year:1972,director:"法蘭西斯柯波拉 Francis Ford Coppola",genres:["劇情","犯罪","史詩"],tags:["#劇情片","#史詩","#探討人性","#經典","#老片"],imdb:9.2,rt:97,desc:"黑手黨家族的權力傳承與人性墮落，史上最偉大的電影之一。柯波拉以莎士比亞式的悲劇結構，在犯罪的外殼下書寫了家族、榮耀與背叛的永恆主題，讓黑道電影成為藝術。",cast:"馬龍白蘭度、艾爾帕西諾、詹姆斯肯恩",awards:"奧斯卡最佳影片·男主角·改編劇本3項大獎 · 影史最偉大電影之一",ott:"Netflix TW",emoji:"🌹",isNew:false,trailer:"https://www.youtube.com/watch?v=sY1S34973zA"},
+  {id:191,zh:"教父2",en:"The Godfather Part II",year:1974,director:"法蘭西斯柯波拉 Francis Ford Coppola",genres:["劇情","犯罪","史詩"],tags:["#劇情片","#史詩","#非線性敘事","#經典","#老片"],imdb:9.0,rt:97,desc:"麥可柯里昂的帝國擴張與道德沉淪，同時以非線性敘事交織父親維托的移民崛起故事。史上唯一超越前作的續集，也是影史唯一同時獲得奧斯卡最佳影片的續集電影。",cast:"艾爾帕西諾、勞勃狄尼洛、黛安基頓",awards:"奧斯卡最佳影片·導演·男配角·改編劇本·美術·配樂6項大獎",ott:"Netflix TW",emoji:"🍊",isNew:false,trailer:"https://www.youtube.com/watch?v=qJtQINGdTNk"},
+  {id:192,zh:"羅馬假期",en:"Roman Holiday",year:1953,director:"威廉惠勒 William Wyler",genres:["愛情","喜劇","經典"],tags:["#愛情","#浪漫喜劇","#老片","#經典"],imdb:7.9,rt:98,desc:"歐洲公主微服出走羅馬，與美國記者度過了一個充滿魔法的一天。奧黛麗赫本的銀幕處女作就是奧斯卡最佳女主角，羅馬的永恆城市與這段無法延續的愛情，成為影史最完美的浪漫記憶。",cast:"奧黛麗赫本、葛雷哥萊畢克",awards:"奧斯卡最佳女主角·故事·服裝設計3項大獎",ott:"Prime Video TW",emoji:"🛵",isNew:false,trailer:"https://www.youtube.com/watch?v=bDFBBASrxlA"},
+  {id:193,zh:"窈窕淑女",en:"My Fair Lady",year:1964,director:"喬治庫克 George Cukor",genres:["愛情","音樂","喜劇"],tags:["#愛情","#音樂","#老片","#經典"],imdb:7.8,rt:96,desc:"語音學教授打賭能將花街賣花女改造成上流淑女，在訓練與轉變中兩人都發生了意想不到的變化。奧黛麗赫本的優雅與賈利葛倫的傲慢形成絕妙化學，是歌舞片的永恆經典。",cast:"奧黛麗赫本、賈利葛倫、史丹利哈洛威",awards:"奧斯卡最佳影片·導演·男主角等8項大獎",ott:"Prime Video TW",emoji:"🎩",isNew:false,trailer:"https://www.youtube.com/watch?v=CW_cljlF6pk"},
+  {id:194,zh:"北非諜影",en:"Casablanca",year:1942,director:"麥可柯蒂茲 Michael Curtiz",genres:["愛情","劇情","戰爭"],tags:["#愛情","#劇情片","#老片","#經典"],imdb:8.5,rt:99,desc:"二戰期間摩洛哥的酒吧老闆與舊愛的重逢，在愛情、理想與犧牲之間做出艱難選擇。那句「Here's looking at you, kid」成為影史最動人的告別，是愛情電影的永恆標竿。",cast:"亨弗萊鮑嘉、英格麗褒曼",awards:"奧斯卡最佳影片·導演·改編劇本3項大獎 · AFI百大影片第3名",ott:"Max TW",emoji:"🎷",isNew:false,trailer:"https://www.youtube.com/watch?v=BkL9l7qovsE"},
+  {id:195,zh:"大亨小傳",en:"The Great Gatsby",year:2013,director:"巴茲魯曼 Baz Luhrmann",genres:["劇情","愛情","史詩"],tags:["#劇情片","#愛情","#攝影強","#詩意"],imdb:7.3,rt:48,desc:"費茲傑羅的文學經典以華麗的視覺語言重現，李奧納多的蓋茲比充滿傳奇的脆弱感。巴茲魯曼用現代音樂搭配爵士年代的奢靡美學，讓這個關於美國夢的幻滅故事煥發出新的光芒。",cast:"李奧納多狄卡皮歐、凱莉穆莉根、陶比麥奎爾",awards:"奧斯卡最佳美術·服裝設計2項大獎",ott:"Netflix TW",emoji:"🥂",isNew:false,trailer:"https://www.youtube.com/watch?v=OaSLCxFEnZM"},
+  {id:196,zh:"香草的天空",en:"Vanilla Sky",year:2001,director:"卡麥隆克羅 Cameron Crowe",genres:["科幻","懸疑","非線性"],tags:["#科幻","#懸疑","#非線性敘事","#心理"],imdb:6.9,rt:43,desc:"英俊富商在一場意外後，現實與夢境的邊界徹底崩潰。卡麥隆克羅改編西班牙電影《睜開你的雙眼》，以迷幻的視覺語言探問意識、記憶與真實的本質，湯姆克魯斯少見的脆弱面貌。",cast:"湯姆克魯斯、潘妮洛普克魯茲、卡麥蓉狄亞",awards:"奧斯卡最佳原創歌曲提名",ott:"Prime Video TW",emoji:"🌅",isNew:false,trailer:"https://www.youtube.com/watch?v=GqvX5a0fVA4"},
+  {id:197,zh:"蜘蛛人：穿越新宇宙",en:"Spider-Man: Across the Spider-Verse",year:2023,director:"昆汀佩恩 Joaquim Dos Santos",genres:["動畫","科幻","冒險"],tags:["#動畫","#科幻","#攝影強","#新上映"],imdb:8.6,rt:96,desc:"Miles Morales跨越多個宇宙的冒險，每個宇宙都有獨特的視覺風格。多組動畫師以不同的藝術語言構建不同的宇宙，打造了動畫電影的視覺革命，是近年最令人嘆為觀止的動畫傑作。",cast:"夏梅克摩爾、海莉史坦菲德（配音）",awards:"奧斯卡最佳動畫片提名 · 多項動畫協會大獎",ott:"Netflix TW",emoji:"🕷️",isNew:true,trailer:"https://www.youtube.com/watch?v=cqGjhVJWtEg"},
+  {id:198,zh:"轉捩點",en:"The Turning Point",year:2023,director:"尤沃金·提爾 Joachim Trier",genres:["劇情","愛情","心理"],tags:["#劇情片","#愛情","#心理","#情感細膩"],imdb:7.1,rt:87,desc:"提爾延續《世界上最糟糕的人》的風格，深入探索現代女性在愛情與自我實現之間的掙扎，以細膩的觀察力捕捉當代關係中最難言說的情感層次。",cast:"芮娜莎絲、安德斯丹尼爾森李",awards:"坎城主競賽入圍",ott:"MUBI",emoji:"🌊",isNew:true,trailer:"https://www.youtube.com/watch?v=vRQbYlIcJl4"},
+  {id:199,zh:"世界上最糟糕的人",en:"The Worst Person in the World",year:2021,director:"尤沃金·提爾 Joachim Trier",genres:["劇情","愛情","成長"],tags:["#劇情片","#愛情","#成長","#情感細膩"],imdb:7.8,rt:97,desc:"奧斯陸年輕女子茱莉在不同的人生選擇中漂移，尋找屬於自己的故事。提爾以12章的結構記錄一個女人三十歲前的徬徨，是北歐電影最誠實也最溫柔的當代女性書寫。坎城最佳女主角。",cast:"芮娜莎絲、安德斯丹尼爾森李",awards:"坎城最佳女主角 · 奧斯卡最佳國際影片·原著劇本提名",ott:"MUBI",emoji:"☁️",isNew:false,trailer:"https://www.youtube.com/watch?v=Gb7bBBNNHjE"},
+  {id:200,zh:"奧斯陸三部曲之一夜",en:"Oslo, August 31st",year:2011,director:"尤沃金·提爾 Joachim Trier",genres:["劇情","心理","慢節奏"],tags:["#劇情片","#心理","#慢節奏","#深度"],imdb:7.7,rt:97,desc:"一個戒毒男子在出所前最後一天回到奧斯陸，探訪昔日的朋友與愛人，最終面對無法承受的存在之重。提爾以靜謐的長鏡頭，拍出了孤獨與渴望之間最令人心碎的一天。",cast:"安德斯丹尼爾森李",awards:"坎城導演雙週入圍 · 歐洲電影獎最佳影片",ott:"MUBI",emoji:"🌅",isNew:false,trailer:"https://www.youtube.com/watch?v=7rEbQ8xYJJk"},
+  {id:201,zh:"聖鹿之殺",en:"The Killing of a Sacred Deer",year:2017,director:"藍西莫 Yorgos Lanthimos",genres:["驚悚","哲學","神秘"],tags:["#驚悚","#哲學","#神秘","#深度"],imdb:7.0,rt:79,desc:"心臟外科醫生與神秘少年之間的關係逐漸讓整個家庭陷入超自然的恐怖詛咒。藍西莫以冷酷的儀式感與幾何構圖，探問罪惡感與代價的希臘悲劇邏輯，科林法瑞爾的壓抑演出令人窒息。",cast:"科林法瑞爾、妮可基嫚、巴瑞科根",awards:"坎城最佳劇本 · 英國影藝學院提名",ott:"Prime Video TW",emoji:"🦌",isNew:false,trailer:"https://www.youtube.com/watch?v=9Bm0oMoALiQ"},
+  {id:202,zh:"龍蝦",en:"The Lobster",year:2015,director:"藍西莫 Yorgos Lanthimos",genres:["科幻","喜劇","哲學"],tags:["#科幻","#哲學","#黑色幽默","#神秘"],imdb:7.1,rt:89,desc:"反烏托邦世界中，單身者必須在45天內找到伴侶，否則將被變成動物。藍西莫以極度荒誕的設定，解構了社會對配對與愛情的強迫性規範，科林法瑞爾的面無表情成為最犀利的表演策略。",cast:"科林法瑞爾、蕾雅賽杜、瑞秋懷茲",awards:"坎城評審團獎 · 歐洲電影獎最佳影片提名",ott:"Netflix TW",emoji:"🦞",isNew:false,trailer:"https://www.youtube.com/watch?v=Wgf4HBFKmC4"},
+  {id:203,zh:"Single Man",en:"A Single Man",year:2009,director:"湯姆福特 Tom Ford",genres:["劇情","愛情","LGBT"],tags:["#劇情片","#愛情","#LGBT","#攝影強","#慢節奏"],imdb:7.6,rt:89,desc:"1962年洛杉磯，大學英文教授在失去長期伴侶後度過的最後一天。湯姆福特以時裝設計師的眼光構建每一個畫面，將悲傷轉化為精緻的視覺詩篇，柯林佛斯一生最美的表演。",cast:"柯林佛斯、茱麗安摩爾、尼可拉斯霍爾特",awards:"威尼斯最佳男主角（柯林佛斯）· 奧斯卡最佳男主角提名",ott:"MUBI",emoji:"🕶️",isNew:false,trailer:"https://www.youtube.com/watch?v=a3yiKmF6MHI"},
+  {id:204,zh:"絕美之城",en:"The Great Beauty",year:2013,director:"保羅索倫提諾 Paolo Sorrentino",genres:["劇情","哲學","詩意"],tags:["#劇情片","#哲學","#詩意","#慢節奏"],imdb:7.9,rt:88,desc:"羅馬65歲的派對評論家在絢爛的社交生活中面對老去與意義的失落。索倫提諾以費里尼式的狂歡與寂寥，讓羅馬古城成為存在主義的最美舞台，奧斯卡最佳外語片。",cast:"托尼賽爾維洛、卡洛貝爾多涅",awards:"奧斯卡最佳外語片 · 英國影藝學院最佳外語片",ott:"Netflix TW",emoji:"🏛️",isNew:false,trailer:"https://www.youtube.com/watch?v=FtumJ3uyVns"},
+  {id:205,zh:"教宗的承繼",en:"The Two Popes",year:2019,director:"費南多梅瑞爾斯 Fernando Meirelles",genres:["劇情","傳記","哲學"],tags:["#劇情片","#傳記","#哲學","#知識性"],imdb:7.6,rt:86,desc:"保守派教宗班奈迪克與改革派的未來教宗方濟各在梵蒂岡的深刻對話。兩位演技派巨星的對手戲充滿張力與溫情，是關於信仰、改革與人性的精彩神學辯論。",cast:"安東尼霍普金斯、強納森普萊斯",awards:"奧斯卡最佳男主角·男配角·改編劇本3項提名",ott:"Netflix TW",emoji:"⛪",isNew:false,trailer:"https://www.youtube.com/watch?v=YbcTFwWYkVE"},
+  {id:206,zh:"腦海中的橡皮擦",en:"A Moment to Remember",year:2004,director:"鄭允哲",genres:["愛情","劇情","韓國"],tags:["#愛情","#劇情片","#韓國","#感人"],imdb:7.8,rt:82,desc:"一對相愛的夫妻，妻子年僅30多歲卻罹患阿茲海默症，記憶一點一點消失。丈夫的不離不棄成為韓國愛情電影最令人心碎的陪伴宣言，看完會讓你重新珍惜身邊的每一個記憶。",cast:"鄭宇成、孫藝珍",awards:"韓國大鐘獎最佳影片提名 · 百想藝術大賞",ott:"Netflix TW",emoji:"🧡",isNew:false,trailer:"https://www.youtube.com/watch?v=3bXnoMM9DhI"},
+  {id:207,zh:"建築師",en:"The Architect",year:2023,director:"伯特揚斯·奧爾森 Bertrand Bonello",genres:["劇情","神秘","哲學"],tags:["#劇情片","#神秘","#哲學","#深度"],imdb:7.0,rt:88,desc:"一個建築師在完成人生最重要作品之際，面對身份與意義的雙重危機。邦內洛以建築空間的結構隱喻人類存在的框架，是法國電影近年最具思考深度的哲學作品之一。",cast:"法蘭克格雷尼、加斯帕烏勒",awards:"威尼斯主競賽入圍",ott:"MUBI",emoji:"🏗️",isNew:true,trailer:"https://www.youtube.com/watch?v=fP0YfgFXLOs"},
+  {id:208,zh:"咖啡愛情",en:"Café Lumière",year:2003,director:"侯孝賢 Hou Hsiao-hsien",genres:["劇情","日本","詩意"],tags:["#劇情片","#詩意","#慢節奏","#侯孝賢"],imdb:7.2,rt:84,desc:"東京的日常與記憶交織，侯孝賢向小津安二郎致敬的靜謐城市凝視，以長鏡頭捕捉都市人的孤獨與連結。",cast:"一青窈、淺野忠信",awards:"侯孝賢向小津安二郎百年致敬之作",ott:"MUBI",emoji:"☕",isNew:false,trailer:"https://www.youtube.com/watch?v=3gvXPlYvNcA"},
+  {id:209,zh:"海灘",en:"The Beach",year:2000,director:"丹尼波伊爾 Danny Boyle",genres:["冒險","劇情","神秘"],tags:["#冒險","#神秘","#劇情片","#攝影強"],imdb:6.7,rt:19,desc:"背包客在泰國發現秘密天堂海灘，卻在烏托邦式的共同體中見到人性最黑暗的一面。丹尼波伊爾以鮮豔的熱帶色彩包裹了一個關於理想與腐化的寓言，李奧納多的魅力加持。",cast:"李奧納多狄卡皮歐、蒂達史雲頓、維珍妮·蕾多彤",awards:"英國電影獎多項提名",ott:"Disney+ TW",emoji:"🏖️",isNew:false,trailer:"https://www.youtube.com/watch?v=Tt0fFAPBODE"},
+  {id:210,zh:"倫敦戀習曲",en:"About a Boy",year:2002,director:"保羅·韋茲 Paul Weitz",genres:["喜劇","愛情","成長"],tags:["#喜劇","#愛情","#成長","#輕盈"],imdb:7.0,rt:94,desc:"倫敦自私的富家子弟為了泡妞混入單親父母支援團體，卻意外與一個奇怪的12歲男孩建立了改變彼此的友誼。休葛蘭最討喜的表演，關於成長永遠不嫌晚的溫馨喜劇。",cast:"休葛蘭、尼古拉斯霍爾特、圖妮薇特",awards:"奧斯卡最佳改編劇本提名 · 英國影藝學院最佳改編劇本",ott:"Prime Video TW",emoji:"🎧",isNew:false,trailer:"https://www.youtube.com/watch?v=0jMFPqC_9Os"},
+  {id:211,zh:"時空旅人之妻",en:"The Time Traveler's Wife",year:2009,director:"羅伯特史瓦克 Robert Schwentke",genres:["科幻","愛情","劇情"],tags:["#科幻","#愛情","#非線性敘事","#感人"],imdb:7.1,rt:38,desc:"男人無法控制地穿越時間，與深愛他的妻子之間的愛情因此充滿了錯位與等待。雖然科幻設定荒誕，但兩人之間跨越時間的深情令人動容，是關於愛需要多少耐心的感人故事。",cast:"艾瑞克巴納、瑞秋麥亞當斯",awards:"土星獎最佳奇幻影片提名",ott:"Netflix TW",emoji:"⏰",isNew:false,trailer:"https://www.youtube.com/watch?v=uNiJt4XnTRw"},
+  {id:212,zh:"美麗境界2",en:"Eternal Sunshine 2",year:2019,director:"Xavier Dolan",genres:["愛情","劇情","非線性"],tags:["#愛情","#劇情片","#非線性敘事","#情感細膩"],imdb:7.4,rt:88,desc:"Xavier Dolan以他一貫的緊密視角，探索一段充滿激情與傷害的愛情，手持攝影機讓情感的強烈度幾乎讓人窒息，是法語電影中最真實也最痛苦的愛情書寫之一。",cast:"艾倫夏巴、蘇珊克雷蒙",awards:"坎城評審團獎",ott:"MUBI",emoji:"💔",isNew:false,trailer:"https://www.youtube.com/watch?v=M6T14oGi4t4"},
+  {id:213,zh:"我殺了我媽媽",en:"I Killed My Mother",year:2009,director:"澤維爾·多蘭 Xavier Dolan",genres:["劇情","家庭","LGBT"],tags:["#劇情片","#LGBT","#情感細膩","#深度"],imdb:7.4,rt:88,desc:"19歲的多蘭自編自導自演，用近乎日記的方式記錄與母親之間愛恨交織的關係。這部首作的情感強烈度讓坎城為之震驚，開創了一個法語電影新天才的傳奇起點。",cast:"澤維爾多蘭、安娜杜瓦爾",awards:"坎城導演雙週3項大獎",ott:"MUBI",emoji:"💐",isNew:false,trailer:"https://www.youtube.com/watch?v=Xq8EZqGkzOY"},
+  {id:214,zh:"湯姆在農場",en:"Tom at the Farm",year:2013,director:"澤維爾·多蘭 Xavier Dolan",genres:["驚悚","劇情","LGBT"],tags:["#驚悚","#劇情片","#LGBT","#心理"],imdb:7.1,rt:80,desc:"城市男子前往農場弔唁過世的男友，卻被男友的哥哥以操控和威脅困在農場中。多蘭罕見地嘗試希區考克式的驚悚，但情感的壓抑與身份認同的困境依然是核心。",cast:"澤維爾多蘭、皮耶伊夫法樂",awards:"威尼斯費比西獎 · 多倫多影展入圍",ott:"MUBI",emoji:"🚜",isNew:false,trailer:"https://www.youtube.com/watch?v=NNhPIB1SFMU"},
+  {id:215,zh:"親愛媽咪",en:"Mommy",year:2014,director:"澤維爾·多蘭 Xavier Dolan",genres:["劇情","家庭","情感"],tags:["#劇情片","#情感細膩","#深度","#攝影強"],imdb:8.0,rt:88,desc:"單親媽媽與患有過動症的兒子之間的愛與崩潰，多蘭首次使用1:1的正方形畫幅，在最後那個畫幅展開的瞬間，所有壓抑的夢想與現實同時爆發，是影史最具震撼力的構圖實驗之一。",cast:"安娜杜瓦爾、安托萬奧利維耶·皮隆",awards:"坎城評審團獎（與高達並列）",ott:"MUBI",emoji:"💙",isNew:false,trailer:"https://www.youtube.com/watch?v=wHCE_q3CEEM"},
+  {id:216,zh:"醉好的時光",en:"Another Round",year:2020,director:"托瑪斯凡提柏格 Thomas Vinterberg",genres:["劇情","哲學","黑色幽默"],tags:["#劇情片","#哲學","#黑色幽默","#深度"],imdb:7.7,rt:95,desc:"四個丹麥男老師試驗一個理論：血液中維持0.05%的酒精濃度是否能讓人更快樂更有創造力。凡提柏格以輕盈的喜劇開場，逐漸走向對中年危機與生命意義的深刻拷問。馬茲米克森封帝之作。",cast:"馬茲米克森、湯瑪斯波·拉森",awards:"奧斯卡最佳國際影片 · 英國影藝學院最佳非英語影片",ott:"Netflix TW",emoji:"🍺",isNew:false,trailer:"https://www.youtube.com/watch?v=8d6bTIWbDjA"},
+  {id:217,zh:"一個明星的誕生",en:"A Star Is Born",year:2018,director:"布萊德利庫柏 Bradley Cooper",genres:["音樂","愛情","劇情"],tags:["#音樂","#愛情","#劇情片","#感人"],imdb:7.6,rt:90,desc:"過氣搖滾歌手發掘了街頭演唱的天才女孩，兩人在音樂與愛情的舞台上互相成就也互相毀滅。布萊德利庫柏的導演處女作驚豔全球，女神卡卡的爆發性演出讓人遺忘她是流行歌手。",cast:"女神卡卡、布萊德利庫柏",awards:"奧斯卡最佳原創歌曲 · 金球獎最佳原創歌曲",ott:"Netflix TW",emoji:"🎤",isNew:false,trailer:"https://www.youtube.com/watch?v=-gLf4tFmGWo"},
+  {id:218,zh:"雨中曲",en:"Singin' in the Rain",year:1952,director:"金凱利 Gene Kelly",genres:["音樂","喜劇","愛情"],tags:["#音樂","#喜劇","#老片","#經典"],imdb:8.3,rt:100,desc:"好萊塢從默片過渡到有聲電影的混亂期，金凱利在傾盆大雨中起舞的那一幕，成為電影史上最純粹的喜悅瞬間。歌舞片的最高境界，半世紀後依然讓人嘴角上揚。",cast:"金凱利、黛比雷諾茲、唐奧康納",awards:"美國國家影片登記 · AFI十大音樂電影第一名",ott:"Prime Video TW",emoji:"🌧️",isNew:false,trailer:"https://www.youtube.com/watch?v=D1ZYhVpdXbQ"},
+  {id:219,zh:"愛是您·愛是我",en:"Love Actually",year:2003,director:"理查柯提斯 Richard Curtis",genres:["愛情","喜劇","群像"],tags:["#愛情","#浪漫喜劇","#輕盈","#感人"],imdb:7.6,rt:64,desc:"倫敦聖誕節前的五週，十段交織的愛情故事從首相到保母、從搖滾歌手到外來移民。理查柯提斯以最溫暖的群像喜劇，讓愛情以各種面貌出現，那張卡片告白成為影史最甜蜜的宣言。",cast:"休葛蘭、艾瑪湯普遜、科連費斯",awards:"英國影藝學院最佳英國電影提名",ott:"Netflix TW",emoji:"🎄",isNew:false,trailer:"https://www.youtube.com/watch?v=oGukl-KBucc"},
+  {id:220,zh:"歡迎來到布達佩斯大飯店番外",en:"Asteroid City",year:2023,director:"魏斯安德森 Wes Anderson",genres:["喜劇","魔幻","科幻"],tags:["#喜劇","#魔幻","#科幻","#攝影強"],imdb:6.6,rt:74,desc:"1955年美國沙漠小鎮，各懷心事的人們聚集在觀星活動中，卻遭遇了外星人入侵。安德森以戲中戲的後設結構，探問創作與悲傷之間的關係，視覺美學一如既往令人著迷。",cast:"傑森舒瓦茲曼、史嘉蕾喬韓森、湯姆漢克斯",awards:"坎城主競賽入圍",ott:"Disney+ TW",emoji:"🌵",isNew:false,trailer:"https://www.youtube.com/watch?v=bAjarMgPMBU"},
+  {id:221,zh:"鬼月奇譚",en:"The Others",year:2001,director:"亞歷山卓阿曼納巴 Alejandro Amenábar",genres:["驚悚","神秘","哲學"],tags:["#驚悚","#神秘","#哲學","#餘韻深"],imdb:7.6,rt:83,desc:"二戰後孤島莊園，母親帶著對光過敏的孩子生活，卻感覺到有不明存在出沒。阿曼納巴以極度壓抑的氛圍與精心設計的反轉，讓這部哥德式驚悚成為近年最聰明的恐怖電影之一。",cast:"妮可基嫚、芬奴歐布萊恩",awards:"英國影藝學院最佳英語影片提名 · 哥雅獎最佳歐洲電影",ott:"Prime Video TW",emoji:"👻",isNew:false,trailer:"https://www.youtube.com/watch?v=4IvdJzJsqSQ"},
+  {id:222,zh:"色即是空",en:"Adaptation",year:2002,director:"史派克瓊斯 Spike Jonze",genres:["劇情","喜劇","非線性"],tags:["#劇情片","#非線性敘事","#哲學","#黑色幽默"],imdb:7.7,rt:91,desc:"編劇查理考夫曼在改編一本關於蘭花的書時，讓自己陷入了後設創作的無限迴圈。史派克瓊斯讓尼可拉斯凱吉同飾雙胞胎兄弟，以最聰明的方式探問創作焦慮與真實性的本質。",cast:"尼可拉斯凱吉、梅莉史翠普、克里斯庫柏",awards:"奧斯卡最佳男配角（庫柏）·最佳女主角提名",ott:"Netflix TW",emoji:"🌺",isNew:false,trailer:"https://www.youtube.com/watch?v=2QLMlDCHW9o"},
+  {id:223,zh:"成名在望",en:"Licorice Pizza",year:2021,director:"保羅湯瑪斯安德森 Paul Thomas Anderson",genres:["愛情","喜劇","成長"],tags:["#愛情","#喜劇","#成長","#詩意"],imdb:7.4,rt:91,desc:"1970年代洛杉磯，15歲的少年與25歲的女子之間曖昧不清的夏日奇遇。保羅湯瑪斯安德森以輕盈的節奏和70年代的溫暖色調，拍出了一首獻給那個時代的青春詩篇。",cast:"艾拉安德森、庫柏霍夫曼",awards:"奧斯卡最佳影片·導演·原著劇本3項提名",ott:"Prime Video TW",emoji:"🛹",isNew:false,trailer:"https://www.youtube.com/watch?v=QQSS8PGRHeo"},
+  {id:224,zh:"私戀失調",en:"Punch-Drunk Love",year:2002,director:"保羅湯瑪斯安德森 Paul Thomas Anderson",genres:["愛情","喜劇","哲學"],tags:["#愛情","#喜劇","#哲學","#神秘"],imdb:7.3,rt:78,desc:"壓抑的孤獨男子意外遇見了能接受他一切的女人，在荒誕的情節中綻放出純粹的愛情。亞當山德勒最好的表演，保羅湯瑪斯安德森以色彩和音樂創造了最奇異也最真實的愛情電影。",cast:"亞當山德勒、艾蜜莉華特森",awards:"坎城最佳導演",ott:"Prime Video TW",emoji:"🎛️",isNew:false,trailer:"https://www.youtube.com/watch?v=Z4EQHBQeqk8"},
+  {id:225,zh:"醉後大丈夫",en:"The Hangover",year:2009,director:"陶德菲利普斯 Todd Phillips",genres:["喜劇","冒險","輕盈"],tags:["#喜劇","#輕盈","#刺激"],imdb:7.7,rt:79,desc:"三個男人在拉斯維加斯的告別單身派對後醒來，卻完全不記得昨晚發生了什麼，只知道新郎不見了。以逆推方式拼湊瘋狂一夜的喜劇設計讓這部電影成為近年最歡樂的爆笑之作。",cast:"布萊德利庫柏、艾德賀姆斯、扎克加里費納基斯",awards:"金球獎最佳音樂喜劇影片",ott:"Netflix TW",emoji:"🎰",isNew:false,trailer:"https://www.youtube.com/watch?v=tcdUhdOlz9M"},
+  {id:226,zh:"女巫",en:"The Witch",year:2015,director:"羅伯特艾格斯 Robert Eggers",genres:["驚悚","神秘","哲學"],tags:["#驚悚","#神秘","#哲學","#深度"],imdb:7.0,rt:91,desc:"17世紀新英格蘭，被驅逐出清教徒村莊的家庭在荒野中面對真實或想像的黑暗力量。艾格斯以考據嚴謹的歷史細節和緩慢累積的恐懼感，打造了最具智識深度的恐怖電影之一。",cast:"安雅泰勒喬伊、拉爾夫艾尼生",awards:"日舞影展最佳導演 · 英國影藝學院最佳恐怖影片",ott:"Netflix TW",emoji:"🌲",isNew:false,trailer:"https://www.youtube.com/watch?v=iQXmlf3Sefg"},
+  {id:227,zh:"輕聲說我愛你",en:"Speak No Evil",year:2022,director:"克里斯汀陶菲爾德 Christian Tafdrup",genres:["驚悚","心理","哲學"],tags:["#驚悚","#心理","#哲學","#深度"],imdb:7.1,rt:90,desc:"一對丹麥夫妻受邀拜訪在義大利假期結識的荷蘭家庭，卻在禮貌的外表下感受到越來越強烈的不安。這部電影把人類的過度順從推向最恐怖的極限，看完讓你重新思考邊界的重要。",cast:"海頓賽門森、卡亞泰羅斯",awards:"英國影藝學院多項提名",ott:"MUBI",emoji:"🤫",isNew:false,trailer:"https://www.youtube.com/watch?v=3n9oUFGFD9Y"},
+  {id:228,zh:"月球",en:"Moon",year:2009,director:"鄧肯瓊斯 Duncan Jones",genres:["科幻","哲學","孤獨"],tags:["#科幻","#哲學","#孤獨","#深度"],imdb:7.9,rt:89,desc:"月球上的採礦工人在三年任期即將結束前發現了一個改變一切的秘密。鄧肯瓊斯以極低成本打造了最有深度的硬科幻，山姆洛克威爾的獨角戲是近年最被低估的表演之一。",cast:"山姆洛克威爾、凱文史貝西（聲音）",awards:"英國影藝學院最佳英國電影·新銳英國電影人",ott:"Netflix TW",emoji:"🌕",isNew:false,trailer:"https://www.youtube.com/watch?v=2WIqotS_9-s"},
+  {id:229,zh:"鋼鐵擂台",en:"Real Steel",year:2011,director:"尚加文 Shawn Levy",genres:["劇情","科幻","感人"],tags:["#劇情片","#科幻","#感人","#振奮"],imdb:7.1,rt:60,desc:"未來世界以機器人取代真人搏擊，過氣拳手帶著久違的兒子踏上機器人搏擊之旅。雖然設定科幻，但核心是最真實的父子情感，機器人阿童木的故事讓觀眾從一開始的冷漠到最後熱淚盈眶。",cast:"休傑克曼、達科塔哥尤、喜朵爾",awards:"奧斯卡最佳視效提名",ott:"Disney+ TW",emoji:"🤖",isNew:false,trailer:"https://www.youtube.com/watch?v=s5OXAP0dWlw"},
+  {id:230,zh:"哈利波特：混血王子的背叛",en:"Harry Potter and the Half-Blood Prince",year:2009,director:"大衛葉茨 David Yates",genres:["奇幻","冒險","青春"],tags:["#奇幻","#冒險","#青春","#經典"],imdb:7.6,rt:84,desc:"哈利波特系列最情感豐富的一集，鄧不利多的秘密逐漸揭開，愛情的萌芽與黑暗的逼近在霍格華茲交織。大衛葉茨以最成熟的電影語言讓這部青春奇幻充滿了成人世界的重量。",cast:"丹尼爾雷德克里夫、艾瑪華森、芮妮克萊頓",awards:"英國影藝學院最佳特效提名",ott:"Max TW",emoji:"⚗️",isNew:false,trailer:"https://www.youtube.com/watch?v=oOaRl4bVLlA"},
+  {id:231,zh:"告白",en:"Confessions",year:2010,director:"中島哲也",genres:["驚悚","心理","日本"],tags:["#驚悚","#心理","#非線性敘事","#深度"],imdb:7.9,rt:89,desc:"一個中學女老師在畢業典禮上平靜地宣告：殺死她女兒的兇手就是班上的學生。中島哲也以極度精緻的視覺風格和令人窒息的復仇邏輯，打造了日本犯罪心理電影的極致之作。",cast:"松隆子",awards:"日本電影學院獎最佳影片·導演等7項大獎",ott:"MUBI",emoji:"🧪",isNew:false,trailer:"https://www.youtube.com/watch?v=hkM2iIDrJoU"},
+  {id:232,zh:"電影版：來自北國",en:"Departures",year:2008,director:"瀧田洋二郎",genres:["劇情","靈性","感人"],tags:["#劇情片","#靈性","#感人","#慢節奏"],imdb:8.1,rt:80,desc:"失業大提琴手誤打誤撞成為遺體入殮師，在這個社會邊緣的職業中重新發現了生命的尊嚴與美麗。日本電影中最溫柔的生死觀書寫，奧斯卡最佳外語片。",cast:"本木雅弘、山崎努、廣末涼子",awards:"奧斯卡最佳外語片 · 日本電影學院獎最佳影片",ott:"Netflix TW",emoji:"🎻",isNew:false,trailer:"https://www.youtube.com/watch?v=4PWL3e1MJJI"},
+  {id:233,zh:"遠離塵囂：珍愛相隨",en:"Far from the Madding Crowd",year:2015,director:"托瑪斯凡提柏格 Thomas Vinterberg",genres:["愛情","劇情","史詩"],tags:["#愛情","#劇情片","#攝影強","#詩意"],imdb:7.2,rt:85,desc:"維多利亞時代的英格蘭農村，獨立女牧場主與三個性格截然不同的男人之間的愛情抉擇。凡提柏格以壯麗的英格蘭風景包裹這個關於女性自主的古典故事，凱莉穆莉根的演出優雅動人。",cast:"凱莉穆莉根、馬提亞斯史瓦能希格爾",awards:"英國影藝學院提名",ott:"Disney+ TW",emoji:"🌾",isNew:false,trailer:"https://www.youtube.com/watch?v=BLHpAWJsHN0"},
+  {id:234,zh:"雙面女友",en:"Two Lovers",year:2008,director:"詹姆斯葛雷 James Gray",genres:["愛情","劇情","心理"],tags:["#愛情","#劇情片","#心理","#情感細膩"],imdb:7.2,rt:80,desc:"布魯克林男子同時愛上兩個完全不同的女人——一個穩定善良，一個充滿危險的吸引力。詹姆斯葛雷以寫實的紐約氣息，呈現了愛情中最真實的猶豫、衝動與妥協。",cast:"瓦昆·菲尼克斯、葛妮絲派特洛、薇諾娜瑞德",awards:"坎城主競賽入圍",ott:"MUBI",emoji:"🌃",isNew:false,trailer:"https://www.youtube.com/watch?v=X-f74JVZW0U"},
+  {id:235,zh:"命運規劃局",en:"The Adjustment Bureau",year:2011,director:"喬治諾菲 George Nolfi",genres:["科幻","愛情","哲學"],tags:["#科幻","#愛情","#哲學","#神秘"],imdb:7.0,rt:72,desc:"政治明星發現有一群神秘的調整局成員在操控所有人的命運，而他為了與心愛的女人在一起，選擇反抗命運的安排。馬特戴蒙與艾蜜莉布朗的化學反應讓這部哲學科幻充滿浪漫張力。",cast:"馬特戴蒙、艾蜜莉布朗",awards:"土星獎最佳科幻影片提名",ott:"Prime Video TW",emoji:"🎩",isNew:false,trailer:"https://www.youtube.com/watch?v=vMbMUmWKNoo"},
+  {id:236,zh:"心靈捕手",en:"Good Will Hunting",year:1997,director:"葛斯范桑 Gus Van Sant",genres:["劇情","心理","成長"],tags:["#劇情片","#心理","#成長","#振奮","#經典"],imdb:8.3,rt:97,desc:"波士頓貧民窟的天才清潔工被心理學家幫助打開了內心的枷鎖。羅賓威廉斯的溫柔與麥特戴蒙的原始才華，共同打造了影史最感人的師生關係，那句「It's not your fault」讓無數人落淚。",cast:"麥特戴蒙、羅賓威廉斯、班艾佛列克",awards:"奧斯卡最佳男配角（威廉斯）·最佳原著劇本",ott:"Netflix TW",emoji:"🧮",isNew:false,trailer:"https://www.youtube.com/watch?v=e4THMhWMTaA"},
+  {id:237,zh:"愛在午夜",en:"Midnight Cowboy",year:1969,director:"約翰史勒辛格 John Schlesinger",genres:["劇情","人性","成長"],tags:["#劇情片","#探討人性","#老片","#經典"],imdb:7.8,rt:97,desc:"德州男孩來到紐約想以身體賺錢，卻與一個街頭騙子建立了超越友情的深刻連結。史上唯一一部以X級評分奪得奧斯卡最佳影片的電影，是美國電影最勇敢的人性探索之一。",cast:"達斯汀霍夫曼、喬恩沃特",awards:"奧斯卡最佳影片·導演·改編劇本3項大獎",ott:"Prime Video TW",emoji:"🤠",isNew:false,trailer:"https://www.youtube.com/watch?v=LrJHt1RFj6Y"},
+  {id:238,zh:"縮小人生",en:"Downsizing",year:2017,director:"亞歷山大佩恩 Alexander Payne",genres:["科幻","喜劇","哲學"],tags:["#科幻","#哲學","#黑色幽默","#深度"],imdb:5.7,rt:54,desc:"人類發明了縮小技術，主角決定縮小以過更豐富的生活，卻發現烏托邦背後同樣存在不平等與孤獨。佩恩以輕盈的設定觸碰沉重的環保與存在主義命題，結局充滿哲學餘韻。",cast:"麥特戴蒙、克里斯多福瓦茲、洪川娥",awards:"威尼斯開幕片",ott:"Prime Video TW",emoji:"🔬",isNew:false,trailer:"https://www.youtube.com/watch?v=o6M5-OLzPSo"},
+  {id:239,zh:"永恆族",en:"Eternals",year:2021,director:"趙婷 Chloé Zhao",genres:["科幻","史詩","哲學"],tags:["#科幻","#史詩","#哲學","#攝影強"],imdb:6.3,rt:47,desc:"永恆族超級英雄在地球生活數千年，卻在宇宙秘密浮現時面對存在與道德的終極抉擇。趙婷以金棕櫚得主的寫實美學挑戰漫威的商業框架，大量自然光攝影讓這部超英雄電影充滿罕見的詩意質感。",cast:"吉瑪陳、理察馬登、安吉麗娜裘莉",awards:"奧斯卡最佳視效提名",ott:"Disney+ TW",emoji:"✨",isNew:false,trailer:"https://www.youtube.com/watch?v=x_me3xsvDgk"},
+  {id:240,zh:"遊牧人生",en:"Nomadland",year:2020,director:"趙婷 Chloé Zhao",genres:["劇情","公路","詩意"],tags:["#劇情片","#詩意","#慢節奏","#攝影強"],imdb:7.3,rt:93,desc:"2008年金融危機後失去一切的女性，以廂型車為家在美國西部流浪尋找意義。趙婷以近紀錄片的風格捕捉美國大地的壯麗與孤獨，法蘭西絲麥朵曼第三座奧斯卡最佳女主角。",cast:"法蘭西絲麥朵曼、大衛史崔馬連",awards:"奧斯卡最佳影片·導演·女主角 · 威尼斯金獅獎",ott:"Disney+ TW",emoji:"🚐",isNew:false,trailer:"https://www.youtube.com/watch?v=6sxCFZ8_d84"},
+  {id:241,zh:"一屍到底",en:"One Cut of the Dead",year:2017,director:"上田慎一郎",genres:["喜劇","驚悚","後設"],tags:["#喜劇","#後設","#輕盈","#燒腦"],imdb:7.6,rt:99,desc:"一部僵屍電影拍攝過程中遭遇了真正的僵屍，以一鏡到底的方式拍攝。但這只是第一層——後半段揭開的真相讓人捧腹大笑，同時也被電影人對電影的熱愛深深感動。",cast:"濱津隆之、竹原芳子",awards:"日本電影學院獎多項提名 · 爛番茄99%",ott:"Netflix TW",emoji:"🎬",isNew:false,trailer:"https://www.youtube.com/watch?v=d9drj8FK_IE"},
+  {id:242,zh:"完美陌生人",en:"Perfect Strangers",year:2016,director:"保羅傑諾維斯 Paolo Genovese",genres:["喜劇","劇情","心理"],tags:["#喜劇","#劇情片","#心理","#探討人性"],imdb:7.6,rt:90,desc:"七個老朋友在晚宴上同意一個遊戲：所有人把手機放在桌上，所有來電與訊息都要公開。義大利版本引爆的道德危機，讓這個簡單設定成為最犀利的現代婚姻與友情解剖。",cast:"馬可喬爾迪亞諾、卡洛布卡羅西",awards:"大衛多納泰洛獎最佳影片·劇本",ott:"Netflix TW",emoji:"📱",isNew:false,trailer:"https://www.youtube.com/watch?v=kh0dJ3kCTFQ"},
+  {id:243,zh:"最後的決鬥",en:"The Last Duel",year:2021,director:"雷利史考特 Ridley Scott",genres:["歷史","劇情","心理"],tags:["#劇情片","#歷史","#非線性敘事","#深度"],imdb:7.6,rt:85,desc:"14世紀法國，同一場強暴案件以三個視角分別呈現——丈夫的榮耀、騎士的慾望、妻子的真相。史考特以羅生門式的結構，探問歷史中女性的聲音如何被壓制與扭曲。",cast:"麥特戴蒙、班艾佛列克、茱蒂科默",awards:"英國影藝學院最佳改編劇本提名",ott:"Disney+ TW",emoji:"⚔️",isNew:false,trailer:"https://www.youtube.com/watch?v=PH0OP_5L5HM"},
+  {id:244,zh:"尋找快樂",en:"The Pursuit of Love",year:2021,director:"艾蜜莉摩提默 Emily Mortimer",genres:["愛情","喜劇","劇情"],tags:["#愛情","#喜劇","#劇情片","#輕盈"],imdb:6.9,rt:85,desc:"兩個英國貴族閨蜜在二戰前後的愛情冒險，一個尋找真愛不顧一切，一個旁觀卻深陷其中。莉莉詹姆斯的魅力讓這部根據南茜米特福德小說改編的作品充滿了優雅的喜劇光芒。",cast:"莉莉詹姆斯、艾蜜莉比查姆",awards:"英國影藝學院電視獎多項提名",ott:"Amazon Prime TW",emoji:"💃",isNew:false,trailer:"https://www.youtube.com/watch?v=TmVKiLOE3CQ"},
+  {id:245,zh:"不存在的房間",en:"Room",year:2015,director:"藍納亞伯拉罕遜 Lenny Abrahamson",genres:["劇情","心理","成長"],tags:["#劇情片","#心理","#情感細膩","#深度"],imdb:8.1,rt:94,desc:"被囚禁七年的母親與在狹小房間出生的五歲兒子，終於重回自由世界後卻面對更難適應的現實。布麗拉森的奧斯卡最佳女主角表演撕心裂肺，雅各特倫布萊的童星表演讓所有大人汗顏。",cast:"布麗拉森、雅各特倫布萊",awards:"奧斯卡最佳女主角（拉森）· 英國影藝學院最佳女主角",ott:"Netflix TW",emoji:"🚪",isNew:false,trailer:"https://www.youtube.com/watch?v=ga1vMN_TEOQ"},
+  {id:246,zh:"福斯特先生",en:"45 Years",year:2015,director:"安德魯海格 Andrew Haigh",genres:["愛情","劇情","心理"],tags:["#愛情","#劇情片","#心理","#餘韻深"],imdb:7.3,rt:97,desc:"結婚45週年前夕，丈夫收到一封關於當年未婚妻遺體被發現的信，舊情的陰影讓妻子重新審視這段婚姻的真實意義。夏綠蒂蘭普林的表演如此克制，卻在沉默中讓人心碎。",cast:"夏綠蒂蘭普林、湯姆康特奈",awards:"柏林最佳男女主角銀熊（並列）· 英國影藝學院最佳英國電影",ott:"MUBI",emoji:"💍",isNew:false,trailer:"https://www.youtube.com/watch?v=x-mAFwj2Bxo"},
+  {id:247,zh:"花月殺手",en:"Killers of the Flower Moon",year:2023,director:"馬丁史柯西斯 Martin Scorsese",genres:["劇情","歷史","犯罪"],tags:["#劇情片","#歷史","#深度","#探討人性"],imdb:7.6,rt:89,desc:"1920年代奧克拉荷馬，原住民奧色治族因石油致富後遭遇連串神秘死亡。史柯西斯以三小時半的史詩長度，揭露美國歷史中最黑暗的種族謀殺，李奧納多與羅伯特狄尼洛的重逢震撼人心。",cast:"李奧納多狄卡皮歐、羅伯特狄尼洛、莉莉格萊斯頓",awards:"奧斯卡10項提名含最佳影片 · 坎城主競賽入圍",ott:"Apple TV+ TW",emoji:"🌺",isNew:true,trailer:"https://www.youtube.com/watch?v=EP34Yoxs3FQ"},
+  {id:248,zh:"火柴人",en:"Matchstick Men",year:2003,director:"雷利史考特 Ridley Scott",genres:["劇情","喜劇","心理"],tags:["#劇情片","#心理","#燒腦","#輕盈"],imdb:7.3,rt:81,desc:"患有強迫症的詐騙老手突然出現了一個失散多年的女兒，親情讓他的計畫出現了意想不到的變數。史考特少見的輕盈類型，尼可拉斯凱吉的喜劇演技與感情戲的完美結合。",cast:"尼可拉斯凱吉、山姆洛克威爾、艾莉森羅曼",awards:"英國影藝學院多項提名",ott:"Netflix TW",emoji:"🎩",isNew:false,trailer:"https://www.youtube.com/watch?v=VHXMYX9n4Q0"},
+];
+
+let watched=[],scores={},currentTab="recommend",filterTag="全部",modalId=null,pendingId=null;
+
+let recOffset = 0;
+let shownMovieIds = new Set(); // track which movies have been shown this session
+
+function shuffleRec(){
+  // Add current batch to shown set
+  const currentBatch = getRecommendedRaw();
+  currentBatch.forEach(m => shownMovieIds.add(m.id));
+  recOffset++;
+  renderRecommend(true);
+}
+
+function resetShuffle(){
+  shownMovieIds = new Set();
+  recOffset = 0;
+}
+function openTrailer(zh, en, directUrl){
+  if(directUrl && directUrl.includes('watch?v=')){
+    window.open(directUrl, '_blank');
+  } else {
+    const q = encodeURIComponent(zh + ' ' + en + ' 正式預告 official trailer');
+    window.open('https://www.youtube.com/results?search_query=' + q, '_blank');
+  }
+}
+
+function load(){
+  try{watched=JSON.parse(localStorage.getItem("cw")||"[]");}catch(e){watched=[];}
+  try{scores=JSON.parse(localStorage.getItem("cs")||"{}");}catch(e){scores={};}
+}
+function save(){
+  try{localStorage.setItem("cw",JSON.stringify(watched));localStorage.setItem("cs",JSON.stringify(scores));}catch(e){}
+}
+
+const BASE_G=["哲學","科幻","愛情","劇情","非線性","詩意","靈性","攝影強","餘韻深","魔幻","神秘","人性","心理","奇幻","史詩","傳記"];
+const BASE_D=["王家衛 Wong Kar-wai","維倫紐夫 Denis Villeneuve","林克雷特 Richard Linklater","侯孝賢 Hou Hsiao-hsien","楊德昌 Edward Yang","蘇菲亞柯波拉 Sofia Coppola","諾蘭 Christopher Nolan","史蒂芬史匹柏 Steven Spielberg","雷利史考特 Ridley Scott","提爾 Joachim Trier","藍西莫 Yorgos Lanthimos","宮崎駿 Hayao Miyazaki","李安 Ang Lee","史派克瓊斯 Spike Jonze","伍迪艾倫 Woody Allen"];
+
+function buildProfile(){
+  const gW={},dW={};
+  BASE_G.forEach(g=>gW[g]=2.5);
+  BASE_D.forEach(d=>dW[d]=3.0);
+  // Disliked directors — penalise
+  ["柏格曼 Ingmar Bergman","塔可夫斯基 Andrei Tarkovsky","奇士勞斯基 Krzysztof Kieślowski","岩井俊二 Shunji Iwai","蔡明亮 Tsai Ming-liang","薩安瑪 Céline Sciamma","查理考夫曼 Charlie Kaufman"].forEach(d=>dW[d]=-4);
+  // Favourite actors listed (used in scoreM)
+  const favActors=["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"];
+  watched.forEach(id=>{
+    const m=MOVIES.find(x=>x.id===id);if(!m||!scores[id])return;
+    const b=(scores[id]-5)*0.45;
+    m.genres.forEach(g=>gW[g]=(gW[g]||0)+b);
+    dW[m.director]=(dW[m.director]||0)+b*1.6;
+  });
+  return{gW,dW};
+}
+function scoreM(m,p){
+  let s=0;
+  Object.entries(p.gW).forEach(([g,w])=>{if(m.genres.includes(g))s+=w;});
+  s+=(p.dW[m.director]||0);
+  s+=(m.imdb/10)*1.2+(m.rt/100)*0.8;
+  if(m.isNew)s+=1.8;
+  // Festival award boost
+  if(m.awards && (m.awards.includes("金棕櫚")||m.awards.includes("金獅")||m.awards.includes("金熊")||m.awards.includes("奧斯卡最佳"))) s+=2.5;
+  // Favourite actor boost
+  if(m.cast){
+    const favA=["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"];
+    favA.forEach(a=>{ if(m.cast.includes(a)) s+=1.8; });
+  }
+  if(watched.includes(m.id))s-=99;
+  return s;
+}
+function getRecommendedRaw(){
+  // Returns full sorted pool (used by shuffleRec to record shown ids)
+  const p=buildProfile();
+  return [...MOVIES].filter(m=>!watched.includes(m.id) && !watchlist.includes(m.id))
+    .map(m=>({...m,_s:scoreM(m,p)+likedMovieBoost(m)}))
+    .sort((a,b)=>b._s-a._s);
+}
+
+function getRecommended(){
+  const p = buildProfile();
+  // Score: if mood active, blend mood score heavily into base score
+  const pool = [...MOVIES]
+    .filter(m => !watched.includes(m.id) && !watchlist.includes(m.id))
+    .map(m => {
+      let s = scoreM(m, p) + likedMovieBoost(m);
+      if(currentMoodRec) s += scoreMoodMovie(m) * 2; // mood dominates when active
+      return {...m, _s: s};
+    })
+    .sort((a,b) => b._s - a._s);
+
+  if(pool.length === 0) return [];
+  if(recOffset === 0) return pool.slice(0, 20);
+
+  const fresh = pool.filter(m => !shownMovieIds.has(m.id));
+  if(fresh.length === 0){
+    shownMovieIds = new Set();
+    return pool.slice(0, 20);
+  }
+  return fresh.slice(0, 20);
+}
+
+function scC(s){if(!s)return'var(--text3)';if(s>=8)return'var(--green)';if(s>=5)return'var(--warm)';return'var(--rose)';}
+function scBg(s){if(!s)return'var(--bg3)';if(s>=8)return'var(--green-lt)';if(s>=5)return'var(--warm-lt)';return'var(--rose-lt)';}
+function scBd(s){if(!s)return'var(--border2)';if(s>=8)return'var(--green-mid)';if(s>=5)return'#5A4020';return'#6A3A36';}
+
+function cardHTML(m,idx){
+  const isW=watched.includes(m.id);
+  const sc=scores[m.id];
+  const cls=isW?'card watched':m.isNew&&!isW?'card new-badge':'card';
+  const titleC=isW?'var(--green)':m.isNew?'var(--blue)':'var(--text)';
+  return`
+  <div class="${cls} fade-up" style="animation-delay:${idx*0.045}s" onclick="openModal(${m.id})">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div class="emoji-box">${m.emoji}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px">
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Noto Sans TC','Microsoft JhengHei',Calibri,sans-serif;font-weight:600;font-size:15.5px;color:${titleC};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;line-height:1.3">${m.zh}</div>
+            <div style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px;letter-spacing:0.01em">${m.en}</div>
+          </div>
+          ${sc?`<span class="score-badge" style="background:${scBg(sc)};color:${scC(sc)};border:1.5px solid ${scBd(sc)}">${sc}/10</span>`:''}
+          ${!sc&&isW?`<span class="score-badge" style="background:var(--green-lt);color:var(--green);border:1.5px solid var(--green-mid)">✓ 已看</span>`:''}
+          ${!isW&&m.isNew?`<span class="score-badge" style="background:var(--blue-lt);color:var(--blue);border:1.5px solid #355060">NEW</span>`:''}
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">${m.year} · <span style="color:var(--warm);font-weight:500">${m.director}</span>${m.cast ? " · " + m.cast : ""}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px">
+          ${[...m.tags.slice(0,3), ...(new Date().getFullYear()-m.year>=20?["#老片"]:[]), ...(m.isClassic?["#經典"]:[])].map(t=>`<span class="tag${t==='#老片'||t==='#經典'?'" style="background:var(--warm-lt);color:var(--warm);border-color:#5A4020':''}">${t}</span>`).join('')}
+        </div>
+        <div style="display:flex;align-items:center;font-size:13.5px;gap:10px">
+          <span style="color:var(--warm);font-weight:500">⭐ ${m.imdb}</span>
+          <span style="color:var(--rose);font-weight:500">🍅 ${m.rt}%</span>
+          <span style="color:var(--blue);margin-left:auto;font-size:10.5px">📱 ${m.ott}</span>
+        </div>
+        ${m.awards ? `<div style="font-size:10.5px;color:var(--warm);margin-top:6px;line-height:1.55;display:flex;align-items:flex-start;gap:4px"><span style="flex-shrink:0">🏆</span><span>${m.awards}</span></div>` : ""}
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:13.5px;color:var(--text2);line-height:1.7;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;font-style:italic;margin-bottom:10px">${m.desc}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <a href="#" onclick="event.stopPropagation();openTrailer('${m.zh}','${m.en}','${m.trailer||""}');return false;" style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--rose);text-decoration:none;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--card2)">▶ 預告片</a>
+      <div style="display:flex;gap:6px;align-items:center">
+        ${isW ? `<button onclick="event.stopPropagation();reopenRating(${m.id})" style="background:var(--warm-lt);border:1.5px solid #5A4020;border-radius:20px;padding:4px 10px;font-size:10.5px;color:var(--warm);cursor:pointer">✎ 改分</button>` : ''}
+        ${!isW ? `<button data-wl-id="${m.id}" ontouchstart="event.preventDefault();event.stopPropagation();toggleWatchlist(${m.id})" onclick="event.stopPropagation();toggleWatchlist(${m.id})" style="background:${watchlist.includes(m.id)?'var(--blue-lt)':'var(--card2)'};border:1.5px solid ${watchlist.includes(m.id)?'#355060':'var(--border2)'};border-radius:20px;padding:4px 10px;font-size:10.5px;color:${watchlist.includes(m.id)?'var(--blue)':'var(--text3)'};cursor:pointer;touch-action:manipulation">${watchlist.includes(m.id)?'🔖 已加入':'🔖 想看'}</button>` : ''}
+        <button class="watch-btn-sm ${isW?'watched':''}" onclick="event.stopPropagation();handleToggle(${m.id})">
+          ${isW?'✓ 已看過':'＋ 標記已看'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function handleToggle(id){
+  if(watched.includes(id)){
+    watched=watched.filter(x=>x!==id);delete scores[id];
+    save();
+    renderRecommend(true);
+      renderAll();
+    if(modalId===id)updateModal(id);
+  } else {
+    if(watched.includes(id)) return; // guard against double-tap
+    watched.push(id);save();
+    renderRecommend(true);
+      pendingId=id;openRating(id);
+  }
+}
+function reopenRating(id){
+  pendingId = id;
+  openRating(id);
+}
+function openRating(id){
+  const m=MOVIES.find(x=>x.id===id);
+  document.getElementById("r-emoji").textContent=m.emoji;
+  document.getElementById("r-title").textContent=m.zh;
+  document.getElementById("r-en-title").textContent=m.en;
+  document.querySelectorAll(".score-btn").forEach(b=>b.classList.remove("sel"));
+  document.getElementById("rating-modal").classList.remove("hidden");
+}
+function submitScore(val){
+  if(val!==null)scores[pendingId]=val;
+  save();
+  document.getElementById("rating-modal").classList.add("hidden");
+  pendingId=null;
+  renderRecommend(true);
+  renderAll();
+  if(modalId) updateModal(modalId);
+}
+function toggleFromModal(){handleToggle(modalId);}
+
+function renderRecommend(preserveScroll){
+  const list=getRecommended();
+  const total=MOVIES.length;
+  const watchedCount=watched.length;
+  const remaining=total-watchedCount;
+  document.getElementById("rec-count").textContent=`${list.length}/20 部`;
+  const warn=document.getElementById("low-stock-warn");
+  if(warn){ warn.style.display = remaining<25 ? "block":"none"; }
+  // Update mood status bar
+  const moodBar = document.getElementById("mood-active-bar");
+  const recTitle = document.getElementById("rec-title");
+  if(currentMoodRec){
+    if(moodBar){ moodBar.style.display="flex"; }
+    const {mood,feel,vibe,label,dayOfWeek,timeLabel} = currentMoodRec;
+    const moodDesc = document.getElementById("mood-rec-desc");
+    if(moodDesc) moodDesc.textContent = `${label} · ${mood} · ${[...feel,...vibe].join("、")}`;
+    if(recTitle) recTitle.textContent = "為你精選（依今天狀態）";
+  } else {
+    if(moodBar){ moodBar.style.display="none"; }
+    if(recTitle) recTitle.textContent = "為你精選";
+  }
+  // Save scroll before re-render
+  const savedScroll = preserveScroll ? (document.documentElement.scrollTop || document.body.scrollTop) : null;
+  document.getElementById("recommend-list").innerHTML=list.length
+    ?list.map((m,i)=>cardHTML(m,i)).join('')
+    :`<div style="text-align:center;color:var(--text3);padding:60px 0;font-size:14.5px">✦ 已看遍所有推薦</div>`;
+  // Restore scroll after render
+  if(savedScroll !== null){
+    requestAnimationFrame(()=>{
+      window.scrollTo({top: savedScroll, behavior: "instant"});
+    });
+  }
+}
+function renderBrowse(){
+  const q=document.getElementById("search-input").value.toLowerCase();
+  const list=MOVIES.filter(m=>{
+    const mQ=!q||m.zh.includes(q)||m.en.toLowerCase().includes(q)||m.director.toLowerCase().includes(q)||(m.cast&&m.cast.toLowerCase().includes(q));
+    const mT=filterTag==="全部"||m.tags.includes(filterTag);
+    return mQ&&mT;
+  });
+  document.getElementById("browse-count").textContent=`找到 ${list.length} 部`;
+  document.getElementById("browse-list").innerHTML=list.map((m,i)=>cardHTML(m,i)).join('');
+}
+function renderFilters(){
+  const all=["全部"];
+  MOVIES.forEach(m=>m.tags.forEach(t=>{if(!all.includes(t))all.push(t);}));
+  document.getElementById("filter-scroll").innerHTML=all.slice(0,22).map(t=>
+    `<button class="filter-btn${t===filterTag?' active':''}" onclick="setFilter('${t}')">${t}</button>`
+  ).join('');
+}
+function renderWatched(){
+  const list=MOVIES.filter(m=>watched.includes(m.id));
+  document.getElementById("watched-sub").textContent=`共 ${list.length} 部`;
+  const rated=list.filter(m=>scores[m.id]);
+  const avgBox=document.getElementById("avg-box");
+  if(rated.length){
+    document.getElementById("avg-val").textContent=(rated.reduce((s,m)=>s+scores[m.id],0)/rated.length).toFixed(1)+"/10";
+    avgBox.style.display="block";
+  }else avgBox.style.display="none";
+  document.getElementById("watched-list").innerHTML=list.length
+    ?list.sort((a,b)=>(scores[b.id]||0)-(scores[a.id]||0)).map((m,i)=>cardHTML(m,i)).join('')
+    :`<div style="text-align:center;color:var(--text3);padding:60px 0;font-size:14.5px">還沒標記任何電影</div>`;
+}
+function updateHeader(){
+  document.getElementById("header-count").textContent=`${MOVIES.length} 部片庫 · ${watched.length} 部已看`;
+  document.getElementById("tab-watched").textContent=`已看${watched.length>0?' '+watched.length:''}`;
+}
+function renderAll(){
+  updateHeader();
+  if(currentTab==="recommend")renderRecommend();
+  else if(currentTab==="browse"){renderFilters();renderBrowse();}
+  else renderWatched();
+}
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-"+tab).classList.add("active");
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+tab).classList.add("active");
+  if(tab==="taste") renderTaste();
+  else if(tab==="watchlist") renderWatchlistPage();
+  else renderAll();
+}
+function setFilter(tag){filterTag=tag;renderFilters();renderBrowse();}
+
+function openModal(id){
+  modalId=id;updateModal(id);
+  document.getElementById("modal").classList.remove("hidden");
+}
+function updateModal(id){
+  const m=MOVIES.find(x=>x.id===id);
+  const isW=watched.includes(id);const sc=scores[id];
+  document.getElementById("m-emoji").textContent=m.emoji;
+  document.getElementById("m-title").textContent=m.zh;
+  document.getElementById("m-en-title").textContent=m.en;
+  document.getElementById("m-sub").textContent=`${m.year} · ${m.director}${m.cast ? " · " + m.cast : ""}`;
+  document.getElementById("m-tags").innerHTML=m.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById("m-desc").textContent=m.desc;
+  document.getElementById("m-imdb").textContent=m.imdb;
+  document.getElementById("m-rt").textContent=m.rt+"%";
+  document.getElementById("m-ott").textContent=m.ott;
+  const row=document.getElementById("m-score-row");
+  if(isW&&sc){
+    document.getElementById("m-score-val").textContent=sc;
+    document.getElementById("m-score-val").style.color=scC(sc);
+    row.style.background=scBg(sc);row.style.borderColor=scBd(sc);
+    row.style.display="block";
+  }else row.style.display="none";
+  // Awards
+  const awardsRow=document.getElementById("m-awards-row");
+  const awardsText=document.getElementById("m-awards-text");
+  if(m.awards){ awardsText.textContent=m.awards; awardsRow.style.display="block"; }
+  else { awardsRow.style.display="none"; }
+  const trailerRow=document.getElementById("m-trailer-row");
+  const trailerLink=document.getElementById("m-trailer-link");
+  // Always show trailer - search YouTube with zh+en title
+  trailerLink.href="#";
+  trailerLink.onclick=(e)=>{ e.preventDefault(); openTrailer(m.zh, m.en, m.trailer||''); };
+  trailerRow.style.display="block";
+  const btn=document.getElementById("m-watch-btn");
+  if(isW){btn.className="cta-btn done";btn.textContent="✓ 已看過（點擊取消）";}
+  else{btn.className="cta-btn primary";btn.textContent="＋ 標記為已看過";}
+  const wlBtn=document.getElementById("m-watchlist-btn");
+  if(wlBtn){
+    const inWL = watchlist.includes(id);
+    wlBtn.textContent = inWL ? "🔖 已在想看清單（點擊移除）" : "🔖 加入想看清單";
+    wlBtn.style.background = inWL ? "var(--blue-lt)" : "var(--card2)";
+    wlBtn.style.borderColor = inWL ? "#355060" : "var(--border2)";
+    wlBtn.style.color = inWL ? "var(--blue)" : "var(--text2)";
+  }
+}
+function closeModal(){
+  document.getElementById("modal").classList.add("hidden");modalId=null;
+}
+
+// ─── Mood Check-in ───
+// Vibe → genre/tag mapping for scoring
+const VIBE_MAP = {
+  "輕盈":  {genres:["喜劇","愛情","動畫"],              avoid:["恐怖","戰爭","沉重"],      weight:3},
+  "溫暖":  {genres:["愛情","家庭","劇情"],              avoid:["恐怖","驚悚"],             weight:3},
+  "感人":  {genres:["劇情","愛情","傳記"],              avoid:["喜劇","動作"],             weight:3},
+  "浪漫":  {genres:["愛情","浪漫","喜劇"],              avoid:["恐怖","戰爭"],             weight:3},
+  "燒腦":  {genres:["哲學","科幻","懸疑","非線性"],      avoid:[],                        weight:3.5},
+  "懸疑":  {genres:["懸疑","驚悚","犯罪"],              avoid:["喜劇"],                    weight:3},
+  "療癒":  {genres:["動畫","靈性","劇情"],              avoid:["驚悚","恐怖","戰爭"],      weight:3},
+  "寂靜":  {genres:["慢節奏","詩意","劇情"],            avoid:["動作","喜劇"],             weight:3.5},
+  "振奮":  {genres:["傳記","史詩","音樂"],              avoid:["慢節奏"],                  weight:2.5},
+  "刺激":  {genres:["動作","科幻","驚悚"],              avoid:["慢節奏","詩意"],           weight:2.5},
+  "深度":  {genres:["哲學","劇情","歷史","探討人性"],   avoid:["喜劇","輕盈"],             weight:3.5},
+  "靈性":  {genres:["靈性","哲學","詩意","奇幻"],       avoid:["動作","驚悚"],             weight:3.5},
+  "神秘":  {genres:["懸疑","科幻","非線性","奇幻"],     avoid:["喜劇"],                    weight:3.5},
+  "知識性":{genres:["哲學","歷史","傳記","探討人性"],   avoid:["喜劇","輕盈"],             weight:3.5},
+  "詩意":  {genres:["詩意","慢節奏","藝術","台灣電影"], avoid:["動作","喜劇","刺激"],      weight:4},
+  "存在感":{genres:["哲學","非線性","科幻","身份認同"], avoid:["喜劇","輕盈"],             weight:4},
+};
+const FEEL_MAP = {
+  "想被療癒":    {boost:["靈性","動畫","溫暖"],              avoid:["沉重","驚悚","恐怖"]},
+  "想動腦思考":  {boost:["哲學","科幻","非線性","懸疑"],     avoid:[]},
+  "想哭一場":    {boost:["劇情","愛情","感人"],               avoid:["喜劇","輕盈"]},
+  "不想太沉重":  {boost:["喜劇","輕盈","浪漫","動畫"],      avoid:["戰爭","恐怖","驚悚","哲學"]},
+  "想感受愛":    {boost:["愛情","浪漫","劇情"],               avoid:[]},
+  "想看美的畫面":{boost:["攝影強","詩意","慢節奏","藝術"],   avoid:[]},
+  "想逃離現實":  {boost:["科幻","奇幻","動畫"],               avoid:[]},
+  "想被振奮激勵":{boost:["傳記","音樂","史詩"],               avoid:["慢節奏","沉重"]},
+  "想探索靈性":  {boost:["靈性","哲學","詩意","奇幻"],      avoid:["動作","驚悚","喜劇"]},
+  "想看有深度的":{boost:["哲學","歷史","劇情","探討人性"],   avoid:["喜劇","輕盈","動畫"]},
+  "想感受神秘感":{boost:["懸疑","科幻","非線性","奇幻"],     avoid:["喜劇","輕盈"]},
+  "想學到東西":  {boost:["歷史","傳記","哲學","探討人性"],   avoid:["喜劇","動畫"]},
+};
+const MOOD_MAP = {
+  "開心愉悅":  {prefer:["喜劇","愛情","動畫"],   avoid:[]},
+  "平靜放鬆":  {prefer:["慢節奏","詩意","劇情"],  avoid:["驚悚","恐怖"]},
+  "有點疲憊":  {prefer:["輕盈","療癒","動畫"],   avoid:["燒腦","哲學","非線性"]},
+  "感性細膩":  {prefer:["愛情","劇情","詩意"],   avoid:[]},
+  "思緒紛亂":  {prefer:["慢節奏","寂靜","詩意"], avoid:["燒腦","懸疑"]},
+  "興奮期待":  {prefer:["科幻","史詩","振奮"],   avoid:[]},
+  "有點孤單":  {prefer:["愛情","劇情","溫暖"],   avoid:[]},
+  "需要逃逸":  {prefer:["科幻","奇幻","冒險"],   avoid:[]},
+};
+
+let moodState = {mood:"", feel:[], vibe:[]};
+let moodHistory = [];
+let currentMoodRec = null;
+
+function loadMood(){
+  try{ moodHistory = JSON.parse(localStorage.getItem("mh")||"[]"); }catch(e){ moodHistory=[]; }
+  try{ currentMoodRec = JSON.parse(localStorage.getItem("cmr")||"null"); }catch(e){ currentMoodRec=null; }
+}
+function saveMood(){
+  try{ localStorage.setItem("mh", JSON.stringify(moodHistory)); }catch(e){}
+  try{ localStorage.setItem("cmr", JSON.stringify(currentMoodRec)); }catch(e){}
+}
+
+function openMoodCheckin(){
+  moodState = {mood:"", feel:[], vibe:[]};
+  goMoodStep(1);
+  document.getElementById("mood-modal").classList.remove("hidden");
+}
+function closeMoodModal(){
+  document.getElementById("mood-modal").classList.add("hidden");
+}
+
+function goMoodStep(step){
+  [1,2,3].forEach(s=>{
+    document.getElementById("mood-step-"+s).style.display = s===step?"block":"none";
+    const dot = document.getElementById("step-dot-"+s);
+    dot.style.width = s===step?"28px":"8px";
+    dot.style.background = s<=step?"var(--green)":"var(--border2)";
+  });
+  // Reset selection highlights for this step
+  const qMap = {1:"mood",2:"feel",3:"vibe"};
+  document.querySelectorAll(`.mood-opt[data-q="${qMap[step]}"]`).forEach(b=>{
+    const isSelected = qMap[step]==="mood"
+      ? moodState.mood === b.dataset.v
+      : moodState[qMap[step]].includes(b.dataset.v);
+    b.classList.toggle("selected", isSelected);
+  });
+  updateNextBtn(step);
+}
+
+function selectMoodOpt(btn, q, multi=false){
+  if(q==="mood"){
+    document.querySelectorAll('.mood-opt[data-q="mood"]').forEach(b=>b.classList.remove("selected"));
+    btn.classList.add("selected");
+    moodState.mood = btn.dataset.v;
+  } else {
+    if(btn.classList.contains("selected")){
+      btn.classList.remove("selected");
+      moodState[q] = moodState[q].filter(v=>v!==btn.dataset.v);
+    } else {
+      if(moodState[q].length < 2){
+        btn.classList.add("selected");
+        moodState[q].push(btn.dataset.v);
+      }
+    }
+  }
+  updateNextBtn(q==="mood"?1:q==="feel"?2:3);
+}
+
+function updateNextBtn(step){
+  const hasVal = step===1 ? !!moodState.mood : step===2 ? moodState.feel.length>0 : moodState.vibe.length>0;
+  const btnId = step===3 ? "mood-submit" : "mood-next-"+step;
+  const btn = document.getElementById(btnId);
+  if(btn){ btn.disabled=!hasVal; btn.style.opacity=hasVal?"1":"0.4"; }
+}
+
+function submitMoodCheckin(){
+  const now = new Date();
+  const ts = now.toISOString();
+  const label = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
+  const dayOfWeek = ["日","一","二","三","四","五","六"][now.getDay()];
+  const hour = now.getHours();
+  const timeLabel = hour<6?"深夜":hour<12?"早晨":hour<18?"下午":"夜晚";
+
+  currentMoodRec = {
+    mood: moodState.mood,
+    feel: [...moodState.feel],
+    vibe: [...moodState.vibe],
+    ts, label, dayOfWeek, timeLabel,
+  };
+  moodHistory.unshift(currentMoodRec);
+  if(moodHistory.length > 50) moodHistory = moodHistory.slice(0,50);
+  saveMood();
+  closeMoodModal();
+  updateMoodBtn();
+  renderRecommend(false);
+}
+
+function scoreMoodMovie(m){
+  if(!currentMoodRec) return 0;
+  let s = 0;
+  const {mood,feel,vibe} = currentMoodRec;
+
+  // Mood boost/avoid
+  const moodRule = MOOD_MAP[mood];
+  if(moodRule){
+    moodRule.prefer.forEach(g=>{ if(m.genres.includes(g)||m.tags.some(t=>t.includes(g))) s+=2.5; });
+    moodRule.avoid.forEach(g=>{ if(m.genres.includes(g)||m.tags.some(t=>t.includes(g))) s-=4; });
+  }
+  // Feel boost/avoid
+  feel.forEach(f=>{
+    const rule = FEEL_MAP[f];
+    if(!rule) return;
+    rule.boost.forEach(g=>{ if(m.genres.includes(g)||m.tags.some(t=>t.includes(g))) s+=2; });
+    rule.avoid.forEach(g=>{ if(m.genres.includes(g)||m.tags.some(t=>t.includes(g))) s-=3.5; });
+  });
+  // Vibe boost/avoid
+  vibe.forEach(v=>{
+    const rule = VIBE_MAP[v];
+    if(!rule) return;
+    rule.genres.forEach(g=>{ if(m.genres.includes(g)||m.tags.some(t=>t.includes(g))) s+=rule.weight; });
+    rule.avoid.forEach(g=>{ if(m.genres.includes(g)||m.tags.some(t=>t.includes(g))) s-=3; });
+  });
+  return s;
+}
+
+let moodOffset = 0;
+function shuffleMoodRec(){
+  const available = MOVIES.filter(m=>!watched.includes(m.id)).length;
+  moodOffset = (moodOffset + 1) % Math.max(1, Math.ceil(available/6));
+  renderMoodRecBlock();
+}
+function getMoodRecommended(){
+  if(!currentMoodRec) return [];
+  const base = buildProfile();
+  const pool = [...MOVIES]
+    .filter(m=>!watched.includes(m.id))
+    .map(m=>({...m, _ms: scoreMoodMovie(m) + scoreM(m,base)*0.3 }))
+    .sort((a,b)=>b._ms-a._ms)
+    .filter(m=>m._ms>0);
+  const offset = (moodOffset % Math.max(1,Math.ceil(pool.length/6))) * 6;
+  return pool.slice(offset, offset+6);
+}
+
+function renderMoodRecBlock(){
+  if(!currentMoodRec){ document.getElementById("mood-rec-block").style.display="none"; return; }
+  const {mood,feel,vibe,label,dayOfWeek,timeLabel} = currentMoodRec;
+  document.getElementById("mood-rec-block").style.display="block";
+  document.getElementById("mood-rec-desc").textContent =
+    `${label}（週${dayOfWeek} ${timeLabel}）· ${mood} · ${[...feel,...vibe].join("、")}`;
+  const list = getMoodRecommended();
+  document.getElementById("mood-rec-list").innerHTML = list.length
+    ? list.map((m,i)=>cardHTML(m,i)).join('')
+    : `<div style="text-align:center;color:var(--text3);padding:20px 0;font-size:13px">找不到完全符合的電影，試試調整狀態</div>`;
+}
+
+function updateMoodBtn(){
+  if(currentMoodRec){
+    const {mood,label} = currentMoodRec;
+    document.getElementById("mood-btn-title").textContent = `已記錄：${mood}`;
+    document.getElementById("mood-btn-sub").textContent = `${label} · 點擊更新狀態`;
+    document.getElementById("mood-btn").style.borderStyle = "solid";
+    document.getElementById("mood-btn").style.borderColor = "var(--green-mid)";
+    document.getElementById("mood-btn").style.background = "var(--green-lt)";
+  }
+}
+
+function clearMoodRec(){
+  currentMoodRec=null; saveMood();
+  document.getElementById("mood-btn-title").textContent="告訴我今天的狀態";
+  document.getElementById("mood-btn-sub").textContent="讓推薦更符合你此刻的心情";
+  document.getElementById("mood-btn").style.borderStyle="dashed";
+  document.getElementById("mood-btn").style.borderColor="var(--border2)";
+  document.getElementById("mood-btn").style.background="var(--card)";
+  renderRecommend(false);
+}
+
+function openHistoryModal(){
+  const list = moodHistory;
+  document.getElementById("history-list").innerHTML = list.length
+    ? list.map(r=>`
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <div style="font-size:13px;font-weight:600;color:var(--text)">${r.mood}</div>
+          <div style="font-size:10.5px;color:var(--text3)">${r.label} 週${r.dayOfWeek} ${r.timeLabel}</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${[...r.feel,...r.vibe].map(v=>`<span class="tag">${v}</span>`).join('')}
+        </div>
+      </div>`).join('')
+    : `<div style="text-align:center;color:var(--text3);padding:30px 0">還沒有記錄</div>`;
+  document.getElementById("history-modal").classList.remove("hidden");
+}
+function closeHistoryModal(){ document.getElementById("history-modal").classList.add("hidden"); }
+
+// ── Taste Profile custom additions ──
+let customDirectors = [], customDisliked = [], customActors = [];
+let likedMovieTitles = [];
+let watchlist = []; // array of movie ids
+function loadTaste(){
+  try{ customDirectors=JSON.parse(localStorage.getItem("td")||"[]"); }catch(e){ customDirectors=[]; }
+  try{ customDisliked=JSON.parse(localStorage.getItem("tdd")||"[]"); }catch(e){ customDisliked=[]; }
+  try{ customActors=JSON.parse(localStorage.getItem("ta")||"[]"); }catch(e){ customActors=[]; }
+  try{ likedMovieTitles=JSON.parse(localStorage.getItem("tlm")||"[]"); }catch(e){ likedMovieTitles=[]; }
+  try{ watchlist=JSON.parse(localStorage.getItem("wl")||"[]"); }catch(e){ watchlist=[]; }
+}
+function saveTaste(){
+  try{ localStorage.setItem("td",JSON.stringify(customDirectors)); }catch(e){}
+  try{ localStorage.setItem("tdd",JSON.stringify(customDisliked)); }catch(e){}
+  try{ localStorage.setItem("ta",JSON.stringify(customActors)); }catch(e){}
+  try{ localStorage.setItem("tlm",JSON.stringify(likedMovieTitles)); }catch(e){}
+  try{ localStorage.setItem("wl",JSON.stringify(watchlist)); }catch(e){}
+}
+function addLikedMovie(){
+  const el = document.getElementById("add-movie-input");
+  const val = el.value.trim();
+  if(!val || likedMovieTitles.includes(val)) return;
+  likedMovieTitles.push(val);
+  el.value = "";
+  saveTaste(); renderTaste(); renderRecommend();
+}
+function removeLikedMovie(val){
+  likedMovieTitles = likedMovieTitles.filter(x=>x!==val);
+  saveTaste(); renderTaste(); renderRecommend();
+}
+function likedMovieBoost(movie){
+  // Find matching movies in DB from likedMovieTitles and extract their genre fingerprint
+  let boost = 0;
+  likedMovieTitles.forEach(title => {
+    const match = MOVIES.find(m =>
+      m.zh.includes(title) || m.en.toLowerCase().includes(title.toLowerCase())
+    );
+    if(match){
+      match.genres.forEach(g => { if(movie.genres.includes(g)) boost += 1.5; });
+      if(movie.director === match.director) boost += 2;
+    }
+  });
+  return boost;
+}
+function addTasteItem(type){
+  const inputId = {director:"add-director-input",disliked:"add-disliked-input",actor:"add-actor-input"}[type];
+  const el = document.getElementById(inputId);
+  const val = el.value.trim();
+  if(!val) return;
+  if(type==="director" && !customDirectors.includes(val)){ customDirectors.push(val); }
+  if(type==="disliked" && !customDisliked.includes(val)){ customDisliked.push(val); }
+  if(type==="actor"    && !customActors.includes(val))   { customActors.push(val); }
+  el.value = "";
+  saveTaste(); renderTaste(); renderRecommend();
+}
+function removeTasteItem(type, val){
+  if(type==="director") customDirectors = customDirectors.filter(x=>x!==val);
+  if(type==="disliked") customDisliked  = customDisliked.filter(x=>x!==val);
+  if(type==="actor")    customActors    = customActors.filter(x=>x!==val);
+  saveTaste(); renderTaste(); renderRecommend();
+}
+function renderTaste(){
+  const allDirs   = [...BASE_D, ...customDirectors];
+  const allDis    = ["Ingmar Bergman","Andrei Tarkovsky","Krzysztof Kieslowski","岩井俊二","蔡明亮","Céline Sciamma","Charlie Kaufman",...customDisliked];
+  const allActors = ["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇",...customActors];
+
+  const chip = (val,type,removable=false) => {
+    const bg  = removable ? "var(--green-lt)"  : "var(--card2)";
+    const bdr = removable ? "var(--green-mid)" : "var(--border2)";
+    const clr = removable ? "var(--green)"     : "var(--text2)";
+    return `<span style="display:inline-flex;align-items:center;gap:5px;background:${bg};border:1.5px solid ${bdr};border-radius:20px;padding:5px 11px;font-size:12px;color:${clr}">
+      ${val}${removable?`<span onclick="removeTasteItem('${type}','${val}')" style="cursor:pointer;opacity:0.6;font-size:14px;line-height:1">×</span>`:""}
+    </span>`;
+  };
+
+  const dirEl = document.getElementById("taste-directors");
+  const disEl = document.getElementById("taste-disliked");
+  const actEl = document.getElementById("taste-actors");
+  const genEl = document.getElementById("taste-genres");
+  if(dirEl) dirEl.innerHTML = BASE_D.map(d=>chip(d,"director",false)).join("") + customDirectors.map(d=>chip(d,"director",true)).join("");
+
+  if(actEl) actEl.innerHTML = ["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"].map(a=>chip(a,"actor",false)).join("") + customActors.map(a=>chip(a,"actor",true)).join("");
+  if(genEl) genEl.innerHTML = BASE_G.map(g=>`<span style="background:var(--green-lt);border:1px solid var(--green-mid);border-radius:20px;padding:5px 11px;font-size:12px;color:var(--green)">${g}</span>`).join("");
+  const movEl = document.getElementById("taste-liked-movies");
+  if(movEl) movEl.innerHTML = likedMovieTitles.map(t =>
+    `<span style="display:inline-flex;align-items:center;gap:5px;background:var(--blue-lt);border:1.5px solid #355060;border-radius:20px;padding:5px 11px;font-size:12px;color:var(--blue)">
+      ${t}<span onclick="removeLikedMovie('${t}')" style="cursor:pointer;opacity:0.6;font-size:14px;line-height:1">×</span>
+    </span>`
+  ).join("");
+}
+
+// Patch buildProfile to include custom items
+const _origBuildProfile = buildProfile;
+buildProfile = function(){
+  const p = _origBuildProfile();
+  customDirectors.forEach(d=>p.dW[d]=(p.dW[d]||0)+3);
+  customDisliked.forEach(d=>p.dW[d]=-4);
+  return p;
+};
+
+function renderGreeting(){
+  const now = new Date();
+  const days = ["日","一","二","三","四","五","六"];
+  const day = days[now.getDay()];
+  const h = now.getHours();
+  const period = h<6?"深夜":h<12?"早上":h<18?"下午":"晚上";
+  const month = now.getMonth()+1, date = now.getDate();
+  const greetings = {
+    "深夜": ["夜深了，適合看一部讓你沉靜下來的電影","深夜好，今晚想沉浸在什麼世界？"],
+    "早上": ["早安，今天從一部好電影開始吧","週"+day+"早上好，今天有空看片嗎？"],
+    "下午": ["週"+day+"下午好，要不要找部電影放鬆一下？","下午了，今天選一部好片？"],
+    "晚上": ["週"+day+"晚上好，今晚想看什麼？","晚上好，今天的心情適合哪種電影？"]
+  };
+  const options = greetings[period];
+  const greeting = options[Math.floor(Math.random()*options.length)];
+  const el = document.getElementById("greeting-text");
+  const sub = document.getElementById("greeting-sub");
+  if(el) el.textContent = greeting;
+  if(sub) sub.textContent = `${month}月${date}日 週${day} · ${period}`;
+}
+
+// ── Watchlist functions ──
+function toggleWatchlist(id){
+  const adding = !watchlist.includes(id);
+  if(watchlist.includes(id)){
+    watchlist = watchlist.filter(x=>x!==id);
+  } else {
+    watchlist.push(id);
+  }
+  saveTaste();
+  updateWatchlistBadge();
+
+  if(adding){
+    // Flash button → then remove card + jump to watchlist tab
+    const btn = document.querySelector(`[data-wl-id="${id}"]`);
+    if(btn){
+      btn.textContent = "🔖 已加入 ✓";
+      btn.classList.add("wl-flash");
+    }
+    setTimeout(()=>{
+      const savedY = document.documentElement.scrollTop || document.body.scrollTop;
+      renderRecommend(false);
+      requestAnimationFrame(()=>{ window.scrollTo({top: savedY, behavior:"instant"}); });
+      // Stay on recommend tab, just update watchlist badge
+      updateWatchlistBadge();
+    }, 400);
+  } else {
+    // Removing from watchlist
+    const savedY = document.documentElement.scrollTop || document.body.scrollTop;
+    renderRecommend(false);
+    requestAnimationFrame(()=>{ window.scrollTo({top: savedY, behavior:"instant"}); });
+    if(currentTab==="watchlist") renderWatchlistPage();
+    else if(currentTab==="browse") renderBrowse();
+  }
+  if(modalId) updateModal(modalId);
+}
+
+function updateWatchlistBadge(){
+  const btn = document.getElementById("tab-watchlist");
+  if(btn) btn.textContent = "想看" + (watchlist.length>0 ? " "+watchlist.length : "");
+}
+
+function renderWatchlistSearch(){
+  const q = document.getElementById("watchlist-search").value.toLowerCase().trim();
+  const el = document.getElementById("watchlist-search-results");
+  if(!q){ el.innerHTML=""; return; }
+  const results = MOVIES.filter(m =>
+    !watchlist.includes(m.id) &&
+    (m.zh.includes(q) || m.en.toLowerCase().includes(q) || (m.director&&m.director.toLowerCase().includes(q)))
+  ).slice(0,5);
+  el.innerHTML = results.map(m => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;margin-bottom:6px">
+      <div>
+        <div style="font-size:13.5px;font-weight:600;color:var(--text)">${m.zh}</div>
+        <div style="font-size:11px;color:var(--text3)">${m.en} · ${m.year}</div>
+      </div>
+      <button onclick="toggleWatchlist(${m.id});renderWatchlistSearch();"
+        style="background:var(--green-lt);border:1.5px solid var(--green-mid);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--green);cursor:pointer">
+        ＋ 加入
+      </button>
+    </div>`).join('') || `<div style="font-size:12px;color:var(--text3);padding:8px 4px">找不到符合的電影</div>`;
+}
+
+function renderWatchlistPage(){
+  const list = MOVIES.filter(m=>watchlist.includes(m.id));
+  document.getElementById("watchlist-sub").textContent = `共 ${list.length} 部`;
+  document.getElementById("watchlist-list").innerHTML = list.length
+    ? list.map((m,i) => watchlistCardHTML(m,i)).join('')
+    : `<div style="text-align:center;color:var(--text3);padding:60px 0;font-size:14px">還沒有加入任何電影<br><span style="font-size:12px">用上方搜尋加入想看的片</span></div>`;
+}
+
+function watchlistCardHTML(m, idx){
+  const isW = watched.includes(m.id);
+  return `
+  <div class="card fade-up${isW?' watched':''}" style="animation-delay:${idx*0.04}s" onclick="openModal(${m.id})">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div class="emoji-box">${m.emoji}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px">
+          <div style="font-size:15.5px;font-weight:600;color:${isW?'var(--green)':'var(--text)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${m.zh}</div>
+          ${isW?`<span class="score-badge" style="background:var(--green-lt);color:var(--green);border:1.5px solid var(--green-mid)">✓ 已看</span>`:''}
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:6px">${m.year} · <span style="color:var(--warm)">${m.director}</span></div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${m.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div style="display:flex;align-items:center;font-size:11.5px;gap:10px">
+          <span style="color:var(--warm)">⭐ ${m.imdb}</span>
+          <span style="color:var(--rose)">🍅 ${m.rt}%</span>
+          <span style="color:var(--blue);margin-left:auto;font-size:10.5px">📱 ${m.ott}</span>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:12.5px;color:var(--text2);line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-style:italic;margin-bottom:10px">${m.desc}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <a href="#" onclick="event.stopPropagation();openTrailer('${m.zh}','${m.en}','${m.trailer||""}');return false;"
+        style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--rose);text-decoration:none;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--card2)">▶ 預告片</a>
+      <div style="display:flex;gap:6px">
+        <button onclick="event.stopPropagation();toggleWatchlist(${m.id})"
+          style="background:var(--rose-lt);border:1.5px solid #6A3A36;border-radius:20px;padding:4px 11px;font-size:10.5px;color:var(--rose);cursor:pointer">移除</button>
+        <button onclick="event.stopPropagation();handleToggle(${m.id})"
+          class="watch-btn-sm ${isW?'watched':''}">${isW?'✓ 已看過':'＋ 標記已看'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+load(); loadMood(); loadTaste(); renderAll(); renderFilters(); renderGreeting(); updateWatchlistBadge();
+if(currentMoodRec){ renderMoodRecBlock(); updateMoodBtn(); }
+</script>
+</body>
+</html>
