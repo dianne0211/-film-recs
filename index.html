@@ -409,7 +409,11 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
     <!-- Genres -->
     <div style="margin-bottom:20px">
       <div style="font-size:12px;font-weight:600;color:var(--warm);letter-spacing:0.05em;margin-bottom:10px">喜愛類型</div>
-      <div id="taste-genres" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      <div id="taste-genres" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="add-genre-input" placeholder="新增類型（例如：黑色幽默）" style="flex:1;padding:9px 14px;background:var(--card);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:12.5px;font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;" onkeydown="if(event.key==='Enter')addTasteItem('genre')">
+        <button onclick="addTasteItem('genre')" style="padding:9px 16px;background:var(--green);color:var(--bg);border:none;border-radius:50px;font-size:12.5px;font-weight:600;cursor:pointer">＋</button>
+      </div>
     </div>
 
     <!-- Liked movies input -->
@@ -441,6 +445,7 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
         每部電影的分數由以下項目加總，分數越高排越前面：<br>
         ・<b style="color:var(--text)">你設定的喜愛導演</b>：命中大幅加分（主要驅動力）<br>
         ・<b style="color:var(--text)">你設定的喜愛演員</b>：卡司命中加分<br>
+        ・<b style="color:var(--text)">你設定的喜愛類型</b>：命中加分<br>
         ・<b style="color:var(--text)">你的評分回饋</b>：對已看電影評分越高，該片的類型與導演往後會被推薦更多；評分低則反向削弱<br>
         ・<b style="color:var(--text)">你輸入的喜歡電影</b>：系統會比對片庫，若有收錄則套用該片的類型/導演特徵加分（片庫沒有的片名不會產生效果）<br>
         ・IMDB / 爛番茄分數、得獎紀錄（金棕櫚 / 金獅 / 金熊 / 奧斯卡最佳）：通用品質加分，人人適用<br>
@@ -474,9 +479,10 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
     <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px">
       <div style="font-size:13.5px;font-weight:600;color:var(--warm);margin-bottom:8px">🎨 品味設定</div>
       <div style="font-size:12.5px;color:var(--text2);line-height:1.85">
-        ・「已加入」（綠色）：目前生效的喜愛導演/演員，點擊可移除<br>
+        ・「已加入」（綠色）：目前生效的喜愛導演/演員/類型，點擊可移除<br>
         ・「推薦快速加入」（灰色）：常見名單，點一下即可加入<br>
-        ・「喜歡的電影」：輸入片名讓系統比對片庫，套用該片特徵<br>
+        ・導演、演員、類型都可以<b style="color:var(--text)">用下方輸入框自由輸入</b>，不限於快速加入名單裡的選項<br>
+        ・「喜歡的電影」：自由輸入片名，系統會比對片庫，套用該片特徵<br>
         ・這裡的設定<b style="color:var(--text)">是推薦演算法的主要依據</b>，越完整推薦越準確
       </div>
     </div>
@@ -1009,7 +1015,7 @@ function defaultProfileData(){
   return {
     onboarded:false,
     watched:[], scores:{}, watchlist:[],
-    customDirectors:[], customDisliked:[], customActors:[], likedMovieTitles:[],
+    customDirectors:[], customDisliked:[], customActors:[], customGenres:[], likedMovieTitles:[],
     moodHistory:[], currentMoodRec:null
   };
 }
@@ -1051,14 +1057,14 @@ function pullProfileIntoState(){
   const p = currentProfileObj();
   watched=p.watched; scores=p.scores; watchlist=p.watchlist;
   customDirectors=p.customDirectors; customDisliked=p.customDisliked;
-  customActors=p.customActors; likedMovieTitles=p.likedMovieTitles;
+  customActors=p.customActors; customGenres=p.customGenres||[]; likedMovieTitles=p.likedMovieTitles;
   moodHistory=p.moodHistory; currentMoodRec=p.currentMoodRec;
 }
 function pushStateIntoProfile(){
   const p = currentProfileObj();
   p.watched=watched; p.scores=scores; p.watchlist=watchlist;
   p.customDirectors=customDirectors; p.customDisliked=customDisliked;
-  p.customActors=customActors; p.likedMovieTitles=likedMovieTitles;
+  p.customActors=customActors; p.customGenres=customGenres; p.likedMovieTitles=likedMovieTitles;
   p.moodHistory=moodHistory; p.currentMoodRec=currentMoodRec;
   saveProfilesStore();
 }
@@ -1750,7 +1756,7 @@ function openHistoryModal(){
 function closeHistoryModal(){ document.getElementById("history-modal").classList.add("hidden"); }
 
 // ── Taste Profile custom additions ──
-let customDirectors = [], customDisliked = [], customActors = [];
+let customDirectors = [], customDisliked = [], customActors = [], customGenres = [];
 let likedMovieTitles = [];
 let watchlist = []; // array of movie ids
 function loadTaste(){ pullProfileIntoState(); }
@@ -1782,13 +1788,14 @@ function likedMovieBoost(movie){
   return boost;
 }
 function addTasteItem(type){
-  const inputId = {director:"add-director-input",disliked:"add-disliked-input",actor:"add-actor-input"}[type];
+  const inputId = {director:"add-director-input",disliked:"add-disliked-input",actor:"add-actor-input",genre:"add-genre-input"}[type];
   const el = document.getElementById(inputId);
   const val = el.value.trim();
   if(!val) return;
   if(type==="director" && !customDirectors.includes(val)){ customDirectors.push(val); }
   if(type==="disliked" && !customDisliked.includes(val)){ customDisliked.push(val); }
   if(type==="actor"    && !customActors.includes(val))   { customActors.push(val); }
+  if(type==="genre"    && !customGenres.includes(val))   { customGenres.push(val); }
   el.value = "";
   saveTaste(); renderTaste(); renderRecommend();
 }
@@ -1796,6 +1803,7 @@ function removeTasteItem(type, val){
   if(type==="director") customDirectors = customDirectors.filter(x=>x!==val);
   if(type==="disliked") customDisliked  = customDisliked.filter(x=>x!==val);
   if(type==="actor")    customActors    = customActors.filter(x=>x!==val);
+  if(type==="genre")    customGenres    = customGenres.filter(x=>x!==val);
   saveTaste(); renderTaste(); renderRecommend();
 }
 const TASTE_PRESET_ACTORS=["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"];
@@ -1803,6 +1811,7 @@ const TASTE_PRESET_ACTORS=["梁朝偉","提摩西夏勒梅","Scarlett Johansson"
 function quickAddTaste(type,val){
   if(type==="director" && !customDirectors.includes(val)) customDirectors.push(val);
   if(type==="actor" && !customActors.includes(val)) customActors.push(val);
+  if(type==="genre" && !customGenres.includes(val)) customGenres.push(val);
   saveTaste(); renderTaste(); renderRecommend();
 }
 
@@ -1838,7 +1847,12 @@ function renderTaste(){
       (customActors.length ? customActors.map(a=>chip(a,"actor",true)).join("") : `<span style="font-size:11.5px;color:var(--text3)">尚未加入，點下方推薦快速加入</span>`) +
       (suggestions.length ? `<div style="width:100%;font-size:10.5px;color:var(--text3);margin:8px 0 4px">推薦快速加入：</div>` + suggestions.map(a=>chip(a,"actor",false)).join("") : "");
   }
-  if(genEl) genEl.innerHTML = BASE_G.map(g=>`<span style="background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 11px;font-size:12px;color:var(--text3)">${g}</span>`).join("");
+  if(genEl){
+    const suggestions = BASE_G.filter(g=>!customGenres.includes(g));
+    genEl.innerHTML =
+      (customGenres.length ? customGenres.map(g=>chip(g,"genre",true)).join("") : `<span style="font-size:11.5px;color:var(--text3)">尚未加入，點下方推薦快速加入</span>`) +
+      (suggestions.length ? `<div style="width:100%;font-size:10.5px;color:var(--text3);margin:8px 0 4px">推薦快速加入：</div>` + suggestions.map(g=>chip(g,"genre",false)).join("") : "");
+  }
   if(movEl) movEl.innerHTML = likedMovieTitles.map(t => {
     const safe = t.replace(/'/g,"\\'");
     return `<span style="display:inline-flex;align-items:center;gap:5px;background:var(--blue-lt);border:1.5px solid #355060;border-radius:20px;padding:5px 11px;font-size:12px;color:var(--blue)">
@@ -1847,23 +1861,24 @@ function renderTaste(){
   }).join("");
 
   if(summaryEl){
-    if(customDirectors.length || customActors.length || likedMovieTitles.length){
+    if(customDirectors.length || customActors.length || customGenres.length || likedMovieTitles.length){
       summaryEl.innerHTML = `
         <div style="font-size:11px;font-weight:600;color:var(--warm);letter-spacing:0.06em;margin-bottom:8px">${profilesData.active} 的品味輪廓</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.75">導演 ${customDirectors.length} 位 · 演員 ${customActors.length} 位 · 喜歡的電影 ${likedMovieTitles.length} 部</div>
-        <div style="font-size:12px;color:var(--text3);margin-top:5px;line-height:1.65">${[...customDirectors.slice(0,5),...customActors.slice(0,5)].join(" · ") || "尚未設定"}</div>`;
+        <div style="font-size:13px;color:var(--text2);line-height:1.75">導演 ${customDirectors.length} 位 · 演員 ${customActors.length} 位 · 類型 ${customGenres.length} 種 · 喜歡的電影 ${likedMovieTitles.length} 部</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:5px;line-height:1.65">${[...customDirectors.slice(0,3),...customActors.slice(0,3),...customGenres.slice(0,3)].join(" · ") || "尚未設定"}</div>`;
     } else {
-      summaryEl.innerHTML = `<div style="font-size:12.5px;color:var(--text3)">尚未設定品味資料，請在下方新增你喜愛的導演、演員與電影</div>`;
+      summaryEl.innerHTML = `<div style="font-size:12.5px;color:var(--text3)">尚未設定品味資料，請在下方新增你喜愛的導演、演員、類型與電影</div>`;
     }
   }
 }
 
-// Patch buildProfile：把當前使用者自訂的導演/黑名單併入權重計算。
+// Patch buildProfile：把當前使用者自訂的導演/類型/黑名單併入權重計算。
 // +5 是主要的個人化訊號（因為 buildProfile() 本身已不含任何硬編碼偏好）。
 const _origBuildProfile = buildProfile;
 buildProfile = function(){
   const p = _origBuildProfile();
   customDirectors.forEach(d=>p.dW[d]=(p.dW[d]||0)+5);
+  customGenres.forEach(g=>p.gW[g]=(p.gW[g]||0)+4);
   customDisliked.forEach(d=>p.dW[d]=-4);
   return p;
 };
