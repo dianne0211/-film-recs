@@ -274,6 +274,9 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
     </div>
     <div id="header-count" style="font-size:13.5px;color:var(--text3);text-align:right;margin-top:6px;line-height:1.8"></div>
   </div>
+  <button onclick="openProfileModal()" id="profile-btn" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1.5px solid var(--border2);border-radius:50px;padding:6px 14px;margin-top:10px;font-size:12.5px;color:var(--text2);cursor:pointer">
+    👤 <span id="profile-btn-name">我</span><span style="color:var(--text3);margin-left:2px">切換 ›</span>
+  </button>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('recommend')" id="tab-recommend">✦ 推薦</button>
     <button class="tab-btn" onclick="switchTab('browse')"    id="tab-browse">片庫</button>
@@ -377,16 +380,8 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
       <div style="font-size:12px;color:var(--text3)">影響演算法推薦的核心資料</div>
     </div>
 
-    <!-- Profile Summary Card -->
-    <div style="background:var(--warm-lt);border:1.5px solid #5A4020;border-radius:18px;padding:16px 18px;margin-bottom:22px">
-      <div style="font-size:11px;font-weight:600;color:var(--warm);letter-spacing:0.06em;margin-bottom:8px">你的品味輪廓</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.75">
-        哲學 · 非線性敘事 · 詩意 · 靈性 · 攝影強 · 魔幻 · 神秘 · 心理
-      </div>
-      <div style="font-size:12px;color:var(--text3);margin-top:5px;line-height:1.65">
-        鍾愛：王家衛 · Nolan · Villeneuve · 宮崎駿 · Lanthimos · Woody Allen · Ang Lee · Spielberg
-      </div>
-    </div>
+    <!-- Profile Summary Card (dynamic, per-user) -->
+    <div id="taste-summary" style="background:var(--warm-lt);border:1.5px solid #5A4020;border-radius:18px;padding:16px 18px;margin-bottom:22px"></div>
 
     <!-- Directors section -->
     <div style="margin-bottom:20px">
@@ -608,6 +603,62 @@ button,input{font-family:Calibri,'Noto Sans TC','Microsoft JhengHei',sans-serif;
       <button onclick="closeHistoryModal()" style="background:var(--bg3);border:1px solid var(--border2);width:30px;height:30px;border-radius:50%;color:var(--text2);font-size:14px">✕</button>
     </div>
     <div id="history-list"></div>
+  </div>
+</div>
+
+<!-- ── Profile Switcher Modal ── -->
+<div id="profile-modal" class="overlay center hidden" style="z-index:350" onclick="closeProfileModal()">
+  <div style="background:var(--card);border-radius:24px;padding:24px 20px;width:calc(100% - 40px);max-width:360px;max-height:80dvh;overflow-y:auto;border:1.5px solid var(--border2)" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-weight:600;font-size:18px;color:var(--text)">切換使用者</div>
+      <button onclick="closeProfileModal()" style="background:var(--bg3);border:1px solid var(--border2);width:30px;height:30px;border-radius:50%;color:var(--text2);font-size:14px">✕</button>
+    </div>
+    <div id="profile-list" style="margin-bottom:16px"></div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px">新增使用者（每個人有自己的推薦、已看、想看清單）</div>
+    <div style="display:flex;gap:8px">
+      <input id="new-profile-input" placeholder="輸入名稱" style="flex:1;padding:10px 14px;background:var(--card2);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:13px;font-family:Calibri,'Noto Sans TC',sans-serif;" onkeydown="if(event.key==='Enter')handleCreateProfile()">
+      <button onclick="handleCreateProfile()" style="padding:10px 18px;background:var(--green);color:var(--bg);border:none;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer">＋ 新增</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── First-time Onboarding Modal ── -->
+<div id="onboarding-modal" class="overlay center hidden" style="z-index:400">
+  <div class="rating-sheet pop-in" style="max-height:88dvh;overflow-y:auto;max-width:400px" onclick="event.stopPropagation()">
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:30px;margin-bottom:8px">🎬</div>
+      <div style="font-weight:600;font-size:18px;color:var(--text)">歡迎，<span id="ob-profile-name"></span>！</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;line-height:1.6">先設定你的品味，AI才能幫你精準推薦<br>每一項至少選 2 個才能開始使用</div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:600;color:var(--warm);margin-bottom:8px">① 喜愛的導演（至少2位）</div>
+      <div id="ob-director-suggestions" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="ob-director-input" placeholder="或輸入其他導演" style="flex:1;padding:9px 14px;background:var(--card2);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:12.5px;font-family:Calibri,'Noto Sans TC',sans-serif;" onkeydown="if(event.key==='Enter')obAddCustom('director')">
+        <button onclick="obAddCustom('director')" style="padding:9px 16px;background:var(--card2);border:1.5px solid var(--border2);color:var(--text2);border-radius:50px;font-size:12.5px;font-weight:600;cursor:pointer">＋</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:600;color:var(--warm);margin-bottom:8px">② 喜愛的演員（至少2位）</div>
+      <div id="ob-actor-suggestions" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="ob-actor-input" placeholder="或輸入其他演員" style="flex:1;padding:9px 14px;background:var(--card2);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:12.5px;font-family:Calibri,'Noto Sans TC',sans-serif;" onkeydown="if(event.key==='Enter')obAddCustom('actor')">
+        <button onclick="obAddCustom('actor')" style="padding:9px 16px;background:var(--card2);border:1.5px solid var(--border2);color:var(--text2);border-radius:50px;font-size:12.5px;font-weight:600;cursor:pointer">＋</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <div style="font-size:12px;font-weight:600;color:var(--warm);margin-bottom:8px">③ 喜歡的電影片名（至少2部）</div>
+      <div id="ob-movie-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="ob-movie-input" placeholder="輸入片名" style="flex:1;padding:9px 14px;background:var(--card2);border:1.5px solid var(--border2);border-radius:50px;color:var(--text);font-size:12.5px;font-family:Calibri,'Noto Sans TC',sans-serif;" onkeydown="if(event.key==='Enter')obAddMovie()">
+        <button onclick="obAddMovie()" style="padding:9px 16px;background:var(--card2);border:1.5px solid var(--border2);color:var(--text2);border-radius:50px;font-size:12.5px;font-weight:600;cursor:pointer">＋</button>
+      </div>
+    </div>
+
+    <button id="ob-finish-btn" onclick="finishOnboarding()" disabled class="cta-btn primary" style="opacity:0.4">開始使用 →</button>
   </div>
 </div>
 
@@ -882,6 +933,219 @@ const MOVIES=[
 
 let watched=[],scores={},currentTab="recommend",filterTag="全部",modalId=null,pendingId=null;
 
+// ── Multi-profile storage ──
+// Each profile keeps its own watched/scores/watchlist/taste data,
+// isolated under one localStorage key. Switching profiles just
+// swaps which slice of "profilesData" the working variables point to.
+const PROFILE_KEY = "frProfiles";
+let profilesData = { active: null, list: {} };
+
+function defaultProfileData(){
+  return {
+    onboarded:false,
+    watched:[], scores:{}, watchlist:[],
+    customDirectors:[], customDisliked:[], customActors:[], likedMovieTitles:[],
+    moodHistory:[], currentMoodRec:null
+  };
+}
+function loadProfilesStore(){
+  try{ profilesData = JSON.parse(localStorage.getItem(PROFILE_KEY)); }catch(e){ profilesData=null; }
+  if(!profilesData){
+    profilesData = {active:null, list:{}};
+    // Migrate any pre-existing single-user data so nothing gets lost
+    let legacy = null;
+    if(localStorage.getItem("cw") !== null){
+      legacy = defaultProfileData();
+      legacy.onboarded = true; // grandfather in existing usage, skip forced onboarding
+      try{ legacy.watched = JSON.parse(localStorage.getItem("cw")||"[]"); }catch(e){}
+      try{ legacy.scores = JSON.parse(localStorage.getItem("cs")||"{}"); }catch(e){}
+      try{ legacy.watchlist = JSON.parse(localStorage.getItem("wl")||"[]"); }catch(e){}
+      try{ legacy.customDirectors = JSON.parse(localStorage.getItem("td")||"[]"); }catch(e){}
+      try{ legacy.customActors = JSON.parse(localStorage.getItem("ta")||"[]"); }catch(e){}
+      try{ legacy.likedMovieTitles = JSON.parse(localStorage.getItem("tlm")||"[]"); }catch(e){}
+      try{ legacy.moodHistory = JSON.parse(localStorage.getItem("mh")||"[]"); }catch(e){}
+      try{ legacy.currentMoodRec = JSON.parse(localStorage.getItem("cmr")||"null"); }catch(e){}
+    }
+    const name = "我";
+    profilesData.list[name] = legacy || defaultProfileData();
+    profilesData.active = name;
+    saveProfilesStore();
+  }
+  if(!profilesData.active || !profilesData.list[profilesData.active]){
+    const firstName = Object.keys(profilesData.list)[0];
+    if(firstName){ profilesData.active = firstName; }
+    else{ const name="我"; profilesData.list[name]=defaultProfileData(); profilesData.active=name; }
+    saveProfilesStore();
+  }
+}
+function saveProfilesStore(){
+  try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(profilesData)); }catch(e){}
+}
+function currentProfileObj(){ return profilesData.list[profilesData.active]; }
+function pullProfileIntoState(){
+  const p = currentProfileObj();
+  watched=p.watched; scores=p.scores; watchlist=p.watchlist;
+  customDirectors=p.customDirectors; customDisliked=p.customDisliked;
+  customActors=p.customActors; likedMovieTitles=p.likedMovieTitles;
+  moodHistory=p.moodHistory; currentMoodRec=p.currentMoodRec;
+}
+function pushStateIntoProfile(){
+  const p = currentProfileObj();
+  p.watched=watched; p.scores=scores; p.watchlist=watchlist;
+  p.customDirectors=customDirectors; p.customDisliked=customDisliked;
+  p.customActors=customActors; p.likedMovieTitles=likedMovieTitles;
+  p.moodHistory=moodHistory; p.currentMoodRec=currentMoodRec;
+  saveProfilesStore();
+}
+function updateProfileBtn(){
+  const el = document.getElementById("profile-btn-name");
+  if(el) el.textContent = profilesData.active;
+}
+function openProfileModal(){ renderProfileModalList(); document.getElementById("profile-modal").classList.remove("hidden"); }
+function closeProfileModal(){ document.getElementById("profile-modal").classList.add("hidden"); }
+function renderProfileModalList(){
+  const names = Object.keys(profilesData.list);
+  document.getElementById("profile-list").innerHTML = names.map(n=>{
+    const active = n===profilesData.active;
+    const safe = n.replace(/'/g,"\\'");
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:14px;margin-bottom:8px;background:${active?'var(--green-lt)':'var(--card2)'};border:1.5px solid ${active?'var(--green-mid)':'var(--border2)'}">
+      <span onclick="switchProfile('${safe}')" style="cursor:pointer;flex:1;font-size:14px;font-weight:600;color:${active?'var(--green)':'var(--text)'}">${active?'✓ ':''}${n}</span>
+      ${names.length>1?`<span onclick="deleteProfile('${safe}')" style="cursor:pointer;font-size:11.5px;color:var(--rose);margin-left:8px">刪除</span>`:''}
+    </div>`;
+  }).join('');
+}
+function handleCreateProfile(){
+  const el = document.getElementById("new-profile-input");
+  const name = el.value.trim();
+  if(!name) return;
+  el.value='';
+  createProfile(name);
+}
+function switchProfile(name){
+  if(!profilesData.list[name]) return;
+  profilesData.active = name;
+  saveProfilesStore();
+  pullProfileIntoState();
+  resetShuffle();
+  closeProfileModal();
+  updateProfileBtn();
+  renderAll(); renderFilters(); renderTaste(); updateWatchlistBadge(); updateMoodBtn(); renderGreeting();
+  checkOnboarding();
+}
+function createProfile(name){
+  if(profilesData.list[name]){ switchProfile(name); return; }
+  profilesData.list[name] = defaultProfileData();
+  profilesData.active = name;
+  saveProfilesStore();
+  pullProfileIntoState();
+  resetShuffle();
+  closeProfileModal();
+  updateProfileBtn();
+  renderAll(); renderFilters(); renderTaste(); updateWatchlistBadge();
+  checkOnboarding();
+}
+function deleteProfile(name){
+  if(!confirm(`確定要刪除使用者「${name}」嗎？此操作無法復原。`)) return;
+  delete profilesData.list[name];
+  if(profilesData.active === name){
+    const remaining = Object.keys(profilesData.list);
+    if(remaining.length){ profilesData.active = remaining[0]; }
+    else{ const n="我"; profilesData.list[n]=defaultProfileData(); profilesData.active=n; }
+  }
+  saveProfilesStore();
+  pullProfileIntoState();
+  renderProfileModalList();
+  updateProfileBtn();
+  renderAll(); renderFilters(); renderTaste(); updateWatchlistBadge();
+  checkOnboarding();
+}
+
+// ── First-time onboarding ──
+function checkOnboarding(){
+  const p = currentProfileObj();
+  const nameEl = document.getElementById("ob-profile-name");
+  if(nameEl) nameEl.textContent = profilesData.active;
+  const modal = document.getElementById("onboarding-modal");
+  if(!p.onboarded){
+    renderOnboardingSuggestions();
+    updateOnboardingBtn();
+    modal.classList.remove("hidden");
+  } else {
+    modal.classList.add("hidden");
+  }
+}
+function obChip(val,type){
+  const list = type==='director'?customDirectors:customActors;
+  const selected = list.includes(val);
+  const safe = val.replace(/'/g,"\\'");
+  return `<span onclick="obToggle('${type}','${safe}')" style="cursor:pointer;display:inline-block;padding:6px 12px;border-radius:20px;font-size:12px;border:1.5px solid ${selected?'var(--green-mid)':'var(--border2)'};background:${selected?'var(--green-lt)':'var(--card2)'};color:${selected?'var(--green)':'var(--text2)'}">${selected?'✓ ':''}${val}</span>`;
+}
+const OB_PRESET_ACTORS=["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"];
+function renderOnboardingSuggestions(){
+  const dirBox = document.getElementById("ob-director-suggestions");
+  if(dirBox) dirBox.innerHTML = [...new Set([...BASE_D, ...customDirectors])].map(d=>obChip(d,'director')).join('');
+  const actBox = document.getElementById("ob-actor-suggestions");
+  if(actBox) actBox.innerHTML = [...new Set([...OB_PRESET_ACTORS, ...customActors])].map(a=>obChip(a,'actor')).join('');
+  renderOnboardingMovies();
+}
+function obToggle(type,val){
+  const arr = type==='director'?customDirectors:customActors;
+  const idx = arr.indexOf(val);
+  if(idx>-1) arr.splice(idx,1); else arr.push(val);
+  save();
+  renderOnboardingSuggestions();
+  updateOnboardingBtn();
+}
+function obAddCustom(type){
+  const inputId = type==='director'?'ob-director-input':'ob-actor-input';
+  const el = document.getElementById(inputId);
+  const val = el.value.trim();
+  if(!val) return;
+  const arr = type==='director'?customDirectors:customActors;
+  if(!arr.includes(val)) arr.push(val);
+  el.value='';
+  save();
+  renderOnboardingSuggestions();
+  updateOnboardingBtn();
+}
+function renderOnboardingMovies(){
+  const box = document.getElementById("ob-movie-list");
+  if(!box) return;
+  box.innerHTML = likedMovieTitles.map(t=>{
+    const safe = t.replace(/'/g,"\\'");
+    return `<span style="display:inline-flex;align-items:center;gap:5px;background:var(--blue-lt);border:1.5px solid #355060;border-radius:20px;padding:5px 11px;font-size:12px;color:var(--blue)">${t}<span onclick="obRemoveMovie('${safe}')" style="cursor:pointer;opacity:0.6">×</span></span>`;
+  }).join('');
+}
+function obAddMovie(){
+  const el = document.getElementById("ob-movie-input");
+  const val = el.value.trim();
+  if(!val || likedMovieTitles.includes(val)) return;
+  likedMovieTitles.push(val);
+  el.value='';
+  save();
+  renderOnboardingMovies();
+  updateOnboardingBtn();
+}
+function obRemoveMovie(val){
+  likedMovieTitles = likedMovieTitles.filter(t=>t!==val);
+  save();
+  renderOnboardingMovies();
+  updateOnboardingBtn();
+}
+function updateOnboardingBtn(){
+  const ok = customDirectors.length>=2 && customActors.length>=2 && likedMovieTitles.length>=2;
+  const btn = document.getElementById("ob-finish-btn");
+  if(!btn) return;
+  btn.disabled = !ok;
+  btn.style.opacity = ok?"1":"0.4";
+}
+function finishOnboarding(){
+  currentProfileObj().onboarded = true;
+  save();
+  document.getElementById("onboarding-modal").classList.add("hidden");
+  renderAll(); renderTaste(); renderGreeting();
+}
+
 let recOffset = 0;
 let shownMovieIds = new Set(); // track which movies have been shown this session
 
@@ -906,30 +1170,24 @@ function openTrailer(zh, en, directUrl){
   }
 }
 
-function load(){
-  try{watched=JSON.parse(localStorage.getItem("cw")||"[]");}catch(e){watched=[];}
-  try{scores=JSON.parse(localStorage.getItem("cs")||"{}");}catch(e){scores={};}
-}
-function save(){
-  try{localStorage.setItem("cw",JSON.stringify(watched));localStorage.setItem("cs",JSON.stringify(scores));}catch(e){}
-}
+function load(){ pullProfileIntoState(); }
+function save(){ pushStateIntoProfile(); }
 
 const BASE_G=["哲學","科幻","愛情","劇情","非線性","詩意","靈性","攝影強","餘韻深","魔幻","神秘","人性","心理","奇幻","史詩","傳記"];
 const BASE_D=["王家衛 Wong Kar-wai","維倫紐夫 Denis Villeneuve","林克雷特 Richard Linklater","侯孝賢 Hou Hsiao-hsien","楊德昌 Edward Yang","蘇菲亞柯波拉 Sofia Coppola","諾蘭 Christopher Nolan","史蒂芬史匹柏 Steven Spielberg","雷利史考特 Ridley Scott","提爾 Joachim Trier","藍西莫 Yorgos Lanthimos","宮崎駿 Hayao Miyazaki","李安 Ang Lee","史派克瓊斯 Spike Jonze","伍迪艾倫 Woody Allen"];
 
+// 注意：這裡不再寫死任何人的個人偏好。每個使用者的推薦權重
+// 完全來自「自己在品味頁設定的導演/演員/電影」與「自己的評分回饋」，
+// 這樣同一份程式碼給不同朋友使用時，才會各自產生專屬的推薦結果。
 function buildProfile(){
   const gW={},dW={};
-  BASE_G.forEach(g=>gW[g]=2.5);
-  BASE_D.forEach(d=>dW[d]=3.0);
-  // Disliked directors — penalise
-  ["柏格曼 Ingmar Bergman","塔可夫斯基 Andrei Tarkovsky","奇士勞斯基 Krzysztof Kieślowski","岩井俊二 Shunji Iwai","蔡明亮 Tsai Ming-liang","薩安瑪 Céline Sciamma","查理考夫曼 Charlie Kaufman"].forEach(d=>dW[d]=-4);
-  // Favourite actors listed (used in scoreM)
-  const favActors=["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"];
+  BASE_G.forEach(g=>gW[g]=0);
+  BASE_D.forEach(d=>dW[d]=0);
   watched.forEach(id=>{
     const m=MOVIES.find(x=>x.id===id);if(!m||!scores[id])return;
-    const b=(scores[id]-5)*0.45;
+    const b=(scores[id]-5)*0.5;
     m.genres.forEach(g=>gW[g]=(gW[g]||0)+b);
-    dW[m.director]=(dW[m.director]||0)+b*1.6;
+    dW[m.director]=(dW[m.director]||0)+b*1.8;
   });
   return{gW,dW};
 }
@@ -939,12 +1197,11 @@ function scoreM(m,p){
   s+=(p.dW[m.director]||0);
   s+=(m.imdb/10)*1.2+(m.rt/100)*0.8;
   if(m.isNew)s+=1.8;
-  // Festival award boost
+  // Festival award boost（品質訊號，非個人偏好，維持通用）
   if(m.awards && (m.awards.includes("金棕櫚")||m.awards.includes("金獅")||m.awards.includes("金熊")||m.awards.includes("奧斯卡最佳"))) s+=2.5;
-  // Favourite actor boost
+  // 喜愛演員加分：完全依當前使用者自己設定的 customActors
   if(m.cast){
-    const favA=["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"];
-    favA.forEach(a=>{ if(m.cast.includes(a)) s+=1.8; });
+    customActors.forEach(a=>{ if(m.cast.includes(a)) s+=3; });
   }
   if(watched.includes(m.id))s-=99;
   return s;
@@ -1251,14 +1508,8 @@ let moodState = {mood:"", feel:[], vibe:[]};
 let moodHistory = [];
 let currentMoodRec = null;
 
-function loadMood(){
-  try{ moodHistory = JSON.parse(localStorage.getItem("mh")||"[]"); }catch(e){ moodHistory=[]; }
-  try{ currentMoodRec = JSON.parse(localStorage.getItem("cmr")||"null"); }catch(e){ currentMoodRec=null; }
-}
-function saveMood(){
-  try{ localStorage.setItem("mh", JSON.stringify(moodHistory)); }catch(e){}
-  try{ localStorage.setItem("cmr", JSON.stringify(currentMoodRec)); }catch(e){}
-}
+function loadMood(){ pullProfileIntoState(); }
+function saveMood(){ pushStateIntoProfile(); }
 
 function openMoodCheckin(){
   moodState = {mood:"", feel:[], vibe:[]};
@@ -1436,20 +1687,8 @@ function closeHistoryModal(){ document.getElementById("history-modal").classList
 let customDirectors = [], customDisliked = [], customActors = [];
 let likedMovieTitles = [];
 let watchlist = []; // array of movie ids
-function loadTaste(){
-  try{ customDirectors=JSON.parse(localStorage.getItem("td")||"[]"); }catch(e){ customDirectors=[]; }
-  try{ customDisliked=JSON.parse(localStorage.getItem("tdd")||"[]"); }catch(e){ customDisliked=[]; }
-  try{ customActors=JSON.parse(localStorage.getItem("ta")||"[]"); }catch(e){ customActors=[]; }
-  try{ likedMovieTitles=JSON.parse(localStorage.getItem("tlm")||"[]"); }catch(e){ likedMovieTitles=[]; }
-  try{ watchlist=JSON.parse(localStorage.getItem("wl")||"[]"); }catch(e){ watchlist=[]; }
-}
-function saveTaste(){
-  try{ localStorage.setItem("td",JSON.stringify(customDirectors)); }catch(e){}
-  try{ localStorage.setItem("tdd",JSON.stringify(customDisliked)); }catch(e){}
-  try{ localStorage.setItem("ta",JSON.stringify(customActors)); }catch(e){}
-  try{ localStorage.setItem("tlm",JSON.stringify(likedMovieTitles)); }catch(e){}
-  try{ localStorage.setItem("wl",JSON.stringify(watchlist)); }catch(e){}
-}
+function loadTaste(){ pullProfileIntoState(); }
+function saveTaste(){ pushStateIntoProfile(); }
 function addLikedMovie(){
   const el = document.getElementById("add-movie-input");
   const val = el.value.trim();
@@ -1493,41 +1732,72 @@ function removeTasteItem(type, val){
   if(type==="actor")    customActors    = customActors.filter(x=>x!==val);
   saveTaste(); renderTaste(); renderRecommend();
 }
-function renderTaste(){
-  const allDirs   = [...BASE_D, ...customDirectors];
-  const allDis    = ["Ingmar Bergman","Andrei Tarkovsky","Krzysztof Kieslowski","岩井俊二","蔡明亮","Céline Sciamma","Charlie Kaufman",...customDisliked];
-  const allActors = ["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇",...customActors];
+const TASTE_PRESET_ACTORS=["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"];
 
-  const chip = (val,type,removable=false) => {
+function quickAddTaste(type,val){
+  if(type==="director" && !customDirectors.includes(val)) customDirectors.push(val);
+  if(type==="actor" && !customActors.includes(val)) customActors.push(val);
+  saveTaste(); renderTaste(); renderRecommend();
+}
+
+function renderTaste(){
+  // 已加入（可移除，綠色）vs 推薦快速加入（點一下就加入，灰色）
+  const chip = (val,type,removable) => {
+    const safe = val.replace(/'/g,"\\'");
     const bg  = removable ? "var(--green-lt)"  : "var(--card2)";
     const bdr = removable ? "var(--green-mid)" : "var(--border2)";
     const clr = removable ? "var(--green)"     : "var(--text2)";
-    return `<span style="display:inline-flex;align-items:center;gap:5px;background:${bg};border:1.5px solid ${bdr};border-radius:20px;padding:5px 11px;font-size:12px;color:${clr}">
-      ${val}${removable?`<span onclick="removeTasteItem('${type}','${val}')" style="cursor:pointer;opacity:0.6;font-size:14px;line-height:1">×</span>`:""}
+    const action = removable ? `removeTasteItem('${type}','${safe}')` : `quickAddTaste('${type}','${safe}')`;
+    const icon = removable ? "×" : "＋";
+    return `<span onclick="${action}" style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;background:${bg};border:1.5px solid ${bdr};border-radius:20px;padding:5px 11px;font-size:12px;color:${clr}">
+      ${val}<span style="opacity:0.6;font-size:13px;line-height:1">${icon}</span>
     </span>`;
   };
 
   const dirEl = document.getElementById("taste-directors");
-  const disEl = document.getElementById("taste-disliked");
   const actEl = document.getElementById("taste-actors");
   const genEl = document.getElementById("taste-genres");
-  if(dirEl) dirEl.innerHTML = BASE_D.map(d=>chip(d,"director",false)).join("") + customDirectors.map(d=>chip(d,"director",true)).join("");
-
-  if(actEl) actEl.innerHTML = ["梁朝偉","提摩西夏勒梅","Scarlett Johansson","艾瑪史東","梅莉史翠普","茱莉安摩爾","妮可基嫚","舒淇","雷恩葛斯林","娜塔莉波曼","布萊德彼特","瓦昆·菲尼克斯","席尼·墨菲","艾迪·瑞德曼","強尼·戴普","安海瑟薇"].map(a=>chip(a,"actor",false)).join("") + customActors.map(a=>chip(a,"actor",true)).join("");
-  if(genEl) genEl.innerHTML = BASE_G.map(g=>`<span style="background:var(--green-lt);border:1px solid var(--green-mid);border-radius:20px;padding:5px 11px;font-size:12px;color:var(--green)">${g}</span>`).join("");
   const movEl = document.getElementById("taste-liked-movies");
-  if(movEl) movEl.innerHTML = likedMovieTitles.map(t =>
-    `<span style="display:inline-flex;align-items:center;gap:5px;background:var(--blue-lt);border:1.5px solid #355060;border-radius:20px;padding:5px 11px;font-size:12px;color:var(--blue)">
-      ${t}<span onclick="removeLikedMovie('${t}')" style="cursor:pointer;opacity:0.6;font-size:14px;line-height:1">×</span>
-    </span>`
-  ).join("");
+  const summaryEl = document.getElementById("taste-summary");
+
+  if(dirEl){
+    const suggestions = BASE_D.filter(d=>!customDirectors.includes(d));
+    dirEl.innerHTML =
+      (customDirectors.length ? customDirectors.map(d=>chip(d,"director",true)).join("") : `<span style="font-size:11.5px;color:var(--text3)">尚未加入，點下方推薦快速加入</span>`) +
+      (suggestions.length ? `<div style="width:100%;font-size:10.5px;color:var(--text3);margin:8px 0 4px">推薦快速加入：</div>` + suggestions.map(d=>chip(d,"director",false)).join("") : "");
+  }
+  if(actEl){
+    const suggestions = TASTE_PRESET_ACTORS.filter(a=>!customActors.includes(a));
+    actEl.innerHTML =
+      (customActors.length ? customActors.map(a=>chip(a,"actor",true)).join("") : `<span style="font-size:11.5px;color:var(--text3)">尚未加入，點下方推薦快速加入</span>`) +
+      (suggestions.length ? `<div style="width:100%;font-size:10.5px;color:var(--text3);margin:8px 0 4px">推薦快速加入：</div>` + suggestions.map(a=>chip(a,"actor",false)).join("") : "");
+  }
+  if(genEl) genEl.innerHTML = BASE_G.map(g=>`<span style="background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 11px;font-size:12px;color:var(--text3)">${g}</span>`).join("");
+  if(movEl) movEl.innerHTML = likedMovieTitles.map(t => {
+    const safe = t.replace(/'/g,"\\'");
+    return `<span style="display:inline-flex;align-items:center;gap:5px;background:var(--blue-lt);border:1.5px solid #355060;border-radius:20px;padding:5px 11px;font-size:12px;color:var(--blue)">
+      ${t}<span onclick="removeLikedMovie('${safe}')" style="cursor:pointer;opacity:0.6;font-size:14px;line-height:1">×</span>
+    </span>`;
+  }).join("");
+
+  if(summaryEl){
+    if(customDirectors.length || customActors.length || likedMovieTitles.length){
+      summaryEl.innerHTML = `
+        <div style="font-size:11px;font-weight:600;color:var(--warm);letter-spacing:0.06em;margin-bottom:8px">${profilesData.active} 的品味輪廓</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.75">導演 ${customDirectors.length} 位 · 演員 ${customActors.length} 位 · 喜歡的電影 ${likedMovieTitles.length} 部</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:5px;line-height:1.65">${[...customDirectors.slice(0,5),...customActors.slice(0,5)].join(" · ") || "尚未設定"}</div>`;
+    } else {
+      summaryEl.innerHTML = `<div style="font-size:12.5px;color:var(--text3)">尚未設定品味資料，請在下方新增你喜愛的導演、演員與電影</div>`;
+    }
+  }
 }
 
-// Patch buildProfile to include custom items
+// Patch buildProfile：把當前使用者自訂的導演/黑名單併入權重計算。
+// +5 是主要的個人化訊號（因為 buildProfile() 本身已不含任何硬編碼偏好）。
 const _origBuildProfile = buildProfile;
 buildProfile = function(){
   const p = _origBuildProfile();
-  customDirectors.forEach(d=>p.dW[d]=(p.dW[d]||0)+3);
+  customDirectors.forEach(d=>p.dW[d]=(p.dW[d]||0)+5);
   customDisliked.forEach(d=>p.dW[d]=-4);
   return p;
 };
@@ -1658,8 +1928,12 @@ function watchlistCardHTML(m, idx){
   </div>`;
 }
 
-load(); loadMood(); loadTaste(); renderAll(); renderFilters(); renderGreeting(); updateWatchlistBadge();
+loadProfilesStore();
+load(); loadMood(); loadTaste();
+renderAll(); renderFilters(); renderGreeting(); renderTaste();
+updateWatchlistBadge(); updateProfileBtn();
 if(currentMoodRec){ renderMoodRecBlock(); updateMoodBtn(); }
+checkOnboarding();
 </script>
 </body>
 </html>
